@@ -87,13 +87,18 @@ Route::middleware([CheckLogin::class])->group( function(){
     });
     // Thao tác với điểm danh
     Route::match(["get", "post"],'/attendance/create',["as" =>'/attendance/create', "uses"=> "AttendanceController@search" ] );
-    Route::get("/attendance", "AttendanceController@index");
-    Route::post("/attendance/store", "AttendanceController@store")->name("attendance_post");
+    Route::get("/attendance", "AttendanceController@index")->name("attendance");
+    Route::post("/attendance/store", "AttendanceController@store")->name("attendance-post");
     Route::get("/attendance/show/{id}", "AttendanceController@show");
     Route::get("/attendance/edit/{id}", "AttendanceController@edit");
     Route::post("/attendance/update/{id}", "AttendanceController@update");
     Route::get("/attendance/destroy/{id}", "AttendanceController@destroy");
 
+    // Thao tác với điểm danh chi tiết
+    Route::resource("detailattendance", DetailAttendanceController::class);
+    // Route::prefix("detailattendance")->name('detailattendance.')->group( function(){
+        // Route::get('/hide/{id}','AssignController@hide')->name('hide');
+    // });
 
 });
 

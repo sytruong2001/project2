@@ -79,6 +79,7 @@
                     <th>Thời gian bắt đầu</th>
                     <th>Thời gian kết thúc</th>
                     <th>Chi tiết</th>
+                    <th>Cập nhật</th>
                   </tr>
                   </thead>
                   <tbody>
@@ -91,7 +92,8 @@
                         <th>{{ $attendance->dateAttendance}}</th>
                         <th>{{ $attendance->start}}</th>
                         <th>{{ $attendance->end}}</th>
-                        <th><a href="/attendance/show/{{ $attendance->idAttendance }}"><i class="fas fa-info"></i></a></th>
+                        <th><a href="{{ route('detailattendance.show', $attendance->idAttendance) }}" class="btn btn-success">Detail</a></th>
+                        <th><a href="{{ route('detailattendance.edit', $attendance->idAttendance) }}" class="btn btn-warning">Edit</a></th>
                       </tr>
                     @endforeach
                   </tbody>
@@ -105,6 +107,7 @@
                     <th>Thời gian bắt đầu</th>
                     <th>Thời gian kết thúc</th>
                     <th>Chi tiết</th>
+                    <th>Cập nhật</th>
                   </tr>
                   </tfoot>
                 </table>

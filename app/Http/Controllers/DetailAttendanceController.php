@@ -2,8 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\User;
 use Illuminate\Http\Request;
-
+use Illuminate\Support\Facades\Redirect;
+use Auth;
+use DB,Session,DateTime;
+use App\Models\Attendance;
+use App\Models\DetailAttendance;
 class DetailAttendanceController extends Controller
 {
     /**
@@ -45,7 +50,17 @@ class DetailAttendanceController extends Controller
      */
     public function show($id)
     {
-        //
+        $detail = DB::table('detailattendance')
+        ->join('student','detailattendance.idStudent','=','student.idStudent')
+        ->join('attendance','detailattendance.idAttendance','=','attendance.idAttendance')
+        ->where('detailattendance.idAttendance',$id)
+        ->select('detailattendance.*','student.firstName','student.lastName','student.middleName')
+        ->get();
+
+        return view('attendance.detailAttendance',[
+            'index' => 1,
+            'detail' => $detail
+        ]);
     }
 
     /**
@@ -56,7 +71,17 @@ class DetailAttendanceController extends Controller
      */
     public function edit($id)
     {
-        //
+        $detail = DB::table('detailattendance')
+        ->join('student','detailattendance.idStudent','=','student.idStudent')
+        ->join('attendance','detailattendance.idAttendance','=','attendance.idAttendance')
+        ->where('detailattendance.idAttendance',$id)
+        ->select('detailattendance.*','student.firstName','student.lastName','student.middleName')
+        ->get();
+
+        return view('attendance.updateDetail',[
+            'index' => 1,
+            'detail' => $detail
+        ]); 
     }
 
     /**

@@ -6,5 +6,5 @@ use Illuminate\Database\Eloquent\Model;
 
 class DetailAttendance extends Model
 {
-    //
+    public $table = "detailattendance";
 }

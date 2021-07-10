@@ -42,7 +42,6 @@
                     <th>Mã điểm danh</th>
                     <th>Tên sinh viên</th>
                     <th>Trạng thái</th>
-                    <th>Sửa</th>
                   </tr>
                   </thead>
                   <tbody>
@@ -50,9 +49,20 @@
                       <tr>
                         <th>{{ $index++}}</th>
                         <th>{{ $detail->idAttendance}}</th>
-                        <th>{{ $detail->nameStudent}}</th>
-                        <th>{{ $detail->status}}</th>
-                        <th><a href="/attendance/edit/{{ $detail->idAttendance }}"><i class="fas fa-info"></i></a></th>
+                        <th>{{ $detail->lastName}} {{ $detail->middleName}} {{ $detail->firstName}}</th>
+                        <th>
+                          @if ($detail->status == 0)
+                            {{ "Đi học" }}
+                          @elseif($detail->status == 1)
+                            {{ "Nghỉ học"}}
+                          @elseif($detail->status == 2)
+                            {{ "Muộn"}}
+                          @elseif($detail->status == 3)
+                            {{ "Nghỉ có phép" }}
+                          @elseif($detail->status == 4)
+                            {{ "Nghỉ không phép" }}
+                          @endif
+                        </th>
                       </tr>
                     @endforeach
                   </tbody>
@@ -62,7 +72,6 @@
                     <th>Mã điểm danh</th>
                     <th>Tên sinh viên</th>
                     <th>Trạng thái</th>
-                    <th>Sửa</th>
                   </tr>
                   </tfoot>
                 </table>

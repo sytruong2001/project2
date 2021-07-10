@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Redirect;
 use Auth;
 use DB,Session,DateTime;
 use App\Models\Attendance;
+use App\Models\DetailAttendance;
 
 class AttendanceController extends Controller
 {
@@ -24,7 +25,7 @@ class AttendanceController extends Controller
         ->select('classroom.*', 'faculty.nameFaculty')
         ->where('classroom.available','=', 1)
         ->get();
-
+        
         $idSubject = $request->get("idSubject");
         $subject = DB::table('subject')
         ->where('subject.available','=', 1)
@@ -34,7 +35,7 @@ class AttendanceController extends Controller
         ->join('subject','attendance.idSubject','=','subject.idSubject')
         ->join('classroom','attendance.idClass','=','classroom.idClass')
         ->where('attendance.idClass', '=', $idClass)
-        ->where('attendance.idSubject', '=', $idSubject)
+        ->orwhere('attendance.idSubject', '=', $idSubject)
         ->select('attendance.*','classroom.nameClass','subject.nameSubject')
         ->get();
 
@@ -44,7 +45,7 @@ class AttendanceController extends Controller
             'idClass' => $idClass,
             'idSubject' => $idSubject,
             'class' => $class,
-            'subject' => $subject,
+            'subject' => $subject
         ]);
     }
 
@@ -65,7 +66,7 @@ class AttendanceController extends Controller
 
             if ($getID != null || count($getID) > 0) {
                 foreach($getID as $getID){
-                    $mydate = new \DateTime();
+                    $mydate = new DateTime();
                     $mydate->modify('+7 hours');
                     $curentDate = $mydate->format('Y-m-d');
                     
@@ -82,16 +83,20 @@ class AttendanceController extends Controller
                         ->where('idClass', '=', $getID->idClass)
                         ->get();
                     }else{
-                        $attendance = DB::table('attendance')
-                        ->join('subject','attendance.idSubject','=','subject.idSubject')
-                        ->join('classroom','attendance.idClass','=','classroom.idClass')
-                        ->select('attendance.*','classroom.nameClass','subject.nameSubject')
-                        ->get();
-
-                        return view('attendance.diary',[
-                            'index' => 1,
-                            'attendance' => $attendance
-                        ]);
+                        if(Session::exists("user_id")){
+                            $idTeacher = Session::get("user_id");
+                            $view = DB::table('assign')
+                            ->select('assign.*','assign.idFaculty','classroom.nameClass','faculty.nameFaculty','subject.nameSubject')
+                            ->join('subject','assign.idSubject','=','subject.idSubject')
+                            ->join('classroom','assign.idClass','=','classroom.idClass')
+                            ->join('faculty','assign.idFaculty','=','faculty.idFaculty')
+                            ->distinct('assign.idSubject','assign.idClass','assign.idFaculty')
+                            ->where('assign.idTeacher', '=', $idTeacher)
+                            ->get();
+                            // return $subject;
+                            
+                            return view('attendance.index', ['view' => $view]);
+                        }
                     }
                     
                 }
@@ -139,31 +144,62 @@ class AttendanceController extends Controller
      */
     public function store(Request $request)
     {
-        $data = json_decode($request->data, true);
-        $idAssign = json_decode($request->idAssign, true);
-        $getStart = json_decode($request->start, true);
-        $getEnd = json_decode($request->end, true);
-        
-        foreach($idAssign as $assign){
-            $idClass = DB::table('assign')
-            ->where("idAssign", "=", $assign['value'])
+        $idAssign = $request->get("idAssign");
+        $assign = DB::table("assign")
+            ->where("idAssign", "=", $idAssign)
             ->get();
-            foreach($getStart as $startTime){
-                $start = $startTime['value'];
-                foreach($getEnd as $endTime){
-                    $end = $endTime['value'];
-                    
-                    $attendance = new Attendance();
-                    $attendance->dateAttendance = new Datetime();
-                    $attendance->idClass = $idClass->idClass;
-                    $attendance->idSubject = $idClass->idSubject;
-                    $attendance->start = $start;
-                    $attendance->end = $end;
-                    $attendance->save();
-                }
-            }
+        foreach($assign as $assign){
+            $idClass = $assign->idClass;
+            $idSubject = $assign->idSubject;
         }
         
+        $start = $request->get("start");
+        
+        $end = $request->get("end");
+        
+        $student = DB::table("student")
+            ->where("idClass", "=", $idClass)
+            ->get();
+
+        $date = new Datetime();
+        return $date;
+        
+        $attendance = new Attendance();
+        $attendance->dateAttendance = new Datetime();
+        $attendance->idClass = $idClass;
+        $attendance->idSubject = $idSubject;
+        $attendance->start = $start;
+        $attendance->end = $end;
+        $attendance->save();
+
+        $Att = DB::table('Attendance')->orderBy('idAttendance', 'desc')->first();
+        $idAttendance = $Att->idAttendance;
+
+        foreach($student as $student){
+            $idStudent = $student->idStudent;
+            $status = $_REQUEST[$student->idStudent];
+
+            $data = new DetailAttendance();
+            $data->idStudent = $idStudent;
+            $data->idAttendance = $idAttendance;
+            $data->status = $status;
+            $data->save();
+        }
+         if(Session::exists("user_id")){
+            $idTeacher = Session::get("user_id");
+            $view = DB::table('assign')
+            ->select('assign.*','assign.idFaculty','classroom.nameClass','faculty.nameFaculty','subject.nameSubject')
+            ->join('subject','assign.idSubject','=','subject.idSubject')
+            ->join('classroom','assign.idClass','=','classroom.idClass')
+            ->join('faculty','assign.idFaculty','=','faculty.idFaculty')
+            ->distinct('assign.idSubject','assign.idClass','assign.idFaculty')
+            ->where('assign.idTeacher', '=', $idTeacher)
+            ->get();
+            // return $subject;
+            
+            return view('attendance.index', ['view' => $view]);
+        } 
+
     }
 
     /**
@@ -174,17 +210,7 @@ class AttendanceController extends Controller
      */
     public function show($id)
     {
-        $detail = DB::table('detailattendance')
-        ->select('detailattendance.*','student.nameStudent')
-        ->join('student','detailattendance.idStudent','=','student.idStudent')
-        ->join('attendance','detailattendance.idAttendance','=','attendance.idAttendance')
-        ->where('detailattendance.idAttendance',$id)
-        ->get();
-
-        return view('attendance.detailAttendance',[
-            'index' => 1,
-            'detail' => $detail
-        ]);
+        
     }
 
     /**
