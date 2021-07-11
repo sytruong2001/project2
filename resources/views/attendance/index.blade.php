@@ -30,12 +30,19 @@
                 <div class="card-header">
                   <h3 class="card-title">Chọn lớp cần điểm danh</h3>
                 </div>
+                
                 <!-- /.card-header -->
                 <form method="post" action="/attendance/create">
                   @csrf
                 <div class="card-body">
                   <div class="row margin">
                     <div class="col-sm-12">
+                      @if (isset($message))
+                        <h3 style="color: rgb(231, 97, 35); text-align:center"><br>{{ $message }}</h3>
+                      @endif
+                      @if (isset($success))
+                        <h3 style="color: rgb(32, 11, 219); text-align:center"><br>{{ $success }}</h3>
+                      @endif
                       <h3>Tên lớp + môn học:</h3>
                       <select name="idAssign" id="idAssign" class="form-control">
                           @foreach ($view as $view)

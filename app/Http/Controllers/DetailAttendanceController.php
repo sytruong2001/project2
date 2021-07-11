@@ -80,7 +80,8 @@ class DetailAttendanceController extends Controller
 
         return view('attendance.updateDetail',[
             'index' => 1,
-            'detail' => $detail
+            'detail' => $detail,
+            'idDetail' => $id
         ]); 
     }
 

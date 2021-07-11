@@ -27,38 +27,46 @@
       <div class="container-fluid">
         <div class="row">
           <div class="col-12">
-
-            <div class="card">
+            <div class="card card-primary">
               <div class="card-header">
                 <h3 class="card-title">Cập nhật điểm danh</h3>
               </div>
-
+              
               <!-- /.card-header -->
-              @foreach( $detail as $detail)
-              <form action="{{ route('detailattendance.store', $detail->idDetail ) }}" method="post">
-                @csrf
-                <div class="row">
-                  <div class="col-sm-4">
-                    <!-- radio -->
-                    <div class="form-group">
-                      {{ $index++}})  {{ $detail->idStudent}} - {{ $detail->lastName}} {{ $detail->middleName}} {{ $detail->firstName}}
-                      
+              <div class="card-body">
+                
+                <form action="{{ route('detailattendance.update', $idDetail ) }}" method="post">
+                  @csrf
+                  @method("put")
+                  @foreach( $detail as $detail)
+                  <div class="row">
+                    <div class="col-sm-4">
+                      <!-- radio -->
+                      <div class="form-group">
+                        {{ $index++}})  {{ $detail->idStudent}} - {{ $detail->lastName}} {{ $detail->middleName}} {{ $detail->firstName}}
+                        
+                      </div>
+                    </div>
+                    <div class="col-sm-8">
+                      <!-- radio -->
+                      <div class="form-group">
+                        <div>
+                          <b><input type="radio" id="status" name="{{ $detail->idStudent}}" value="0" checked>Đi học</b> &nbsp;
+                          <b><input type="radio" id="status" name="{{ $detail->idStudent}}" value="1">Nghỉ học</b> &nbsp;
+                          <b><input type="radio" id="status" name="{{ $detail->idStudent}}" value="2">Muộn</b> &nbsp;
+                          <b><input type="radio" id="status" name="{{ $detail->idStudent}}" value="3">Có phép</b> &nbsp;
+                          <b><input type="radio" id="status" name="{{ $detail->idStudent}}" value="4">Không phép</b> &nbsp;
+                        </div>                       
+                      </div>
                     </div>
                   </div>
-                  <div class="col-sm-8">
-                    <!-- radio -->
-                    <div class="form-group">
-                      <div>
-                        <b><input type="radio" id="status" name="{{ $detail->idStudent}}" value="0" checked>Đi học</b> &nbsp;
-                        <b><input type="radio" id="status" name="{{ $detail->idStudent}}" value="1">Nghỉ học</b> &nbsp;
-                        <b><input type="radio" id="status" name="{{ $detail->idStudent}}" value="2">Muộn</b> &nbsp;
-                        <b><input type="radio" id="status" name="{{ $detail->idStudent}}" value="3">Có phép</b> &nbsp;
-                        <b><input type="radio" id="status" name="{{ $detail->idStudent}}" value="4">Không phép</b> &nbsp;
-                      </div>                       
-                    </div>
+                  @endforeach
+                  <div >
+                    <button class="btn btn-success">Cập nhật</button>
                   </div>
-                </div>
-              @endforeach
+                </form>
+                
+              </div>
               <!-- /.card-body -->
             </div>
             <!-- /.card -->

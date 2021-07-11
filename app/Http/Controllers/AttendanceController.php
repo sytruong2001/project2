@@ -19,34 +19,78 @@ class AttendanceController extends Controller
      */
     public function index(Request $request)
     { 
-        $idClass = $request->get("idClass");
-        $class = DB::table('classroom')
-        ->join('faculty', 'classroom.idFaculty', '=', 'faculty.idFaculty')
-        ->select('classroom.*', 'faculty.nameFaculty')
-        ->where('classroom.available','=', 1)
-        ->get();
-        
-        $idSubject = $request->get("idSubject");
-        $subject = DB::table('subject')
-        ->where('subject.available','=', 1)
-        ->get();
+        if(Session::exists("admin_id")){
+            $idClass = $request->get("idClass");
+            $class = DB::table('classroom')
+            ->join('faculty', 'classroom.idFaculty', '=', 'faculty.idFaculty')
+            ->select('classroom.*', 'faculty.nameFaculty')
+            ->where('classroom.available','=', 1)
+            ->get();
+            
+            $idSubject = $request->get("idSubject");
+            $subject = DB::table('subject')
+            ->where('subject.available','=', 1)
+            ->get();
 
-        $attendance = DB::table('attendance')
-        ->join('subject','attendance.idSubject','=','subject.idSubject')
-        ->join('classroom','attendance.idClass','=','classroom.idClass')
-        ->where('attendance.idClass', '=', $idClass)
-        ->orwhere('attendance.idSubject', '=', $idSubject)
-        ->select('attendance.*','classroom.nameClass','subject.nameSubject')
-        ->get();
+            $attendance = DB::table('attendance')
+            ->join('subject','attendance.idSubject','=','subject.idSubject')
+            ->join('classroom','attendance.idClass','=','classroom.idClass')
+            ->where('attendance.idClass', '=', $idClass)
+            ->orwhere('attendance.idSubject', '=', $idSubject)
+            ->select('attendance.*','classroom.nameClass','subject.nameSubject')
+            ->get();
 
-        return view('attendance.diary',[
-            'index' => 1,
-            'attendance' => $attendance,
-            'idClass' => $idClass,
-            'idSubject' => $idSubject,
-            'class' => $class,
-            'subject' => $subject
-        ]);
+            return view('attendance.diary',[
+                'index' => 1,
+                'attendance' => $attendance,
+                'idClass' => $idClass,
+                'idSubject' => $idSubject,
+                'class' => $class,
+                'subject' => $subject
+            ]);
+        }elseif(Session::exists("user_id")){
+            $idTeacher = Session::get("user_id");
+            $idClass = $request->get("idClass");
+            $class = DB::table('classroom')
+            ->join('faculty', 'classroom.idFaculty', '=', 'faculty.idFaculty')
+            ->join('assign', 'classroom.idClass', '=', 'assign.idClass')
+            ->select('classroom.*', 'faculty.nameFaculty')
+            ->where('classroom.available','=', 1)
+            ->where('assign.idTeacher','=', $idTeacher)
+            ->get();
+            
+            $idSubject = $request->get("idSubject");
+            $subject = DB::table('subject')
+            ->join('assign', 'subject.idSubject', '=', 'assign.idSubject')
+            ->where('subject.available','=', 1)
+            ->where('assign.idTeacher','=', $idTeacher)
+            ->get();
+
+            $data = DB::table('assign')
+                ->where('available','=', 1)
+                ->where('idTeacher','=', $idTeacher)
+                ->select("*")
+                ->count();
+            if($data != null || $data > 0){
+                $attendance = DB::table('attendance')
+                ->join('subject','attendance.idSubject','=','subject.idSubject')
+                ->join('classroom','attendance.idClass','=','classroom.idClass')
+                ->where('attendance.idClass', '=', $idClass)
+                ->orwhere('attendance.idSubject', '=', $idSubject)
+                ->select('attendance.*','classroom.nameClass','subject.nameSubject')
+                ->get();
+
+                return view('attendance.diary',[
+                    'index' => 1,
+                    'attendance' => $attendance,
+                    'idClass' => $idClass,
+                    'idSubject' => $idSubject,
+                    'class' => $class,
+                    'subject' => $subject
+                ]);
+            }
+            
+        }
     }
 
     public function search(Request $request){
@@ -95,7 +139,7 @@ class AttendanceController extends Controller
                             ->get();
                             // return $subject;
                             
-                            return view('attendance.index', ['view' => $view]);
+                            return view('attendance.index', ['view' => $view])->with("message", "Lớp bạn vừa lựa chọn hôm nay đã được điểm danh =))");
                         }
                     }
                     
@@ -160,9 +204,8 @@ class AttendanceController extends Controller
         $student = DB::table("student")
             ->where("idClass", "=", $idClass)
             ->get();
-
+        
         $date = new Datetime();
-        return $date;
         
         $attendance = new Attendance();
         $attendance->dateAttendance = new Datetime();
@@ -197,7 +240,7 @@ class AttendanceController extends Controller
             ->get();
             // return $subject;
             
-            return view('attendance.index', ['view' => $view]);
+            return view('attendance.index', ['view' => $view])->with("success","Đã điểm danh thành công <3 <3");
         } 
 
     }

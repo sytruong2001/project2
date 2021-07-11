@@ -40,7 +40,7 @@
                   <h3 class="profile-username text-center">{{ $teacher->lastName}} {{ $teacher->middleName}} {{ $teacher->firstName}}</h3>
                   <p class="profile-username text-center">
                       @if (Session::exists("user_id"))
-                        {{"(Giáo vụ)"}}                          
+                        {{"(Giảng viên)"}}                          
                       @endif
                   </p>
                   <ul class="list-group list-group-unbordered mb-1">

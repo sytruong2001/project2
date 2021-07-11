@@ -174,7 +174,7 @@
             <li class="nav-item">
               <a href="/attendance" class="nav-link">
                 <i class="nav-icon fas fa-chart-pie"></i>
-                <p>Thống kê</p>
+                <p>Nhật ký điểm danh</p>
               </a>
             </li>
 
