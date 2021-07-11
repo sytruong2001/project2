@@ -35,7 +35,7 @@
               <!-- /.card-header -->
               <div class="card-body">
                 
-                <form action="{{ route('detailattendance.update', $idDetail ) }}" method="post">
+                <form action="{{ route('detailattendance.update', $idAttendance ) }}" method="post">
                   @csrf
                   @method("put")
                   @foreach( $detail as $detail)
@@ -51,11 +51,11 @@
                       <!-- radio -->
                       <div class="form-group">
                         <div>
-                          <b><input type="radio" id="status" name="{{ $detail->idStudent}}" value="0" checked>Đi học</b> &nbsp;
-                          <b><input type="radio" id="status" name="{{ $detail->idStudent}}" value="1">Nghỉ học</b> &nbsp;
-                          <b><input type="radio" id="status" name="{{ $detail->idStudent}}" value="2">Muộn</b> &nbsp;
-                          <b><input type="radio" id="status" name="{{ $detail->idStudent}}" value="3">Có phép</b> &nbsp;
-                          <b><input type="radio" id="status" name="{{ $detail->idStudent}}" value="4">Không phép</b> &nbsp;
+                          <b><input type="radio" id="status" name="{{ $detail->idStudent}}" value="0" @if($detail->status == 0){{ "checked" }}@endif>Đi học</b> &nbsp;
+                          <b><input type="radio" id="status" name="{{ $detail->idStudent}}" value="1" @if($detail->status == 1){{ "checked" }}@endif>Nghỉ học</b> &nbsp;
+                          <b><input type="radio" id="status" name="{{ $detail->idStudent}}" value="2" @if($detail->status == 2){{ "checked" }}@endif>Muộn</b> &nbsp;
+                          <b><input type="radio" id="status" name="{{ $detail->idStudent}}" value="3" @if($detail->status == 3){{ "checked" }}@endif>Có phép</b> &nbsp;
+                          <b><input type="radio" id="status" name="{{ $detail->idStudent}}" value="4" @if($detail->status == 4){{ "checked" }}@endif>Không phép</b> &nbsp;
                         </div>                       
                       </div>
                     </div>

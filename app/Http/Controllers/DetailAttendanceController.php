@@ -81,7 +81,7 @@ class DetailAttendanceController extends Controller
         return view('attendance.updateDetail',[
             'index' => 1,
             'detail' => $detail,
-            'idDetail' => $id
+            'idAttendance' => $id
         ]); 
     }
 
@@ -94,7 +94,33 @@ class DetailAttendanceController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $idAttendance = $id;
+        $student = DB::table("detailattendance")
+            ->join("student", "detailattendance.idStudent", "=", "student.idStudent")
+            ->where("detailattendance.idAttendance", "=", $idAttendance)
+            ->select("student.*")
+            ->get();
+        
+        foreach($student as $student){
+            $idStudent = $student->idStudent;   
+            $status = $_REQUEST[$student->idStudent];
+            $data = DB::table("detailattendance")
+                ->where("idAttendance", "=", $idAttendance)
+                ->where("idStudent", "=", $idStudent)
+                ->update(['status' => $status]);
+        }
+        $detail = DB::table('detailattendance')
+        ->join('student','detailattendance.idStudent','=','student.idStudent')
+        ->join('attendance','detailattendance.idAttendance','=','attendance.idAttendance')
+        ->where('detailattendance.idAttendance',$idAttendance)
+        ->select('detailattendance.*','student.firstName','student.lastName','student.middleName')
+        ->get();
+
+        return view('attendance.updateDetail',[
+            'index' => 1,
+            'detail' => $detail,
+            'idAttendance' => $id
+        ]);
     }
 
     /**
