@@ -34,31 +34,17 @@
                 <br>
                 <h3 class="btn btn-default"> 
                   <form action="" >
-                    Chọn lớp: 
-                    <select name="idClass" class="form-control">
+                    Chọn lớp + môn học: 
+                    <select name="idAssign" class="form-control">
                       <option value="">.................................</option>
-                      @foreach ($class as $class)
-                          <option value="{{$class->idClass}}"
-                            @if ($class->idClass == $idClass)
+                      @foreach ($assign as $assign)
+                          <option value="{{ $assign->idAssign }}"
+                            @if ($assign->idAssign == $idAssign)
                               {{"selected"}}
                             @endif
-                          >{{$class->nameClass}}{{$class->nameFaculty}}</option>
-                      @endforeach
-                    </select>
-                    <button class="btn btn-default">Okkkkkkk</button>
-                  </form>
-                </h3>
-                <h3 class="btn btn-default"> 
-                  <form action="" >
-                    Chọn Môn học: 
-                    <select name="idSubject" class="form-control">
-                      <option value="">...........................................</option>
-                      @foreach ($subject as $subject)
-                          <option value="{{$subject->idSubject}}"
-                            @if ($subject->idSubject == $idSubject)
-                              {{"selected"}}
-                            @endif
-                          >{{$subject->nameSubject}}</option>
+                          >
+                            {{$assign->nameClass}}{{$assign->nameFaculty}}--{{$assign->nameSubject}}
+                          </option>
                       @endforeach
                     </select>
                     <button class="btn btn-default">Okkkkkkk</button>

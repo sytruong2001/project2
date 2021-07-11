@@ -20,111 +20,149 @@ class AttendanceController extends Controller
     public function index(Request $request)
     { 
         if(Session::exists("admin_id")){
-            $idClass = $request->get("idClass");
-            $class = DB::table('classroom')
-            ->join('faculty', 'classroom.idFaculty', '=', 'faculty.idFaculty')
-            ->select('classroom.*', 'faculty.nameFaculty')
-            ->where('classroom.available','=', 1)
-            ->get();
-            
-            $idSubject = $request->get("idSubject");
-            $subject = DB::table('subject')
-            ->where('subject.available','=', 1)
-            ->get();
-
-            $attendance = DB::table('attendance')
-            ->join('subject','attendance.idSubject','=','subject.idSubject')
-            ->join('classroom','attendance.idClass','=','classroom.idClass')
-            ->where('attendance.idClass', '=', $idClass)
-            ->orwhere('attendance.idSubject', '=', $idSubject)
-            ->select('attendance.*','classroom.nameClass','subject.nameSubject')
-            ->get();
-
-            return view('attendance.diary',[
-                'index' => 1,
-                'attendance' => $attendance,
-                'idClass' => $idClass,
-                'idSubject' => $idSubject,
-                'class' => $class,
-                'subject' => $subject
-            ]);
-        }elseif(Session::exists("user_id")){
-            $idTeacher = Session::get("user_id");
-            $idClass = $request->get("idClass");
-            $class = DB::table('classroom')
-            ->join('faculty', 'classroom.idFaculty', '=', 'faculty.idFaculty')
-            ->join('assign', 'classroom.idClass', '=', 'assign.idClass')
-            ->select('classroom.*', 'faculty.nameFaculty')
-            ->where('classroom.available','=', 1)
-            ->where('assign.idTeacher','=', $idTeacher)
-            ->distinct('assign.idClass')
-            ->get();
-            
-            $idSubject = $request->get("idSubject");
-            $subject = DB::table('subject')
-            ->join('assign', 'subject.idSubject', '=', 'assign.idSubject')
-            ->where('subject.available','=', 1)
-            ->where('assign.idTeacher','=', $idTeacher)
-            ->distinct('assign.idSubject')
-            ->get();
-
-            if(isset($idClass) || isset($idSubject)){
-                $check = DB::table('assign')
-                ->where('available','=', 1)
-                ->where('idTeacher','=', $idTeacher)
-                ->where('idClass','=', $idClass)
-                ->orwhere('idSubject','=', $idSubject)
-                ->select("*")
-                ->get(); 
-
-                $count = count($check);
+            $idAssign = $request->get("idAssign");
+            if(isset($idAssign)){
+                $assign = DB::table('assign')
+                ->join('faculty', 'assign.idFaculty', '=', 'faculty.idFaculty')
+                ->join('classroom', 'assign.idClass', '=', 'classroom.idClass')
+                ->join('subject', 'assign.idSubject', '=', 'subject.idSubject')
+                ->select('assign.*', 'faculty.nameFaculty', 'classroom.nameClass', 'subject.nameSubject')
+                ->where('assign.available','=', 1)
+                ->get();
+                $idClass = DB::table('assign')
+                ->join('classroom', 'assign.idClass', '=', 'classroom.idClass')
+                ->select('assign.idClass')
+                ->where('assign.available','=', 1)
+                ->where('assign.idAssign', '=', $idAssign)
+                ->get();
+                $idSubject = DB::table('assign')
+                ->join('subject','assign.idSubject','=','subject.idSubject')
+                ->select('assign.idSubject')
+                ->where('assign.available','=', 1)
+                ->where('assign.idAssign', '=', $idAssign)
+                ->get();
                 
-                if($count != null || $count > 0){
-                    foreach($check as $check)
-                    {
+                foreach($idClass as $idClass){
+                    
+                    foreach($idSubject as $idSubject){
                         
                         $attendance = DB::table('attendance')
                         ->join('subject','attendance.idSubject','=','subject.idSubject')
                         ->join('classroom','attendance.idClass','=','classroom.idClass')
-                        ->where('attendance.idClass', '=', $check->idClass)
-                        ->where('attendance.idSubject', '=', $check->idSubject)
+                        ->where('attendance.idClass', '=', $idClass->idClass)
+                        ->where('attendance.idSubject', '=', $idSubject->idSubject)
                         ->select('attendance.*','classroom.nameClass','subject.nameSubject')
                         ->get();
+                        
+                        return view('attendance.diary',[
+                            'index' => 1,
+                            'attendance' => $attendance,
+                            'assign' => $assign,
+                            'idAssign' => $idAssign,
+                        ]);
                     }
+                }   
+            }else{
+                $idAssign = '';
+                $assign = DB::table('assign')
+                ->join('faculty', 'assign.idFaculty', '=', 'faculty.idFaculty')
+                ->join('classroom', 'assign.idClass', '=', 'classroom.idClass')
+                ->join('subject', 'assign.idSubject', '=', 'subject.idSubject')
+                ->select('assign.*', 'faculty.nameFaculty', 'classroom.nameClass', 'subject.nameSubject')
+                ->where('assign.available','=', 1)
+                ->get();
+                
+                $idClass = '';
+                $idSubject = '';
+                    $attendance = DB::table('attendance')
+                    ->join('subject','attendance.idSubject','=','subject.idSubject')
+                    ->join('classroom','attendance.idClass','=','classroom.idClass')
+                    ->where('attendance.idClass', '=', $idClass)
+                    ->where('attendance.idSubject', '=', $idSubject)
+                    ->select('attendance.*','classroom.nameClass','subject.nameSubject')
+                    ->get();
+
                     return view('attendance.diary',[
                         'index' => 1,
                         'attendance' => $attendance,
-                        'idClass' => $idClass,
-                        'idSubject' => $idSubject,
-                        'class' => $class,
-                        'subject' => $subject,
+                        'assign' => $assign,
+                        'idAssign' => $idAssign
                     ]);
-                }
             }
-            
-            $data = DB::table('assign')
-            ->where('available','=', 1)
-            ->where('idTeacher','=', $idTeacher)
-            ->select("*")
-            ->count();
-            
-            if($data != null || $data > 0){
-                $attendance = DB::table('attendance')
-                ->join('subject','attendance.idSubject','=','subject.idSubject')
-                ->join('classroom','attendance.idClass','=','classroom.idClass')
-                ->where('attendance.idClass', '=', $idClass)
-                ->orwhere('attendance.idSubject', '=', $idSubject)
-                ->select('attendance.*','classroom.nameClass','subject.nameSubject')
+        }elseif(Session::exists("user_id")){
+            $idAssign = $request->get("idAssign");
+            $idTeacher = Session::get("user_id");
+            if(isset($idAssign)){
+                $assign = DB::table('assign')
+                ->join('faculty', 'assign.idFaculty', '=', 'faculty.idFaculty')
+                ->join('classroom', 'assign.idClass', '=', 'classroom.idClass')
+                ->join('subject', 'assign.idSubject', '=', 'subject.idSubject')
+                ->select('assign.*', 'faculty.nameFaculty', 'classroom.nameClass', 'subject.nameSubject')
+                ->where('assign.available','=', 1)
+                ->where('idTeacher','=', $idTeacher)
                 ->get();
+                $idClass = DB::table('assign')
+                ->join('classroom', 'assign.idClass', '=', 'classroom.idClass')
+                ->select('assign.idClass')
+                ->where('assign.available','=', 1)
+                ->where('assign.idAssign', '=', $idAssign)
+                ->where('idTeacher','=', $idTeacher)
+                ->get();
+                $idSubject = DB::table('assign')
+                ->join('subject','assign.idSubject','=','subject.idSubject')
+                ->select('assign.idSubject')
+                ->where('assign.available','=', 1)
+                ->where('assign.idAssign', '=', $idAssign)
+                ->where('idTeacher','=', $idTeacher)
+                ->get();
+                
+                foreach($idClass as $idClass){
+                    
+                    foreach($idSubject as $idSubject){
+                        
+                        $attendance = DB::table('attendance')
+                        ->join('subject','attendance.idSubject','=','subject.idSubject')
+                        ->join('classroom','attendance.idClass','=','classroom.idClass')
+                        ->where('attendance.idClass', '=', $idClass->idClass)
+                        ->where('attendance.idSubject', '=', $idSubject->idSubject)
+                        ->select('attendance.*','classroom.nameClass','subject.nameSubject')
+                        ->get();
+                        
+                        return view('attendance.diary',[
+                            'index' => 1,
+                            'attendance' => $attendance,
+                            'assign' => $assign,
+                            'idAssign' => $idAssign,
+                        ]);
+                    }
+                }   
+            }else{
+                $idAssign = '';
+                $assign = DB::table('assign')
+                ->join('faculty', 'assign.idFaculty', '=', 'faculty.idFaculty')
+                ->join('classroom', 'assign.idClass', '=', 'classroom.idClass')
+                ->join('subject', 'assign.idSubject', '=', 'subject.idSubject')
+                ->select('assign.*', 'faculty.nameFaculty', 'classroom.nameClass', 'subject.nameSubject')
+                ->where('assign.available','=', 1)
+                ->where('idTeacher','=', $idTeacher)
+                ->get();
+                
+                $idClass = '';
+                $idSubject = '';
+                    $attendance = DB::table('attendance')
+                    ->join('subject','attendance.idSubject','=','subject.idSubject')
+                    ->join('classroom','attendance.idClass','=','classroom.idClass')
+                    ->where('attendance.idClass', '=', $idClass)
+                    ->where('attendance.idSubject', '=', $idSubject)
+                    ->select('attendance.*','classroom.nameClass','subject.nameSubject')
+                    ->get();
 
-                return view('attendance.diary',[
-                    'index' => 1,
-                    'attendance' => $attendance,
-                    'idClass' => $idClass,
-                    'idSubject' => $idSubject,
-                    'class' => $class,
-                    'subject' => $subject,
-                ]);
+                    return view('attendance.diary',[
+                        'index' => 1,
+                        'attendance' => $attendance,
+                        'assign' => $assign,
+                        'idAssign' => $idAssign
+                    ]);
             }
             
         }

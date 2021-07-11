@@ -106,6 +106,7 @@ class AssignController extends Controller
                             $assign->idSubject = $idSubject;
                             $assign->idTeacher = $idTeacher;
                             $assign->start_date = $startDate;
+                            $assign->available = 1;
                             $assign->save();
                             return redirect('assign');
                         }
@@ -116,6 +117,7 @@ class AssignController extends Controller
                         $assign->idSubject = $idSubject;
                         $assign->idTeacher = $idTeacher;
                         $assign->start_date = $startDate;
+                        $assign->available = 1;
                         $assign->save();
                         return redirect('assign');
                     }
@@ -127,6 +129,7 @@ class AssignController extends Controller
                     $assign->idSubject = $idSubject;
                     $assign->idTeacher = $idTeacher;
                     $assign->start_date = $startDate;
+                    $assign->available = 1;
                     $assign->save();
                     return redirect('assign');
                 }
@@ -137,6 +140,7 @@ class AssignController extends Controller
                 $assign->idSubject = $idSubject;
                 $assign->idTeacher = $idTeacher;
                 $assign->start_date = $startDate;
+                $assign->available = 1;
                 $assign->save();
                 return redirect('assign');
              }
