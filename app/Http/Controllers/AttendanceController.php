@@ -57,6 +57,7 @@ class AttendanceController extends Controller
             ->select('classroom.*', 'faculty.nameFaculty')
             ->where('classroom.available','=', 1)
             ->where('assign.idTeacher','=', $idTeacher)
+            ->distinct('assign.idClass')
             ->get();
             
             $idSubject = $request->get("idSubject");
@@ -64,13 +65,49 @@ class AttendanceController extends Controller
             ->join('assign', 'subject.idSubject', '=', 'assign.idSubject')
             ->where('subject.available','=', 1)
             ->where('assign.idTeacher','=', $idTeacher)
+            ->distinct('assign.idClass')
             ->get();
 
-            $data = DB::table('assign')
+            if(isset($idClass) || isset($idSubject)){
+                $check = DB::table('assign')
                 ->where('available','=', 1)
                 ->where('idTeacher','=', $idTeacher)
+                ->where('idClass','=', $idClass)
+                ->orwhere('idSubject','=', $idSubject)
                 ->select("*")
-                ->count();
+                ->get(); 
+
+                $count = count($check);
+                
+                if($count != null || $count > 0){
+                    foreach($check as $check)
+                    {
+                        
+                        $attendance = DB::table('attendance')
+                        ->join('subject','attendance.idSubject','=','subject.idSubject')
+                        ->join('classroom','attendance.idClass','=','classroom.idClass')
+                        ->where('attendance.idClass', '=', $check->idClass)
+                        ->where('attendance.idSubject', '=', $check->idSubject)
+                        ->select('attendance.*','classroom.nameClass','subject.nameSubject')
+                        ->get();
+                    }
+                    return view('attendance.diary',[
+                        'index' => 1,
+                        'attendance' => $attendance,
+                        'idClass' => $idClass,
+                        'idSubject' => $idSubject,
+                        'class' => $class,
+                        'subject' => $subject,
+                    ]);
+                }
+            }
+            
+            $data = DB::table('assign')
+            ->where('available','=', 1)
+            ->where('idTeacher','=', $idTeacher)
+            ->select("*")
+            ->count();
+            
             if($data != null || $data > 0){
                 $attendance = DB::table('attendance')
                 ->join('subject','attendance.idSubject','=','subject.idSubject')
@@ -86,7 +123,7 @@ class AttendanceController extends Controller
                     'idClass' => $idClass,
                     'idSubject' => $idSubject,
                     'class' => $class,
-                    'subject' => $subject
+                    'subject' => $subject,
                 ]);
             }
             
