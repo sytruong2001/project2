@@ -77,7 +77,6 @@ class DetailAttendanceController extends Controller
         ->where('detailattendance.idAttendance',$id)
         ->select('detailattendance.*','student.firstName','student.lastName','student.middleName')
         ->get();
-
         return view('attendance.updateDetail',[
             'index' => 1,
             'detail' => $detail,

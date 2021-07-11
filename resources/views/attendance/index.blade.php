@@ -77,13 +77,13 @@
                     <div class="col-sm-4">
                       <!-- radio -->
                       <div class="form-group">
-                          Họ tên sinh viên (ngày nghỉ/tổng số ngày ) 
+                          <h4>Họ tên sinh viên</h4>
                       </div>
                     </div>
                     <div class="col-sm-8">
                       <!-- radio -->
                       <div class="form-group"> 
-                          Tình trạng điểm danh
+                          <h4>Tình trạng điểm danh</h4>
                       </div>
                     </div>
                   </div>

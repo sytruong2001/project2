@@ -34,7 +34,21 @@
               
               <!-- /.card-header -->
               <div class="card-body">
-                
+                <div class="row" style="color: rgb(165, 9, 9)">
+                  <div class="col-sm-4">
+                    <!-- radio -->
+                    <div class="form-group">
+                        <h4>Họ tên sinh viên</h4>
+                    </div>
+                  </div>
+                  <div class="col-sm-8">
+                    <!-- radio -->
+                    <div class="form-group"> 
+                        <h4>Tình trạng điểm danh</h4>
+                    </div>
+                  </div>
+                </div>
+
                 <form action="{{ route('detailattendance.update', $idAttendance ) }}" method="post">
                   @csrf
                   @method("put")
@@ -44,7 +58,7 @@
                       <!-- radio -->
                       <div class="form-group">
                         {{ $index++}})  {{ $detail->idStudent}} - {{ $detail->lastName}} {{ $detail->middleName}} {{ $detail->firstName}}
-                        
+
                       </div>
                     </div>
                     <div class="col-sm-8">
