@@ -65,7 +65,7 @@ class AttendanceController extends Controller
             ->join('assign', 'subject.idSubject', '=', 'assign.idSubject')
             ->where('subject.available','=', 1)
             ->where('assign.idTeacher','=', $idTeacher)
-            ->distinct('assign.idClass')
+            ->distinct('assign.idSubject')
             ->get();
 
             if(isset($idClass) || isset($idSubject)){
