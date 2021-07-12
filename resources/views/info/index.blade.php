@@ -50,9 +50,9 @@
 
                     <li class="list-group-item">
                         <b>Giới tính: 
-                            @if ($teacher->gender == 0)
+                            @if ($teacher->gender == 1)
                                 {{ "Nam"}}
-                            @elseif ($teacher->gender == 1)
+                            @elseif ($teacher->gender == 0)
                                 {{ "Nữ"}}
                             @endif
                             

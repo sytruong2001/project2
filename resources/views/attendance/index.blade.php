@@ -73,7 +73,7 @@
               </div>
                 <div class="card-body">
 
-                  <div class="row">
+                  <div class="row" style="color: rgb(10, 2, 29)">
                     <div class="col-sm-4">
                       <!-- radio -->
                       <div class="form-group">
@@ -96,7 +96,8 @@
                           <!-- radio -->
                           <div class="form-group">
                             {{ $index++}})  {{ $student->idStudent}} - {{ $student->lastName}} {{ $student->middleName}} {{ $student->firstName}}
-                            
+                            <br>
+                            ({{ $student->birthday}})
                           </div>
                         </div>
                         <div class="col-sm-8">
