@@ -49,11 +49,20 @@ class FacultyController extends Controller
         if($request->isMethod("post")){
             $nameFaculty = $request->input("nameFaculty");
 
-            $faculty = new Faculty();
-            $faculty->nameFaculty = $nameFaculty;
+            $check = DB::table("faculty")
+                ->where("nameFaculty", "=", $nameFaculty)
+                ->where("available", "=", 1)
+                ->count();
+            if($check == 0 || $check == null){
+                $faculty = new Faculty();
+                $faculty->nameFaculty = $nameFaculty;
+                $faculty->available = 1;
 
-            $faculty->save();
+                $faculty->save();
+                return redirect('faculty');
+            }
             return redirect('faculty');
+            
         }
         return view("faculty.create");
     }

@@ -59,18 +59,29 @@ class TeacherController extends Controller
             $birthday = $request->input("birthday");
             $address = $request->input("address");
 
-            $teacher = new teacher();
-            $teacher->firstName = $firstName;
-            $teacher->middleName = $middleName;
-            $teacher->lastName = $lastName;
-            $teacher->gender = $gender;
-            $teacher->email = $email;
-            $teacher->password = md5($password);
-            $teacher->phone = $phone;
-            $teacher->birthday = $birthday;
-            $teacher->address = $address;
+            $check = DB::table("teacher")
+                ->where("firstName", "=", $firstName)
+                ->where("middleName", "=", $middleName)
+                ->where("lastName", "=", $lastName)
+                ->where("gender", "=", $gender)
+                ->where("birthday", "=", $birthday)
+                ->count();
+            if($check == 0 || $check == null){
+                $teacher = new teacher();
+                $teacher->firstName = $firstName;
+                $teacher->middleName = $middleName;
+                $teacher->lastName = $lastName;
+                $teacher->gender = $gender;
+                $teacher->email = $email;
+                $teacher->password = md5($password);
+                $teacher->phone = $phone;
+                $teacher->birthday = $birthday;
+                $teacher->address = $address;
+                $teacher->available = 1;
 
-            $teacher->save();
+                $teacher->save();
+                return redirect('teacher');
+            }
             return redirect('teacher');
         }
         return view("teacher.create");
@@ -152,6 +163,7 @@ class TeacherController extends Controller
         $data->phone = $phone;
         $data->birthday = $birthday;
         $data->address = $address;
+        
 
         $data->save();
         return redirect('teacher');

@@ -43,6 +43,7 @@ class StudentController extends Controller
     {
         $query = DB::table('classroom')
         ->join('faculty', 'classroom.idFaculty', '=', 'faculty.idFaculty')
+        ->where("classroom.available", "=", 1)
         ->select('classroom.*', 'faculty.nameFaculty')
         ->get();
         return view("student.create",['class' => $query]);
@@ -67,19 +68,31 @@ class StudentController extends Controller
             $birthday = $request->input("birthday");
             $address = $request->input("address");
 
-            $student = new student();
-            $student->firstName = $firstName;
-            $student->middleName = $middleName;
-            $student->lastName = $lastName;
-            $student->gender = $gender;
-            $student->idClass = $idClass;
-            $student->email = $email;
-            $student->phone = $phone;
-            $student->birthday = $birthday;
-            $student->address = $address;
+            $check = DB::table("student")
+                ->where("firstName", "=", $firstName)
+                ->where("middleName", "=", $middleName)
+                ->where("lastName", "=", $lastName)
+                ->where("gender", "=", $gender)
+                ->where("birthday", "=", $birthday)
+                ->count();
+            if($check == 0 || $check == null){
+                $student = new student();
+                $student->firstName = $firstName;
+                $student->middleName = $middleName;
+                $student->lastName = $lastName;
+                $student->gender = $gender;
+                $student->idClass = $idClass;
+                $student->email = $email;
+                $student->phone = $phone;
+                $student->birthday = $birthday;
+                $student->address = $address;
+                $student->available = 1;
 
-            $student->save();
+                $student->save();
+                return redirect('student');
+            }
             return redirect('student');
+            
         }
             return view("student.create");
     }

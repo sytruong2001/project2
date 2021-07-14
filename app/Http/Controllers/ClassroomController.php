@@ -52,12 +52,12 @@ class ClassroomController extends Controller
     public function create()
     {
         $query = DB::table("faculty");
-        $query = $query->orderBy("idFaculty","Desc");
+        $query = $query->where("available", "=", 1);
         $query = $query->select("*");
         $faculty = $query->paginate(10);
 
         $query = DB::table("major");
-        $query = $query->orderBy("idMajor","Desc");
+        $query = $query->where("available", "=", 1);
         $query = $query->select("*");
         $major = $query->paginate(10);
 
@@ -77,12 +77,22 @@ class ClassroomController extends Controller
             $idFaculty = $request->input("nameFaculty");
             $idMajor = $request->input("nameMajor");
 
-            $class = new Classroom();
-            $class->nameClass = $nameClass;
-            $class->idFaculty = $idFaculty;
-            $class->idMajor = $idMajor;
+            $check = DB::table("classroom")
+                ->where("nameClass", "=", $nameClass)
+                ->where("idFaculty", "=", $idFaculty)
+                ->where("idMajor", "=", $idMajor)
+                ->where("available", "=", 1)
+                ->count();
+            if($check == 0 || $check == null){
+                $class = new Classroom();
+                $class->nameClass = $nameClass;
+                $class->idFaculty = $idFaculty;
+                $class->idMajor = $idMajor;
+                $class->available = 1;
 
-            $class->save();
+                $class->save();
+                return redirect('class');
+            }
             return redirect('class');
 
         }

@@ -58,18 +58,22 @@ class AssignController extends Controller
     public function create()
     {
         $query = DB::table("classroom");
+        $query = $query->where("available", "=", 1);
         $query = $query->select("*");
         $class = $query->paginate(10);
 
         $query = DB::table("subject");
+        $query = $query->where("available", "=", 1);
         $query = $query->select("*");
         $subject = $query->paginate(10);
         
         $query = DB::table("teacher");
+        $query = $query->where("available", "=", 1);
         $query = $query->select("*");
         $teacher = $query->paginate(10);
 
         $query = DB::table("faculty");
+        $query = $query->where("available", "=", 1);
         $query = $query->select("*");
         $faculty = $query->paginate(10);
 

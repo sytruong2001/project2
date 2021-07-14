@@ -44,6 +44,7 @@ class SubjectController extends Controller
     public function create()
     {
         $query = DB::table("major");
+        $query = $query->where("available", "=", 1);
         $query = $query->select("*");
         $major = $query->paginate(10);
         return view("subject.create",[
@@ -63,14 +64,22 @@ class SubjectController extends Controller
             $nameSubject = $request->input("nameSubject");
             $idMajor = $request->input("idMajor");
             $duration = $request->input("duration");
+            $check = DB::table("subject")
+                ->where("nameSubject", "=", $nameSubject)
+                ->where("duration", "=", $duration)
+                ->count();
+            if($check == 0 || $check == null){
+                $subject = new subject();
+                $subject->nameSubject = $nameSubject;
+                $subject->idMajor = $idMajor;
+                $subject->duration = $duration;
+                $subject->available = 1;
 
-            $subject = new subject();
-            $subject->nameSubject = $nameSubject;
-            $subject->idMajor = $idMajor;
-            $subject->duration = $duration;
-
-            $subject->save();
+                $subject->save();
+                return redirect('subject');
+            }
             return redirect('subject');
+            
         }
             return view("student.create");
     }

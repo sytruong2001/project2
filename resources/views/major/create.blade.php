@@ -32,11 +32,6 @@
               <div class="card-header">
                 <h3 class="card-title">Thêm mới ngành học</h3>
               </div>
-              @if(isset($message))
-                <p style="color:rgb(255, 81, 0);">
-                    {{ $mes }}
-                </p>
-              @endif
               <!-- /.card-header -->
               <!-- form start -->
               <form action="{{ route('major.store')}}" method="post">

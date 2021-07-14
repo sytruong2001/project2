@@ -48,13 +48,21 @@ class MajorController extends Controller
         if($request->isMethod("post")){
             $nameMajor = $request->input("nameMajor");
 
-            $major = new Major();
-            $major->nameMajor = $nameMajor;
+            $check = DB::table("major")
+                ->where("nameMajor", "=", $nameMajor)
+                ->where("available", "=", 1)
+                ->count();
+            if($check == 0 || $check == null){
+                $major = new Major();
+                $major->nameMajor = $nameMajor;
+                $major->available = 1;
 
-            $major->save();
+                $major->save();
+                return redirect('major');
+            }
             return redirect('major');
         }
-        return view("major.create");
+        return view("major");
     }
 
     /**
