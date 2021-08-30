@@ -41,6 +41,11 @@
                     <th>STT</th>
                     <th>Mã điểm danh</th>
                     <th>Tên sinh viên</th>
+                    <th>Tên lớp</th>
+                    <th>Tên môn học</th>
+                    <th>Ngày điểm danh</th>
+                    <th>Thời gian bắt đầu</th>
+                    <th>Thời gian kết thúc</th>
                     <th>Trạng thái</th>
                   </tr>
                   </thead>
@@ -50,6 +55,31 @@
                         <th>{{ $index++}}</th>
                         <th>{{ $detail->idAttendance}}</th>
                         <th>{{ $detail->lastName}} {{ $detail->middleName}} {{ $detail->firstName}}</th>
+                        <th>
+                          @if (!empty($classs))
+                            @foreach ($classs as $class)
+                              @if ($class->idClass == $detail->idClass)
+                                @foreach ($facultys as $faculty)
+                                  @if ($faculty->idFaculty == $class->idFaculty)
+                                      {{$class->nameClass}}{{$faculty->nameFaculty}}
+                                  @endif
+                                @endforeach  
+                              @endif
+                            @endforeach
+                          @endif
+                        </th>
+                        <th>
+                          @if (!empty($subjects))
+                            @foreach ($subjects as $subject)
+                              @if ($subject->idSubject == $detail->idSubject)
+                                      {{$subject->nameSubject}}
+                              @endif
+                            @endforeach
+                          @endif
+                        </th>
+                        <th>{{ $detail->dateAttendance}}</th>
+                        <th>{{ $detail->start}}</th>
+                        <th>{{ $detail->end}}</th>
                         <th>
                           @if ($detail->status == 0)
                             {{ "Đi học" }}
@@ -71,6 +101,11 @@
                     <th>STT</th>
                     <th>Mã điểm danh</th>
                     <th>Tên sinh viên</th>
+                    <th>Tên lớp</th>
+                    <th>Tên môn học</th>
+                    <th>Ngày điểm danh</th>
+                    <th>Thời gian bắt đầu</th>
+                    <th>Thời gian kết thúc</th>
                     <th>Trạng thái</th>
                   </tr>
                   </tfoot>

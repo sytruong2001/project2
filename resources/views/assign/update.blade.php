@@ -1,7 +1,5 @@
 @extends('layout.sidebar')
 
-
-  
   <!-- Content Wrapper. Contains page content -->
   @section('content')
 
@@ -99,8 +97,7 @@
                             <option value="{{ $teacher->idTeacher }}" 
                                 @if( $teacher->idTeacher == $assign->idTeacher)
                                   {{"selected"}}
-                                @endif
-                            >
+                                @endif >
                                 {{ $teacher->lastName }} {{ $teacher->middleName }} {{ $teacher->firstName }}
                             </option>
                         @endforeach
@@ -117,6 +114,7 @@
                   <button type="submit" class="btn btn-primary">Cập nhật</button>
                 </div>
               </form>
+              @endforeach
             </div>
             <!-- /.card -->
         </div>

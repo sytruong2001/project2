@@ -51,15 +51,25 @@ class DetailAttendanceController extends Controller
     public function show($id)
     {
         $detail = DB::table('detailattendance')
-        ->join('student','detailattendance.idStudent','=','student.idStudent')
-        ->join('attendance','detailattendance.idAttendance','=','attendance.idAttendance')
-        ->where('detailattendance.idAttendance',$id)
-        ->select('detailattendance.*','student.firstName','student.lastName','student.middleName')
-        ->get();
+            ->join('student','detailattendance.idStudent','=','student.idStudent')
+            ->join('attendance','detailattendance.idAttendance','=','attendance.idAttendance')
+            ->where('detailattendance.idAttendance',$id)
+            ->select('detailattendance.*','student.firstName','student.lastName','student.middleName', 'attendance.*')
+            ->get();
 
+        $class = DB::table('classroom')
+            ->get();
+        $faculty = DB::table('faculty')
+            ->get();
+        $subject = DB::table('subject')
+            ->get();
+        
         return view('attendance.detailAttendance',[
             'index' => 1,
-            'detail' => $detail
+            'detail' => $detail,
+            'subjects' => $subject,
+            'classs' => $class,
+            'facultys' => $faculty
         ]);
     }
 

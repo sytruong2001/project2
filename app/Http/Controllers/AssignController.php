@@ -171,26 +171,22 @@ class AssignController extends Controller
      */
     public function edit($id)
     {
-        $query = DB::table("assign");
-        $query = $query->where("idAssign","$id");
-        $query = $query->select("*");
-        $assign = $query->paginate(10);
+        
+        $assign = DB::table("assign")
+        ->where("idAssign","$id")
+        ->get();
 
-        $query = DB::table("subject");
-        $query = $query->select("*");
-        $subject = $query->paginate(10);
+        $subject = DB::table("subject")
+        ->get();
 
-        $query = DB::table("teacher");
-        $query = $query->select("*");
-        $teacher = $query->paginate(10);
+        $teacher = DB::table("teacher")
+        ->get();
 
-        $query = DB::table("classroom");
-        $query = $query->select("*");
-        $class = $query->paginate(10);
+        $class = DB::table("classroom")
+        ->get();
 
-        $query = DB::table("faculty");
-        $query = $query->select("*");
-        $faculty = $query->paginate(10);
+        $faculty = DB::table("faculty")
+        ->get();
 
         return view("assign.update",[
             'class' => $class, 
