@@ -31,7 +31,43 @@ class AssignController extends Controller
         ->where('available','=', 1)
         ->get();
 
-        $query = DB::table('assign')
+        // $query = DB::table('assign')
+        // ->join('classroom', 'assign.idClass', '=', 'classroom.idClass')
+        // ->join('faculty', 'assign.idFaculty', '=', 'faculty.idFaculty')
+        // ->join('subject', 'assign.idSubject', '=', 'subject.idSubject')
+        // ->join('teacher', 'assign.idTeacher', '=', 'teacher.idTeacher')
+        // ->where('assign.idClass', '=', $idClass)
+        // ->orwhere('assign.idTeacher', '=', $idTeacher)
+        // ->where('assign.available', '=', 1)
+        // ->select('assign.*', 'classroom.nameClass', 'subject.nameSubject','faculty.nameFaculty', 'teacher.firstName', 'teacher.middleName', 'teacher.lastName' )
+        // ->get();
+        // $time = 0;
+        // if($query != null || $query > 0){
+        // foreach ($query as $query) {
+        //     $attend = DB::table("attendance")
+        //     ->where('attendance.idClass', '=', $query->idClass)
+        //     ->where('attendance.idSubject', '=', $query->idSubject)
+        //     ->get();
+
+        //     $subject = DB::table("subject")
+        //     ->where('subject.idSubject', '=', $query->idSubject)
+        //     ->select('subject.duration')
+        //     ->get();
+        //     $count = DB::table("attendance")
+        //     ->where('attendance.idClass', '=', $query->idClass)
+        //     ->where('attendance.idSubject', '=', $query->idSubject)
+        //     ->count();
+
+        //     foreach ($subject as $subject) {
+        //         $duration = (int)$subject->duration; 
+        //     }
+        //     foreach ($attend as $attend) {
+        //         $hour = (((int)$attend->end - (int)$attend->start) * $count);
+        //     }
+        //     $time = $duration - ($hour);
+        // }}
+        
+        $data = DB::table('assign')
         ->join('classroom', 'assign.idClass', '=', 'classroom.idClass')
         ->join('faculty', 'assign.idFaculty', '=', 'faculty.idFaculty')
         ->join('subject', 'assign.idSubject', '=', 'subject.idSubject')
@@ -42,11 +78,12 @@ class AssignController extends Controller
         ->select('assign.*', 'classroom.nameClass', 'subject.nameSubject','faculty.nameFaculty', 'teacher.firstName', 'teacher.middleName', 'teacher.lastName' )
         ->get();
         return view("assign.index",[
-            'data' => $query,
+            'data' => $data,
             'idClass' => $idClass,
             'idTeacher' => $idTeacher,
             'class' => $class,
             'teacher' => $teacher,
+            // 'time' => $time
         ]);
     }
 

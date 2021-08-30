@@ -30,18 +30,23 @@
 
             <div class="card">
               <div class="card-header">
-                <h3 class="card-title">Danh sách giảng viên</h3>
-                <br>
-                <h3 class="btn btn-success">
-                  <a href="{{ route('teacher.create')}}">
-                    Thêm mới
-                  </a>
-                </h3>
-                <h3 class="btn btn-warning">
-                  <a href="{{ route('teacher.insert-excel')}}">
-                    Thêm bằng excel
-                  </a>
-                </h3>
+                <div class="row">
+                  <div class="col-sm-10">
+                    <h3 class="card-title">Danh sách giảng viên</h3>
+                  </div>
+                  <div class="col-sm-2"> 
+                    <h3 class="btn btn-success">
+                      <a href="{{ route('teacher.create')}}">
+                        Thêm mới
+                      </a>
+                    </h3>
+                    <h3 class="btn btn-warning">
+                      <a href="{{ route('teacher.insert-excel')}}">
+                        Thêm bằng excel
+                      </a>
+                    </h3>
+                  </div>
+                </div>                
               </div>
 
               <!-- /.card-header -->
