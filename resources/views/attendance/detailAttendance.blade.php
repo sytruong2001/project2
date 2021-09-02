@@ -89,8 +89,6 @@
                             {{ "Muộn"}}
                           @elseif($detail->status == 3)
                             {{ "Nghỉ có phép" }}
-                          @elseif($detail->status == 4)
-                            {{ "Nghỉ không phép" }}
                           @endif
                         </th>
                       </tr>

@@ -108,7 +108,6 @@
                               <b><input type="radio" id="status" name="{{ $student->idStudent}}" value="1">Nghỉ học</b> &nbsp;
                               <b><input type="radio" id="status" name="{{ $student->idStudent}}" value="2">Muộn</b> &nbsp;
                               <b><input type="radio" id="status" name="{{ $student->idStudent}}" value="3">Có phép</b> &nbsp;
-                              <b><input type="radio" id="status" name="{{ $student->idStudent}}" value="4">Không phép</b> &nbsp;
                             </div>                       
                           </div>
                         </div>

@@ -31,6 +31,7 @@ class AuthenticateController extends Controller
             // var_dump($request->session()->get('admin_name')[0]);
 
                 // return Session::get('admin_id');
+            
             return redirect('home');
         }else{
             if($user != null || $countUser > 0){

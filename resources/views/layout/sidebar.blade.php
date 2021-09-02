@@ -50,9 +50,6 @@
       <li class="nav-item d-none d-sm-inline-block">
         <a href="home" class="nav-link">Home</a>
       </li>
-      <li class="nav-item d-none d-sm-inline-block">
-        <a href="contact" class="nav-link">Contact</a>
-      </li>
     </ul>
 
     <!-- Right navbar links -->
@@ -256,6 +253,16 @@
               <i class="nav-icon fas fa-table"></i>
               <p>
                 Phân công
+              </p>
+            </a>
+          </li>
+
+          {{-- Thao tác với thống kê --}}
+          <li class="nav-item">
+            <a href="{{ route('detailattendance.index')}}" class="nav-link">
+              <i class="nav-icon fas fa-table"></i>
+              <p>
+                Thống kê
               </p>
             </a>
           </li>

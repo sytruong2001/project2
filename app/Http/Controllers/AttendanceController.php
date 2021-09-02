@@ -263,23 +263,25 @@ class AttendanceController extends Controller
      */
     public function store(Request $request)
     {
+        //lấy dữ liệu từ form khi điểm danh
         $idAssign = $request->get("idAssign");
         $assign = DB::table("assign")
             ->where("idAssign", "=", $idAssign)
             ->get();
+        //từ mã phân công có thể lấy ra được mã lớp và mã môn học
         foreach($assign as $assign){
             $idClass = $assign->idClass;
             $idSubject = $assign->idSubject;
         }
-        
+        //thời gian bắt đầu và kết thúc 
         $start = $request->get("start");
         
         $end = $request->get("end");
-        
+        //dữ liệu của sinh viên được lấy ra dựa vào mã lớp lấy được ở trên
         $student = DB::table("student")
             ->where("idClass", "=", $idClass)
             ->get();
-        
+        // lưu tất cả dữ liệu lấy được ở trên đưa vào bảng điểm danh
         $date = new Datetime();
         
         $attendance = new Attendance();
@@ -290,13 +292,14 @@ class AttendanceController extends Controller
         $attendance->end = $end;
         $attendance->save();
 
+        // sau khi lưu vào bảng điểm danh thì lấy mã điểm danh vừa mới thêm
         $Att = DB::table('Attendance')->orderBy('idAttendance', 'desc')->first();
         $idAttendance = $Att->idAttendance;
-
+        //dùng vòng lặp để lấy ra được mã sinh viên và trạng thái điểm danh lấy từ mã sinh viên request từ bên form gửi qua 
         foreach($student as $student){
             $idStudent = $student->idStudent;
             $status = $_REQUEST[$student->idStudent];
-
+        // lưu dữ liệu vào bảng điểm danh chi tiết
             $data = new DetailAttendance();
             $data->idStudent = $idStudent;
             $data->idAttendance = $idAttendance;

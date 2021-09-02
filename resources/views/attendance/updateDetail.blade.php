@@ -69,14 +69,19 @@
                           <b><input type="radio" id="status" name="{{ $detail->idStudent}}" value="1" @if($detail->status == 1){{ "checked" }}@endif>Nghỉ học</b> &nbsp;
                           <b><input type="radio" id="status" name="{{ $detail->idStudent}}" value="2" @if($detail->status == 2){{ "checked" }}@endif>Muộn</b> &nbsp;
                           <b><input type="radio" id="status" name="{{ $detail->idStudent}}" value="3" @if($detail->status == 3){{ "checked" }}@endif>Có phép</b> &nbsp;
-                          <b><input type="radio" id="status" name="{{ $detail->idStudent}}" value="4" @if($detail->status == 4){{ "checked" }}@endif>Không phép</b> &nbsp;
                         </div>                       
                       </div>
                     </div>
                   </div>
                   @endforeach
-                  <div >
-                    <button class="btn btn-success">Cập nhật</button>
+                  <div class="row">
+                    <div class="col-sm-6">
+                    </div>
+                    <div class="col-sm-2">
+                      <button class="btn btn-success">Cập nhật</button>
+                    </div>
+                    <div class="col-sm-4">
+                    </div>
                   </div>
                 </form>
                 
