@@ -70,25 +70,30 @@
                   </tr>
                   </thead>
                   <tbody>
-                    @foreach ($attendance as $attendance)
+                    @foreach ($students as $student)
                       <tr>
                         <th>{{ $index++}}</th>
                         <th>
-                            @foreach ($students as $student)
-                                @if ($student->idStudent != null)
-                                    @if (($student->idStudent) == ($attendance->idStudent))
-                                        {{ $student->lastName}} {{ $student->middleName}} {{ $student->firstName}}
-                                    @endif
-                                @endif
-                            @endforeach
-                        
+                          {{ $student->lastName}} {{ $student->middleName}} {{ $student->firstName}}
                         </th>
-                        <th>{{ $attendance->nameClass}}</th>
-                        <th>{{ $attendance->nameSubject}}</th>
+                        <th>
+                          {{ $student->nameClass}}
+                        </th>
+                        <th>
+                          @foreach ($subjects as $subject)
+                              @if ($student->idStudent != null)
+                                  @if (($student->idStudent) == ($subject->idStudent))
+                                    {{ $subject->nameSubject}}
+                                  @endif
+                              @endif
+                          @endforeach
+                          
+                        </th>
                         <th style="color:blue; text-align:center">
                             @foreach ($dihocs as $dihoc)
+                              
                                 @if ($dihoc->idStudent != null)
-                                    @if (($dihoc->idStudent) == ($attendance->idStudent))
+                                    @if (($dihoc->idStudent) == ($student->idStudent))
                                         {{ $dihoc->count_dihoc}}
                                     @endif
                                 @endif
@@ -97,11 +102,9 @@
                         <th style="color:red; text-align:center">
                             @foreach ($nghiKps as $nghiKp)
                                 @if ($nghiKp->idStudent != null)
-                                    @if (($nghiKp->idStudent) == ($attendance->idStudent))
+                                    @if (($nghiKp->idStudent) == ($student->idStudent))
                                         @if ($nghiKp->count_nghiKp > 0)
                                             {{ $nghiKp->count_nghiKp }}
-                                        @elseif($nghiKp->count_nghiKp == null )
-                                            {{ "0"}}
                                         @endif
                                     @endif
                                 @endif
@@ -110,7 +113,7 @@
                         <th style="color:red; text-align:center">
                             @foreach ($nghiPs as $nghiP)
                                 @if ($nghiP->idStudent != null)
-                                    @if (($nghiP->idStudent) == ($attendance->idStudent))
+                                    @if (($nghiP->idStudent) == ($student->idStudent))
                                         @if ($nghiP->count_nghiP > 0)
                                             {{ $nghiP->count_nghiP }}
                                         @elseif($nghiP->count_nghiP == null )
@@ -123,7 +126,7 @@
                         <th style="color:rgb(212, 58, 19); text-align:center">
                             @foreach ($dimuons as $muon)
                                 @if ($muon->idStudent != null)
-                                    @if (($muon->idStudent) == ($attendance->idStudent))
+                                    @if (($muon->idStudent) == ($student->idStudent))
                                         @if ($muon->count_dimuon > 0)
                                             {{ $muon->count_dimuon }}
                                         @elseif($muon->count_dimuon == null )

@@ -45,16 +45,23 @@ class DetailAttendanceController extends Controller
                     
                     foreach($idSubject as $idSubject){
                         
-                        $attendance = DB::table('attendance')
-                        ->join('subject','attendance.idSubject','=','subject.idSubject')
-                        ->join('classroom','attendance.idClass','=','classroom.idClass')
-                        ->join('detailattendance','attendance.idAttendance','=','detailattendance.idAttendance')
-                        ->where('attendance.idClass', '=', $idClass->idClass)
-                        ->where('attendance.idSubject', '=', $idSubject->idSubject)
-                        ->select('attendance.*','classroom.nameClass','subject.nameSubject','detailattendance.*')
-                        ->distinct('detailattendance.idStudent')
-                        ->get();
+                        // $attendance0 = DB::table('attendance')
+                        // ->join('subject','attendance.idSubject','=','subject.idSubject')
+                        // ->join('classroom','attendance.idClass','=','classroom.idClass')
+                        // ->where('attendance.idClass', '=', $idClass->idClass)
+                        // ->where('attendance.idSubject', '=', $idSubject->idSubject)
+                        // ->select('attendance.*','classroom.nameClass','subject.nameSubject')
+                        // ->distinct()
+                        // ->get();
 
+                        $subject = DB::table('assign')
+                        ->join('subject','assign.idSubject','=','subject.idSubject')
+                        ->join('classroom','assign.idClass','=','classroom.idClass')
+                        ->join('student', 'classroom.idClass', '=', 'student.idClass')
+                        ->where('assign.idClass', '=', $idClass->idClass)
+                        ->where('assign.idSubject', '=', $idSubject->idSubject)
+                        ->select('assign.*','classroom.nameClass','student.*','subject.nameSubject')
+                        ->get(); 
                         $countAttendance = DB::table('attendance')
                         ->where('attendance.idClass', '=', $idClass->idClass)
                         ->where('attendance.idSubject', '=', $idSubject->idSubject)
@@ -63,76 +70,98 @@ class DetailAttendanceController extends Controller
                         $idAtt = DB::table('attendance')
                         ->where('attendance.idClass', '=', $idClass->idClass)
                         ->where('attendance.idSubject', '=', $idSubject->idSubject)
+                        ->select('idAttendance')
                         ->get();
                         $student = DB::table('student')
-                                ->where('idClass', '=', $idClass->idClass)
+                                ->join('classroom', 'student.idClass','=', 'classroom.idClass')
+                                ->select('student.*', 'classroom.nameClass')
+                                ->where('student.idClass', '=', $idClass->idClass)
                                 ->get();
+                        $dihoc = [];
+                        $dimuon = [];
+                        $nghiP = [];
+                        $nghiKp = [];
                         
+                        for($i = 0 ; $i <= (sizeof($idAtt)-1) ; ++$i){
+                            $dihoc = DB::table('detailattendance')
+                                ->select(DB::raw('DISTINCT idStudent, COUNT(status) AS count_dihoc'))
+                                ->where('status', 0)
+                                ->where('idAttendance','=',$idAtt[$i]->idAttendance)
+                                ->groupBy('idStudent')
+                                ->orderBy('count_dihoc', 'desc')
+                                ->get();
+                            
+                            $dimuon = DB::table('detailattendance')
+                                ->select(DB::raw('idStudent, COUNT(status) AS count_dimuon'))
+                                ->where('status', 2)
+                                ->where('idAttendance',$idAtt[$i]->idAttendance)
+                                ->groupBy('idStudent')
+                                ->orderBy('count_dimuon', 'desc')
+                                ->get();
+                            
+                            $nghiP = DB::table('detailattendance')
+                                ->select(DB::raw('idStudent, COUNT(status) AS count_nghiP'))
+                                ->where('status', '=', 3)
+                                ->where('idAttendance',$idAtt[$i]->idAttendance)
+                                ->groupBy('idStudent')
+                                ->orderBy('count_nghiP', 'desc')
+                                ->get();
                                 
-                                $dihoc = DB::table('detailattendance')
-                                    ->select(DB::raw('DISTINCT idStudent, COUNT(status) AS count_dihoc'))
-                                    ->where('status', 0)
-                                    ->groupBy('idStudent','idAttendance')
-                                    ->orderBy('count_dihoc', 'desc')
-                                    ->get();
-                                
-                                $dimuon = DB::table('detailattendance')
-                                    ->select(DB::raw('DISTINCT idStudent, COUNT(status) AS count_dimuon,idAttendance'))
-                                    ->where('status', 2)
-                                    ->groupBy('idStudent','idAttendance')
-                                    ->orderBy('count_dimuon', 'desc')
-                                    ->get();
-                                    dd($dimuon);
-                                $nghiP = DB::table('detailattendance')
-                                    ->select(DB::raw('DISTINCT idStudent, COUNT(status) AS count_nghiP'))
-                                    ->where('status', '=', 3)
-                                    ->groupBy('idStudent','idAttendance')
-                                    ->orderBy('count_nghiP', 'desc')
-                                    ->get();
-                                $nghiKp = DB::table('detailattendance')
-                                    ->select(DB::raw('DISTINCT idStudent, COUNT(status) AS count_nghiKp'))
-                                    ->where('status', '=', 1)
-                                    ->groupBy('idStudent','idAttendance')
-                                    ->orderBy('count_nghiKp', 'desc')
-                                    ->get();
-    
-                                // foreach($nghiKp as $nghiKps){
-                                //     foreach($dihoc as $dihocs){
-                                //         foreach($dimuon as $dimuons){
-                                //             foreach($nghiP as $nghiPs){
-                                //                 if($nghiKps->idStudent == $dihocs->idStudent && $nghiKps->idStudent == $dimuons->idStudent && $nghiKps->idStudent == $nghiPs->idStudent){
-                                //                     $nghi = $nghiKps->count_nghiKp;
-                                //                     if($nghiPs->count_nghiP % 2 == 0){
-                                //                         $nghi += (1*($nghiPs->count_nghiP/2));
-                                //                     }elseif($nghiPs->count_nghiP % 2 == 1){
-                                //                         $nghi += ($nghiPs->count_nghiP/2);
-                                //                     }elseif($dimuons->count_dimuon % 3 == 0){
-                                //                         $nghi += (1*$dimuons->count_dimuon/3);
-                                //                     }elseif($dimuons->count_dimuon % 3 == 1){
-                                //                         $nghi += ($dimuons->count_dimuon/3);
-                                //                     }
-                                //                     $per = $nghi/$countAttendance;
-                                //                     array_push($arr, $per);
-                                //                 }
-                                //             }
-                                //         }
-                                //     }
-                                // }
-                                // var_dump($arr);
-                                return view('attendance.statistical',[
-                                    'index' => 1,
-                                    'attendance' => $attendance,
-                                    'assign' => $assign,
-                                    'idAssign' => $idAssign,
-                                    'students' => $student,
-                                    'dihocs' => $dihoc,
-                                    'dimuons' => $dimuon,
-                                    'nghiKps' => $nghiKp,
-                                    'nghiPs' => $nghiP,
-                                    // 'arrs' => $arr,
-                                    'countAttendance' => $countAttendance,
-                                ]);
-                        
+                            $nghiKp = DB::table('detailattendance')
+                                ->select(DB::raw('idStudent, COUNT(status) AS count_nghiKp'))
+                                ->where('status', '=', 1)
+                                ->where('idAttendance',$idAtt[$i]->idAttendance)
+                                ->groupBy('idStudent')
+                                ->orderBy('count_nghiKp', 'desc')
+                                ->get();
+                            // return view('attendance.statistical',[
+                            //     'index' => 1,
+                            //     'assign' => $assign,
+                            //     'idAssign' => $idAssign,
+                            //     'students' => $student,
+                            //     'dihocs' => $dihoc,
+                            //     'dimuons' => $dimuon,
+                            //     'nghiKps' => $nghiKp,
+                            //     'nghiPs' => $nghiP,
+                            //     'countAttendance' => $countAttendance,
+                            //     'subjects' => $subject,
+                            // ]);
+                        }
+                        return view('attendance.statistical',[
+                            'index' => 1,
+                            'assign' => $assign,
+                            'idAssign' => $idAssign,
+                            'students' => $student,
+                            'dihocs' => $dihoc,
+                            'dimuons' => $dimuon,
+                            'nghiKps' => $nghiKp,
+                            'nghiPs' => $nghiP,
+                            'countAttendance' => $countAttendance,
+                            'subjects' => $subject,
+                        ]);
+                        //         // foreach($nghiKp as $nghiKps){
+                        //         //     foreach($dihoc as $dihocs){
+                        //         //         foreach($dimuon as $dimuons){
+                        //         //             foreach($nghiP as $nghiPs){
+                        //         //                 if($nghiKps->idStudent == $dihocs->idStudent && $nghiKps->idStudent == $dimuons->idStudent && $nghiKps->idStudent == $nghiPs->idStudent){
+                        //         //                     $nghi = $nghiKps->count_nghiKp;
+                        //         //                     if($nghiPs->count_nghiP % 2 == 0){
+                        //         //                         $nghi += (1*($nghiPs->count_nghiP/2));
+                        //         //                     }elseif($nghiPs->count_nghiP % 2 == 1){
+                        //         //                         $nghi += ($nghiPs->count_nghiP/2);
+                        //         //                     }elseif($dimuons->count_dimuon % 3 == 0){
+                        //         //                         $nghi += (1*$dimuons->count_dimuon/3);
+                        //         //                     }elseif($dimuons->count_dimuon % 3 == 1){
+                        //         //                         $nghi += ($dimuons->count_dimuon/3);
+                        //         //                     }
+                        //         //                     $per = $nghi/$countAttendance;
+                        //         //                     array_push($arr, $per);
+                        //         //                 }
+                        //         //             }
+                        //         //         }
+                        //         //     }
+                        //         // }
+                        // }
                          
                     }
                 }   
