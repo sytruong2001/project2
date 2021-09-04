@@ -54,12 +54,6 @@ class DetailAttendanceController extends Controller
                         ->select(DB::raw('DISTINCT student.idStudent, classroom.nameClass,student.*,subject.nameSubject'))
                         ->get();
                         // dd($student);
-                        $detail = DB::table('attendance')
-                        ->where('attendance.idClass', '=', $idClass->idClass)
-                        ->where('attendance.idSubject', '=', $idSubject->idSubject)
-                        ->select('attendance.idAttendance')
-                        ->get();
-                        // dd($detail);
                         $countAttendance = DB::table('attendance')
                         ->where('attendance.idClass', '=', $idClass->idClass)
                         ->where('attendance.idSubject', '=', $idSubject->idSubject)
@@ -69,49 +63,37 @@ class DetailAttendanceController extends Controller
                         $nghiP = [];
                         $nghiKp = [];
                         $tong = 0;
-                            // dd($id->idAttendance);
-                            // $a = DB::table('attendance')
-                            // ->where('attendance.idClass', '=', $idClass->idClass)
-                            // ->where('attendance.idSubject', '=', $idSubject->idSubject)
-                            // ->select('attendance.idAttendance')
-                            // ->get();
-                            // foreach($a as $a){
-                            //     $idAtt = $a->idAttendance;
-                            //     $danhsach = DB::table('detailattendance')
-                            //     ->join('attendance', 'detailattendance.idAttendance', '=', 'attendance.idAttendance')
-                            //     ->where('detailattendance.idAttendance',$idAtt)
-                            //     ->get();
-                            //     foreach($danhsach as $key => $value){
-                            //         $danhsach;
-                            //         echo $danhsach;
-                            //     }
-                            //     // dd($danhsach);
-                            // }
-                            //     dd($danhsach);
                             $dihoc = DB::table('detailattendance')
-                                ->select(DB::raw('DISTINCT idStudent, COUNT(status) AS count_dihoc,idAttendance'))
+                                ->select(DB::raw('idStudent, COUNT(status) AS count_dihoc'))
                                 ->where('status', 0)
-                                ->groupBy('idStudent','idAttendance')
+                                ->where('detailattendance.idClass', '=', $idClass->idClass)
+                                ->where('detailattendance.idSubject', '=', $idSubject->idSubject)
+                                ->groupBy('idStudent')
                                 ->orderBy('count_dihoc', 'desc')
                                 ->get();
                             $dimuon = DB::table('detailattendance')
-                                ->select(DB::raw('idStudent, COUNT(status) AS count_dimuon,idAttendance'))
+                                ->select(DB::raw('idStudent, COUNT(status) AS count_dimuon'))
                                 ->where('status', 2)
-                                ->groupBy('idStudent','idAttendance')
+                                ->where('detailattendance.idClass', '=', $idClass->idClass)
+                                ->where('detailattendance.idSubject', '=', $idSubject->idSubject)
+                                ->groupBy('idStudent')
                                 ->orderBy('count_dimuon', 'desc')
                                 ->get();
                             // dd($dimuon);
                             $nghiP = DB::table('detailattendance')
-                                ->select(DB::raw('idStudent, COUNT(status) AS count_nghiP,idAttendance'))
+                                ->select(DB::raw('idStudent, COUNT(status) AS count_nghiP'))
                                 ->where('status', '=', 3)
-                                ->groupBy('idStudent','idAttendance')
+                                ->where('detailattendance.idClass', '=', $idClass->idClass)
+                                ->where('detailattendance.idSubject', '=', $idSubject->idSubject)
+                                ->groupBy('idStudent')
                                 ->orderBy('count_nghiP', 'desc')
                                 ->get();
                                 
                             $nghiKp = DB::table('detailattendance')
-                                ->select(DB::raw('idStudent, COUNT(status) AS count_nghiKp,idAttendance'))
+                                ->select(DB::raw('idStudent, COUNT(status) AS count_nghiKp'))
                                 ->where('status', '=', 1)
-                                ->groupBy('idStudent','idAttendance')
+                                ->where('detailattendance.idClass', '=', $idClass->idClass)
+                                ->where('detailattendance.idSubject', '=', $idSubject->idSubject)
                                 ->groupBy('idStudent')
                                 ->orderBy('count_nghiKp', 'desc')
                                 ->get();
@@ -125,7 +107,6 @@ class DetailAttendanceController extends Controller
                             'nghiKps' => $nghiKp,
                             'nghiPs' => $nghiP,
                             'countAttendance' => $countAttendance,
-                            'details' => $detail,
                             'tong'=> $tong,
                         ]);
                         //         // foreach($nghiKp as $nghiKps){

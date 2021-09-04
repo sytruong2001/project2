@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddPaidToDetailattendanceTable extends Migration
+class AddIdsubjectToDetailattendanceTable extends Migration
 {
     /**
      * Run the migrations.
@@ -14,9 +14,9 @@ class AddPaidToDetailattendanceTable extends Migration
     public function up()
     {
         Schema::table('detailattendance', function (Blueprint $table) {
-            $table->increments('idDetail')->after("idStudent");
+            $table->integer('idSubject')->unsigned()->nullable()->after("idClass");
+            $table->foreign('idSubject')->references('idSubject')->on('subject')->onDelete('SET NULL');
         });
-        //mở t db của detail trong code
     }
 
     /**
@@ -27,7 +27,10 @@ class AddPaidToDetailattendanceTable extends Migration
     public function down()
     {
         Schema::table('detailattendance', function (Blueprint $table) {
-            $table->dropColumn("idDetail");
+            $table->dropForeign(['idSubject']);
+
+            
+            $table->dropColumn('idSubject');
         });
     }
 }

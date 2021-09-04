@@ -302,6 +302,8 @@ class AttendanceController extends Controller
         // lưu dữ liệu vào bảng điểm danh chi tiết
             $data = new DetailAttendance();
             $data->idStudent = $idStudent;
+            $data->idClass = $idClass;
+            $data->idSubject = $idSubject;
             $data->idAttendance = $idAttendance;
             $data->status = $status;
             $data->save();
