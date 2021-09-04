@@ -65,11 +65,12 @@
                     <th>Số ngày nghỉ(KP)</th>
                     <th>Số ngày nghỉ(P)</th>
                     <th>Số ngày đi muộn</th>
-                    <th>Tỉ lệ nghỉ</th>
+                    <th>Tỉ lệ đi học</th>
                     <th>Trạng thái</th>
                   </tr>
                   </thead>
                   <tbody>
+                  @if (isset($students))
                     @foreach ($students as $student)
                       <tr>
                         <th>{{ $index++}}</th>
@@ -80,68 +81,84 @@
                           {{ $student->nameClass}}
                         </th>
                         <th>
-                          @foreach ($subjects as $subject)
-                              @if ($student->idStudent != null)
-                                  @if (($student->idStudent) == ($subject->idStudent))
-                                    {{ $subject->nameSubject}}
-                                  @endif
-                              @endif
-                          @endforeach
-                          
+                          {{ $student->nameSubject}}
                         </th>
                         <th style="color:blue; text-align:center">
+                          @foreach ($details as $detail)
                             @foreach ($dihocs as $dihoc)
-                              
-                                @if ($dihoc->idStudent != null)
-                                    @if (($dihoc->idStudent) == ($student->idStudent))
-                                        {{ $dihoc->count_dihoc}}
-                                    @endif
-                                @endif
+                              @if (isset($dihoc->idStudent))
+                                  @if (($dihoc->idStudent) == ($student->idStudent) &&($dihoc->idAttendance) == ($detail->idAttendance))
+                                    {{($dihoc->count_dihoc)}}
+                                  @endif
+                              @endif
                             @endforeach
+                          @endforeach
                         </th>
                         <th style="color:red; text-align:center">
+                          @foreach ($details as $detail)
                             @foreach ($nghiKps as $nghiKp)
-                                @if ($nghiKp->idStudent != null)
-                                    @if (($nghiKp->idStudent) == ($student->idStudent))
-                                        @if ($nghiKp->count_nghiKp > 0)
-                                            {{ $nghiKp->count_nghiKp }}
-                                        @endif
+                                @if (isset($nghiKp->idStudent))
+                                    @if (($nghiKp->idStudent) == ($student->idStudent) &&($nghiKp->idAttendance) == ($detail->idAttendance) )
+                                      {{ $nghiKp->count_nghiKp }}
                                     @endif
                                 @endif
                             @endforeach
+                            @endforeach
                         </th>
                         <th style="color:red; text-align:center">
+                          @foreach ($details as $detail)
                             @foreach ($nghiPs as $nghiP)
-                                @if ($nghiP->idStudent != null)
-                                    @if (($nghiP->idStudent) == ($student->idStudent))
-                                        @if ($nghiP->count_nghiP > 0)
-                                            {{ $nghiP->count_nghiP }}
-                                        @elseif($nghiP->count_nghiP == null )
-                                            {{ "0"}}
-                                        @endif
+                                @if (isset($nghiP->idStudent))
+                                    @if (($nghiP->idStudent) == ($student->idStudent) &&($nghiP->idAttendance) == ($detail->idAttendance))
+                                      {{ $nghiP->count_nghiP }}
                                     @endif
                                 @endif
+                            @endforeach
                             @endforeach
                         </th>
                         <th style="color:rgb(212, 58, 19); text-align:center">
+                          @foreach ($details as $detail)
                             @foreach ($dimuons as $muon)
-                                @if ($muon->idStudent != null)
-                                    @if (($muon->idStudent) == ($student->idStudent))
-                                        @if ($muon->count_dimuon > 0)
-                                            {{ $muon->count_dimuon }}
-                                        @elseif($muon->count_dimuon == null )
-                                            {{ "0"}}
-                                        @endif
+                                @if (isset($muon->idStudent))
+                                    @if (($muon->idStudent) == ($student->idStudent) &&($muon->idAttendance) == ($detail->idAttendance))
+                                      {{ $muon->count_dimuon }}
                                     @endif
                                 @endif
                             @endforeach
+                            @endforeach
                         </th>
                         <th style="text-align:center">
-                            /{{$countAttendance}}
+                          @foreach ($details as $detail)
+                            @foreach ($dihocs as $dihoc)
+                              @if (isset($dihoc->idStudent))
+                                  @if (($dihoc->idStudent) == ($student->idStudent) &&($dihoc->idAttendance) == ($detail->idAttendance))
+                                    {{($dihoc->count_dihoc)}}
+                                  @endif
+                              @endif
+                            @endforeach
+                          @endforeach
+                          /{{$countAttendance}}
                         </th>
-                        <th></th>
+                        <th>
+                          @foreach ($details as $detail)
+                            @foreach ($dihocs as $dihoc)
+                              @if (isset($dihoc->idStudent))
+                                  @if (($dihoc->idStudent) == ($student->idStudent) &&($dihoc->idAttendance) == ($detail->idAttendance))
+                                    @if (($dihoc->count_dihoc/$countAttendance) <= 0.3)
+                                        "Học lại"
+                                    @endif
+                                  @endif
+                              @else
+                                
+                              @endif
+                            @endforeach
+                            
+                          @endforeach
+                          
+                        </th>
                       </tr>
                     @endforeach
+                  @endif
                   </tbody>
                   <tfoot>
                   <tr>
@@ -153,7 +170,7 @@
                     <th>Số ngày nghỉ(KP)</th>
                     <th>Số ngày nghỉ(P)</th>
                     <th>Số ngày đi muộn</th>
-                    <th>Tỉ lệ nghỉ</th>
+                    <th>Tỉ lệ đi học</th>
                     <th>Trạng thái</th>
                   </tr>
                   </tfoot>
