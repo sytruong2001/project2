@@ -73,7 +73,7 @@
                       <tr>
                         <th>{{ $index++}}</th>
                         <th>{{ $attendance->idAttendance}}</th>
-                        <th>{{ $attendance->nameClass}}</th>
+                        <th>{{ $attendance->nameClass}}{{ $attendance->nameFaculty}}</th>
                         <th>{{ $attendance->nameSubject}}</th>
                         <th>{{ $attendance->dateAttendance}}</th>
                         <th>{{ $attendance->start}}</th>

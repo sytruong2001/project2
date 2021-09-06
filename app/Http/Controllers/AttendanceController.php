@@ -49,9 +49,10 @@ class AttendanceController extends Controller
                         $attendance = DB::table('attendance')
                         ->join('subject','attendance.idSubject','=','subject.idSubject')
                         ->join('classroom','attendance.idClass','=','classroom.idClass')
+                        ->join('faculty', 'classroom.idFaculty', '=', 'faculty.idFaculty')
                         ->where('attendance.idClass', '=', $idClass->idClass)
                         ->where('attendance.idSubject', '=', $idSubject->idSubject)
-                        ->select('attendance.*','classroom.nameClass','subject.nameSubject')
+                        ->select('attendance.*','classroom.nameClass','subject.nameSubject','faculty.nameFaculty')
                         ->get();
                         
                         return view('attendance.diary',[

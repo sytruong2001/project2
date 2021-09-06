@@ -65,7 +65,9 @@
                     <th>Số ngày nghỉ(KP)</th>
                     <th>Số ngày nghỉ(P)</th>
                     <th>Số ngày đi muộn</th>
-                    <th>Tỉ lệ đi học(/{{$countAttendance}})</th>
+                    @if (isset($countAttendance))
+                    <th>Tỉ lệ nghỉ học(/{{$countAttendance}})</th>
+                    @endif
                     <th>Trạng thái</th>
                   </tr>
                   </thead>
@@ -78,7 +80,7 @@
                           {{ $student->lastName}} {{ $student->middleName}} {{ $student->firstName}}
                         </th>
                         <th>
-                          {{ $student->nameClass}}
+                          {{ $student->nameClass}}{{$student->nameFaculty}}
                         </th>
                         <th>
                           {{ $student->nameSubject}}
@@ -121,32 +123,129 @@
                             @endforeach
                         </th>
                         <th style="text-align:center">
-                            @foreach ($dihocs as $dihoc)
-                              @if (isset($dihoc->idStudent))
-                                  @if (($dihoc->idStudent) == ($student->idStudent))
-                                    {{($dihoc->count_dihoc)}}
-                                  @endif
-                              @endif
+                          @foreach ($dihocs as $dihoc)
+                            @foreach ($dimuons as $muon)
+                              @foreach ($nghiKps as $nghiKp)
+                                @foreach ($nghiPs as $nghiP)
+                                  {{-- @if (isset($dihoc->idStudent) || isset($muon->idStudent) || isset($nghiP->idStudent) || isset($nghiKp->idStudent)) --}}
+                                      @if ($dihoc->idStudent == $student->idStudent && $muon->idStudent == $student->idStudent && ($nghiP->idStudent) == ($student->idStudent) && ($nghiKp->idStudent) == ($student->idStudent))
+                                        {{(($muon->count_dimuon/3 + ($nghiP->count_nghiP/2) + $nghiKp->count_nghiKp)*100/$countAttendance)}}%
+                                      @elseif($dihoc->idStudent == $student->idStudent && $muon->idStudent == $student->idStudent && ($nghiP->idStudent) == ($student->idStudent))
+                                        {{(($muon->count_dimuon/3 + ($nghiP->count_nghiP/2))*100/$countAttendance)}}%
+                                      @elseif($dihoc->idStudent == $student->idStudent && ($nghiP->idStudent) == ($student->idStudent) && ($nghiKp->idStudent) == ($student->idStudent))
+                                        {{((($nghiP->count_nghiP/2) + $nghiKp->count_nghiKp)*100/$countAttendance)}}%
+                                      @elseif($dihoc->idStudent == $student->idStudent && $muon->idStudent == $student->idStudent && ($nghiKp->idStudent) == ($student->idStudent))
+                                        {{(($muon->count_dimuon/3 + $nghiKp->count_nghiKp)*100/$countAttendance)}}%
+                                      @elseif($dihoc->idStudent == $student->idStudent && $muon->idStudent == $student->idStudent)
+                                        {{(($muon->count_dimuon/3)*100/$countAttendance)}}%
+                                      @elseif($dihoc->idStudent == $student->idStudent && ($nghiP->idStudent) == ($student->idStudent))
+                                        {{((($nghiP->count_nghiP/2))*100/$countAttendance)}}%
+                                      @elseif($dihoc->idStudent == $student->idStudent && ($nghiKp->idStudent) == ($student->idStudent))
+                                        {{(($nghiKp->count_nghiKp)*100/$countAttendance)}}%
+                                      @elseif($muon->idStudent == $student->idStudent && ($nghiKp->idStudent) == ($student->idStudent))
+                                        {{(($muon->count_dimuon/3 + $nghiKp->count_nghiKp)*100/$countAttendance)}}%
+                                      @elseif($muon->idStudent == $student->idStudent && ($nghiP->idStudent) == ($student->idStudent))
+                                        {{(($muon->count_dimuon/3 + $nghiP->count_nghiP/2)*100/$countAttendance)}}%
+                                      @elseif($nghiKp->idStudent == $student->idStudent && ($nghiP->idStudent) == ($student->idStudent))
+                                        {{(($nghiKp->count_nghiKp + $nghiP->count_nghiP/2)*100/$countAttendance)}}%
+                                      {{-- @elseif($nghiKp->idStudent == $student->idStudent)
+                                        {{(($nghiKp->count_nghiKp)*100/$countAttendance)}}%
+                                      @elseif($nghiP->idStudent == $student->idStudent)
+                                        {{(($nghiP->count_nghiP/2)*100/$countAttendance)}}%
+                                      @elseif($muon->idStudent == $student->idStudent)
+                                        {{(($muon->count_dimuon/3)*100/$countAttendance)}}% --}}
+                                      @elseif($dihoc->idStudent == $student->idStudent)
+                                        0%
+                                      @endif
+                                  {{-- @endif --}}
+                                @endforeach
+                              @endforeach
                             @endforeach
-                            {{"/"}}{{$countAttendance}}
+                          @endforeach
                         </th>
                         <th>
-                            @foreach ($dihocs as $dihoc)
-                              @if (isset($student->idStudent))
-                                  @if (($dihoc->idStudent) == ($student->idStudent))
-                                    @if (($dihoc->count_dihoc/$countAttendance) >= 0.7)
-                                      <p style="color:blue">Bình thường</p> 
-                                    @elseif(($dihoc->count_dihoc/$countAttendance) < 0.7 && ($dihoc->count_dihoc/$countAttendance) >= 0.5)
+                          @foreach ($dihocs as $dihoc)
+                            @foreach ($dimuons as $muon)
+                              @foreach ($nghiKps as $nghiKp)
+                                @foreach ($nghiPs as $nghiP)
+                                  {{-- Đi học + muộn + nghỉ phép + nghỉ không phép --}}
+                                  @if (($dihoc->idStudent) == ($student->idStudent) && ($muon->idStudent) == ($student->idStudent) && ($nghiP->idStudent) == ($student->idStudent) && ($nghiKp->idStudent) == ($student->idStudent))
+                                    @if(( ($muon->count_dimuon/3 + ($nghiP->count_nghiP/2) + $nghiKp->count_nghiKp) *100/$countAttendance) < 30)
+                                      <p style="color:blue">Bình thường</p>
+                                    @elseif(( ($muon->count_dimuon/3 + ($nghiP->count_nghiP/2) + $nghiKp->count_nghiKp) *100/$countAttendance) >= 30 && ( ($muon->count_dimuon/3 + ($nghiP->count_nghiP/2) + $nghiKp->count_nghiKp) *100/$countAttendance) <=50)
                                       <p style="color:rgb(226, 131, 23)">Cấm thi lần 1</p>
-                                    @elseif(($dihoc->count_dihoc/$countAttendance) < 0.3)
+                                    @elseif(( ($muon->count_dimuon/3 + ($nghiP->count_nghiP/2) + $nghiKp->count_nghiKp) *100/$countAttendance) > 50)
                                       <p style="color:red">Học lại</p>
                                     @endif
+                                  {{-- Đi học + muộn + nghỉ phép --}}
+                                  @elseif (($dihoc->idStudent) == ($student->idStudent) && ($muon->idStudent) == ($student->idStudent) && ($nghiP->idStudent) == ($student->idStudent))
+                                    @if(( ($muon->count_dimuon/3 + ($nghiP->count_nghiP/2)) *100/$countAttendance) < 30)
+                                      <p style="color:blue">Bình thường</p>
+                                    @elseif(( ($muon->count_dimuon/3 + ($nghiP->count_nghiP/2)) *100/$countAttendance) >= 30 && ( ($muon->count_dimuon/3 + ($nghiP->count_nghiP/2)) *100/$countAttendance) <= 50)
+                                      <p style="color:rgb(226, 131, 23)">Cấm thi lần 1</p>
+                                    @elseif(( ($muon->count_dimuon/3 + ($nghiP->count_nghiP/2)) *100/$countAttendance) > 50)
+                                      <p style="color:red">Học lại</p> 
+                                    @endif
+                                  {{-- Đi hoc + muộn --}}
+                                  @elseif (($dihoc->idStudent) == ($student->idStudent) && ($muon->idStudent) == ($student->idStudent))
+                                    @if(( ($muon->count_dimuon/3) *100/$countAttendance) < 30)
+                                      <p style="color:blue">Bình thường</p>
+                                    @elseif(( ($muon->count_dimuon/3) *100/$countAttendance) >= 30 && ( ($muon->count_dimuon/3) *100/$countAttendance) <=50)
+                                      <p style="color:rgb(226, 131, 23)">Cấm thi lần 1</p>
+                                    @elseif(( ($muon->count_dimuon/3) *100/$countAttendance) > 50)
+                                      <p style="color:red">Học lại</p> 
+                                    @endif
+
+                                  {{-- Đi hoc + nghi phép --}}
+                                  @elseif (($dihoc->idStudent) == ($student->idStudent) && ($nghiP->idStudent) == ($student->idStudent))
+                                    @if(( (($nghiP->count_nghiP/2)) *100/$countAttendance) < 30)
+                                      <p style="color:blue">Bình thường</p>
+                                    @elseif(( (($nghiP->count_nghiP/2)) *100/$countAttendance) >= 30 && ( (($nghiP->count_nghiP/2)) *100/$countAttendance) <=50)
+                                      <p style="color:rgb(226, 131, 23)">Cấm thi lần 1</p>
+                                    @elseif(( (($nghiP->count_nghiP/2)) *100/$countAttendance) > 50)
+                                      <p style="color:red">Học lại</p> 
+                                    @endif
+
+                                  {{-- Đi học + nghỉ không phép --}}
+                                  @elseif (($dihoc->idStudent) == ($student->idStudent)  && ($nghiKp->idStudent) == ($student->idStudent))
+                                    @if(( ($nghiKp->count_nghiKp) *100/$countAttendance) < 30)
+                                      <p style="color:blue">Bình thường</p>
+                                    @elseif(( ($nghiKp->count_nghiKp) *100/$countAttendance) >= 30 && ( ($nghiKp->count_nghiKp) *100/$countAttendance) <= 50)
+                                      <p style="color:rgb(226, 131, 23)">Cấm thi lần 1</p>
+                                    @elseif(( ($nghiKp->count_nghiKp) *100/$countAttendance) > 50)
+                                      <p style="color:red">Học lại</p> 
+                                    @endif
+
+                                  {{-- Đi học + muộn + nghỉ không phép --}}
+                                  @elseif (($dihoc->idStudent) == ($student->idStudent) && ($muon->idStudent) == ($student->idStudent) && ($nghiKp->idStudent) == ($student->idStudent))
+                                    @if(( ($muon->count_dimuon/3 + $nghiKp->count_nghiKp) *100/$countAttendance) < 30)
+                                      <p style="color:blue">Bình thường</p>
+                                    @elseif(( ($muon->count_dimuon/3 + $nghiKp->count_nghiKp) *100/$countAttendance) >= 30 && ( ($muon->count_dimuon/3 + $nghiKp->count_nghiKp) *100/$countAttendance) <= 50)
+                                      <p style="color:rgb(226, 131, 23)">Cấm thi lần 1</p>
+                                    @elseif(( ($muon->count_dimuon/3 + $nghiKp->count_nghiKp) *100/$countAttendance) > 50)
+                                      <p style="color:red">Học lại</p>
+                                    @endif
+
+                                  {{-- Đi học + nghỉ phép + nghỉ không phép--}}
+                                  @elseif (($dihoc->idStudent) == ($student->idStudent) && ($nghiP->idStudent) == ($student->idStudent) && ($nghiKp->idStudent) == ($student->idStudent))
+                                    @if(( (($nghiP->count_nghiP/2) + $nghiKp->count_nghiKp) *100/$countAttendance) < 30)
+                                      <p style="color:blue">Bình thường</p>
+                                    @elseif(( (($nghiP->count_nghiP/2) + $nghiKp->count_nghiKp) *100/$countAttendance) >= 30 && ( (($nghiP->count_nghiP/2) + $nghiKp->count_nghiKp) *100/$countAttendance) <= 50)
+                                      <p style="color:rgb(226, 131, 23)">Cấm thi lần 1</p>
+                                    @elseif(( (($nghiP->count_nghiP/2) + $nghiKp->count_nghiKp) *100/$countAttendance) > 50)
+                                      <p style="color:red">Học lại</p> 
+                                    @endif
+
+                                  {{-- Đi học --}}
+                                  @elseif (($dihoc->idStudent) == ($student->idStudent))
+                                    <p style="color:blue">Bình thường</p>
                                   @endif
-                              @else
-                                
-                              @endif
+                                @endforeach
+                              @endforeach
                             @endforeach
-                          
+                          @endforeach
+                        
+                        
                         </th>
                       </tr>
                     @endforeach
@@ -162,7 +261,9 @@
                     <th>Số ngày nghỉ(KP)</th>
                     <th>Số ngày nghỉ(P)</th>
                     <th>Số ngày đi muộn</th>
-                    <th>Tỉ lệ đi học(/{{$countAttendance}})</th>
+                    @if (isset($countAttendance))
+                    <th>Tỉ lệ nghỉ học(/{{$countAttendance}})</th>
+                    @endif
                     <th>Trạng thái</th>
                   </tr>
                   </tfoot>

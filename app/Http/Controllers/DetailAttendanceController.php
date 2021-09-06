@@ -49,9 +49,10 @@ class DetailAttendanceController extends Controller
                         ->join('subject','assign.idSubject','=','subject.idSubject')
                         ->join('classroom','assign.idClass','=','classroom.idClass')
                         ->join('student', 'classroom.idClass', '=', 'student.idClass')
+                        ->join('faculty', 'classroom.idFaculty', '=', 'faculty.idFaculty')
                         ->where('assign.idClass', '=', $idClass->idClass)
                         ->where('assign.idSubject', '=', $idSubject->idSubject)
-                        ->select(DB::raw('DISTINCT student.idStudent, classroom.nameClass,student.*,subject.nameSubject'))
+                        ->select(DB::raw('DISTINCT student.idStudent, classroom.nameClass,faculty.nameFaculty,student.*,subject.nameSubject'))
                         ->get();
                         // dd($student);
                         $countAttendance = DB::table('attendance')
@@ -109,29 +110,6 @@ class DetailAttendanceController extends Controller
                             'countAttendance' => $countAttendance,
                             'tong'=> $tong,
                         ]);
-                        //         // foreach($nghiKp as $nghiKps){
-                        //         //     foreach($dihoc as $dihocs){
-                        //         //         foreach($dimuon as $dimuons){
-                        //         //             foreach($nghiP as $nghiPs){
-                        //         //                 if($nghiKps->idStudent == $dihocs->idStudent && $nghiKps->idStudent == $dimuons->idStudent && $nghiKps->idStudent == $nghiPs->idStudent){
-                        //         //                     $nghi = $nghiKps->count_nghiKp;
-                        //         //                     if($nghiPs->count_nghiP % 2 == 0){
-                        //         //                         $nghi += (1*($nghiPs->count_nghiP/2));
-                        //         //                     }elseif($nghiPs->count_nghiP % 2 == 1){
-                        //         //                         $nghi += ($nghiPs->count_nghiP/2);
-                        //         //                     }elseif($dimuons->count_dimuon % 3 == 0){
-                        //         //                         $nghi += (1*$dimuons->count_dimuon/3);
-                        //         //                     }elseif($dimuons->count_dimuon % 3 == 1){
-                        //         //                         $nghi += ($dimuons->count_dimuon/3);
-                        //         //                     }
-                        //         //                     $per = $nghi/$countAttendance;
-                        //         //                     array_push($arr, $per);
-                        //         //                 }
-                        //         //             }
-                        //         //         }
-                        //         //     }
-                        //         // }
-                        // }
                          
                     }
                 }   
