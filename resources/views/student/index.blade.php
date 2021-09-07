@@ -38,6 +38,11 @@
                         Thêm mới
                       </a>
                     </h3>
+                    <h3 class="btn btn-warning">
+                      <a href="{{ route('student.insert-excel')}}">
+                        Thêm bằng excel
+                      </a>
+                    </h3>
                   </div>
                 </div>
                 <h3 class="btn btn-default">

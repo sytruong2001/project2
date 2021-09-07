@@ -124,9 +124,10 @@ class AttendanceController extends Controller
                         $attendance = DB::table('attendance')
                         ->join('subject','attendance.idSubject','=','subject.idSubject')
                         ->join('classroom','attendance.idClass','=','classroom.idClass')
+                        ->join('faculty', 'classroom.idFaculty', '=', 'faculty.idFaculty')
                         ->where('attendance.idClass', '=', $idClass->idClass)
                         ->where('attendance.idSubject', '=', $idSubject->idSubject)
-                        ->select('attendance.*','classroom.nameClass','subject.nameSubject')
+                        ->select('attendance.*','classroom.nameClass','subject.nameSubject','faculty.nameFaculty')
                         ->get();
                         
                         return view('attendance.diary',[
@@ -319,9 +320,64 @@ class AttendanceController extends Controller
             ->distinct('assign.idSubject','assign.idClass','assign.idFaculty')
             ->where('assign.idTeacher', '=', $idTeacher)
             ->get();
-            // return $subject;
+            $dihocs = DB::table('detailattendance')
+                ->select(DB::raw('idAttendance, COUNT(status) AS count_dihoc'))
+                ->where('status', 0)
+                ->where('idAttendance', '=', $idAttendance)
+                ->groupBy('idAttendance')
+                ->orderBy('count_dihoc', 'desc')
+                ->get();
+            $countDH = $dihocs->count();
+            if($countDH == 0){
+                $dihocs = $countDH;
+            }
+            $dimuons = DB::table('detailattendance')
+                ->select(DB::raw('idAttendance, COUNT(status) AS count_dimuon'))
+                ->where('status', 2)
+                ->where('idAttendance', '=', $idAttendance)
+                ->groupBy('idAttendance')
+                ->orderBy('count_dimuon', 'desc')
+                ->get();
+            $countDM = $dimuons->count();
+            if($countDM == 0){
+                $dimuons = $countDM;
+            }
+            $nghiPs = DB::table('detailattendance')
+                ->select(DB::raw('idAttendance, COUNT(status) AS count_nghiP'))
+                ->where('status', '=', 3)
+                ->where('idAttendance', '=', $idAttendance)
+                ->groupBy('idAttendance')
+                ->orderBy('count_nghiP', 'desc')
+                ->get();
+            $countNP = $nghiPs->count();
+            if($countNP == 0){
+                $nghiPs = $countNP;
+            }
+            $nghiKps = DB::table('detailattendance')
+                ->select(DB::raw('idAttendance, COUNT(status) AS count_nghiKp'))
+                ->where('status', '=', 1)
+                ->where('idAttendance', '=', $idAttendance)
+                ->groupBy('idAttendance')
+                ->orderBy('count_nghiKp', 'desc')
+                ->get();
+            $countNKP = $nghiKps->count();
+            if($countNKP == 0){
+                $nghiKps = $countNKP;
+            }
+            // dd($nghiKps);
+            return view('attendance.index', 
+            [
+                'view' => $view,
+                'dihoc' => $dihocs,
+                'dimuon' => $dimuons,
+                'nghiP' => $nghiPs,
+                'nghiKp' => $nghiKps,
+                'countDH' => $countDH,
+                'countDM' => $countDM,
+                'countNP' => $countNP,
+                'countNKP' => $countNKP,
             
-            return view('attendance.index', ['view' => $view])->with("success","Đã điểm danh thành công <3 <3");
+            ])->with("success","Đã điểm danh thành công <3 <3");
         } 
 
     }

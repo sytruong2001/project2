@@ -42,6 +42,43 @@
                       @endif
                       @if (isset($success))
                         <h3 style="color: rgb(32, 11, 219); text-align:center"><br>{{ $success }}</h3>
+                        <div class="row">
+                          <div class="col-sm-5">
+                          </div>
+                          <div class="col-sm-4">
+                            @if ($countDH != 0)
+                              @foreach ($dihoc as $item)
+                                <h4 style="color:green">Đi học: {{$item->count_dihoc}} sinh viên</h4>
+                              @endforeach
+                            @else
+                            <h4 style="color:green">Đi học: {{$dihoc}} sinh viên</h4>
+                            @endif
+                            @if ($countDM != 0)
+                              @foreach ($dimuon as $item)
+                                <h4 style="color:rgb(241, 142, 12)">Đi muộn: {{$item->count_dimuon}} sinh viên</h4>
+                              @endforeach
+                            @else
+                            <h4 style="color:rgb(241, 142, 12)">Đi muộn: {{$dimuon}} sinh viên</h4>
+                            @endif
+                            @if ($countNP != 0)
+                              @foreach ($nghiP as $item)
+                                <h4 style="color:rgb(226, 27, 210)">Nghỉ có phép: {{$item->count_nghiP}} sinh viên</h4>
+                              @endforeach
+                            @else
+                            <h4 style="color:rgb(226, 27, 210)">Nghỉ có phép: {{$nghiP}} sinh viên</h4>
+                            @endif
+                            @if ($countNKP != 0)
+                              @foreach ($nghiKp as $item)
+                                <h4 style="color:rgb(207, 13, 13)">Nghỉ không phép: {{$item->count_nghiKp}} viên</h4>
+                              @endforeach
+                            @else
+                            <h4 style="color:rgb(207, 13, 13)">Nghỉ không phép: {{$nghiKp}} sinh viên</h4>
+                            @endif
+                          </div>
+                          <div class="col-sm-3">
+                          </div>
+                        </div>
+                        
                       @endif
                       <h3>Tên lớp + môn học:</h3>
                       <select name="idAssign" id="idAssign" class="form-control">

@@ -40,6 +40,11 @@
                         Thêm mới
                       </a>
                     </h3>
+                    <h3 class="btn btn-warning">
+                      <a href="{{ route('assign.insert-excel')}}">
+                        Thêm bằng excel
+                      </a>
+                    </h3>
                   </div>
                 </div>
                 <h3 class="btn btn-default"> 
@@ -88,6 +93,8 @@
                     <th>Tên môn học</th>
                     <th>Tên giảng viên</th>
                     <th>Thời gian bắt đầu</th>
+                    <th>Thời lượng học</th>
+                    <th>Tình trạng dạy</th>
                     <th>Sửa</th>
                     <th>Ẩn</th>
                   </tr>
@@ -101,6 +108,22 @@
                         <th>{{ $assign->nameSubject}}</th>
                         <th>{{ $assign->lastName}} {{ $assign->middleName}} {{ $assign->firstName}}</th>
                         <th>{{ $assign->start_date }}</th>
+                        <th>{{ $assign->duration }}</th>
+                        <th>
+                          @foreach ($timeStarts as $start)
+                            @foreach ($timeEnds as $end)
+                              @if ($assign->idClass == $start->idClass && $assign->idClass == $end->idClass && $assign->idSubject == $start->idSubject && $assign->idSubject == $end->idSubject)
+                                @if ((($end->sum_end - $start->sum_start) / 10000) > 0 && (($end->sum_end - $start->sum_start) / 10000) < $assign->duration)
+                                  <p style="color:blue">Đang dạy (Hoàn thành {{ ($end->sum_end - $start->sum_start) / 10000}} giờ)</p> 
+                                @elseif((($end->sum_end - $start->sum_start) / 10000) == $assign->duration)
+                                  <p style="color:green">Đã hoàn thành</p> 
+                                @else
+                                  <p style="color: rgb(248, 107, 14)">Chưa dạy</p>
+                                @endif
+                              @endif
+                            @endforeach
+                          @endforeach
+                        </th>
                         <th><a href="{{ route('assign.edit',$assign->idAssign)}}" class="btn btn-warning">Edit</a></th>
                         <th><a href="{{ route('assign.hide', $assign->idAssign)}}" class="btn btn-danger">Hide</a></th>
                       </tr>
@@ -114,6 +137,8 @@
                     <th>Tên môn học</th>
                     <th>Tên giảng viên</th>
                     <th>Thời gian bắt đầu</th>
+                    <th>Thời lượng học</th>
+                    <th>Tình trạng dạy</th>
                     <th>Sửa</th>
                     <th>Ẩn</th>
                   </tr>

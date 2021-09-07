@@ -192,4 +192,15 @@ class ClassroomController extends Controller
         return redirect('class');
         
     }
+
+    public function insertExcel()
+    {
+        return view("class.insertExcel");
+    }
+
+    public function insertExcelProcess(Request $request)
+    {
+        Excel::import(new ClassroomImport, $request->file("nameClass"));
+        return redirect("class");
+    }
 }

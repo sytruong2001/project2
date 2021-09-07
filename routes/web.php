@@ -53,11 +53,15 @@ Route::middleware([CheckLogin::class])->group( function(){
     Route::resource("student", StudentController::class);
     Route::prefix("student")->name('student.')->group( function(){
         Route::get('/hide/{id}','StudentController@hide')->name('hide');
+        Route::get('/insert/excel','StudentController@insertExcel')->name('insert-excel');
+        Route::post('/insert/excel/process','StudentController@insertExcelProcess')->name('insert-excel-process');
     });
     // Thao tác với lớp
     Route::resource("class", ClassroomController::class);
     Route::prefix("class")->name('class.')->group( function(){
         Route::get('/hide/{id}','ClassroomController@hide')->name('hide');
+        Route::get('/insert/excel','ClassroomController@insertExcel')->name('insert-excel');
+        Route::post('/insert/excel/process','ClassroomController@insertExcelProcess')->name('insert-excel-process');
     });
     // Thao tác với ngành
     Route::resource("major", MajorController::class);
@@ -78,12 +82,16 @@ Route::middleware([CheckLogin::class])->group( function(){
     Route::resource("subject", SubjectController::class);
     Route::prefix("subject")->name('subject.')->group( function(){
         Route::get('/hide/{id}','SubjectController@hide')->name('hide');
+        Route::get('/insert/excel','SubjectController@insertExcel')->name('insert-excel');
+        Route::post('/insert/excel/process','SubjectController@insertExcelProcess')->name('insert-excel-process');
     });
 
     // Thao tác với phân công
     Route::resource("assign", AssignController::class);
     Route::prefix("assign")->name('assign.')->group( function(){
         Route::get('/hide/{id}','AssignController@hide')->name('hide');
+        Route::get('/insert/excel','AssignController@insertExcel')->name('insert-excel');
+        Route::post('/insert/excel/process','AssignController@insertExcelProcess')->name('insert-excel-process');
     });
     // Thao tác với điểm danh
     Route::match(["get", "post"],'/attendance/create',["as" =>'/attendance/create', "uses"=> "AttendanceController@search" ] );

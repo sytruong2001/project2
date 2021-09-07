@@ -164,4 +164,15 @@ class SubjectController extends Controller
         return redirect('subject');
         
     }
+
+    public function insertExcel()
+    {
+        return view("subject.insertExcel");
+    }
+
+    public function insertExcelProcess(Request $request)
+    {
+        Excel::import(new SubjectImport, $request->file("nameSubject"));
+        return redirect("subject");
+    }
 }

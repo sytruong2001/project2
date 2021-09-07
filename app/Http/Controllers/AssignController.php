@@ -41,15 +41,28 @@ class AssignController extends Controller
         ->where('assign.idClass', '=', $idClass)
         ->orwhere('assign.idTeacher', '=', $idTeacher)
         ->where('assign.available', '=', 1)
-        ->select('assign.*', 'classroom.nameClass', 'subject.nameSubject','faculty.nameFaculty', 'teacher.firstName', 'teacher.middleName', 'teacher.lastName' )
+        ->select('assign.*', 'classroom.nameClass', 'subject.*','faculty.nameFaculty', 'teacher.firstName', 'teacher.middleName', 'teacher.lastName' )
         ->get();
+
+        $timeStart = DB::table('attendance')
+            ->select(DB::raw('idClass, idSubject, SUM(start) AS sum_start'))
+            ->groupBy('idClass','idSubject')
+            ->orderBy('sum_start', 'desc')
+            ->get();
+        $timeEnd = DB::table('attendance')
+            ->select(DB::raw('idClass, idSubject, SUM(end) AS sum_end'))
+            ->groupBy('idClass','idSubject')
+            ->orderBy('sum_end', 'desc')
+            ->get();
+        // dd($timeEnd);
         return view("assign.index",[
             'data' => $data,
             'idClass' => $idClass,
             'idTeacher' => $idTeacher,
             'class' => $class,
             'teacher' => $teacher,
-            // 'time' => $time
+            'timeStarts' => $timeStart,
+            'timeEnds' => $timeEnd,
         ]);
     }
 
@@ -297,5 +310,16 @@ class AssignController extends Controller
         $data->save();
         return redirect('assign');
         
+    }
+
+    public function insertExcel()
+    {
+        return view("assign.insertExcel");
+    }
+
+    public function insertExcelProcess(Request $request)
+    {
+        Excel::import(new AssignImport, $request->file("nameClass"));
+        return redirect("assign");
     }
 }

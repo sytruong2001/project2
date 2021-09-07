@@ -190,4 +190,15 @@ class StudentController extends Controller
         $data->save();
         return redirect('student');
     }
+
+    public function insertExcel()
+    {
+        return view("student.insertExcel");
+    }
+
+    public function insertExcelProcess(Request $request)
+    {
+        Excel::import(new StudentImport, $request->file("firstName"));
+        return redirect("student");
+    }
 }
