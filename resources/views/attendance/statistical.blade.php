@@ -148,12 +148,6 @@
                                         {{(($muon->count_dimuon/3 + $nghiP->count_nghiP/2)*100/$countAttendance)}}%
                                       @elseif($nghiKp->idStudent == $student->idStudent && ($nghiP->idStudent) == ($student->idStudent))
                                         {{(($nghiKp->count_nghiKp + $nghiP->count_nghiP/2)*100/$countAttendance)}}%
-                                      {{-- @elseif($nghiKp->idStudent == $student->idStudent)
-                                        {{(($nghiKp->count_nghiKp)*100/$countAttendance)}}%
-                                      @elseif($nghiP->idStudent == $student->idStudent)
-                                        {{(($nghiP->count_nghiP/2)*100/$countAttendance)}}%
-                                      @elseif($muon->idStudent == $student->idStudent)
-                                        {{(($muon->count_dimuon/3)*100/$countAttendance)}}% --}}
                                       @elseif($dihoc->idStudent == $student->idStudent)
                                         0%
                                       @endif
