@@ -69,7 +69,7 @@
                             @endif
                             @if ($countNKP != 0)
                               @foreach ($nghiKp as $item)
-                                <h4 style="color:rgb(207, 13, 13)">Nghỉ không phép: {{$item->count_nghiKp}} viên</h4>
+                                <h4 style="color:rgb(207, 13, 13)">Nghỉ không phép: {{$item->count_nghiKp}} sinh viên</h4>
                               @endforeach
                             @else
                             <h4 style="color:rgb(207, 13, 13)">Nghỉ không phép: {{$nghiKp}} sinh viên</h4>

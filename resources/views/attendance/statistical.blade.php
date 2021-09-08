@@ -66,7 +66,7 @@
                     <th>Số ngày nghỉ(P)</th>
                     <th>Số ngày đi muộn</th>
                     @if (isset($countAttendance))
-                    <th>Tỉ lệ nghỉ học(/{{$countAttendance}})</th>
+                    <th>Tỉ lệ nghỉ học( /{{$countAttendance}} buổi)</th>
                     @endif
                     <th>Trạng thái</th>
                   </tr>
@@ -256,7 +256,7 @@
                     <th>Số ngày nghỉ(P)</th>
                     <th>Số ngày đi muộn</th>
                     @if (isset($countAttendance))
-                    <th>Tỉ lệ nghỉ học(/{{$countAttendance}})</th>
+                    <th>Tỉ lệ nghỉ học( /{{$countAttendance}} buổi)</th>
                     @endif
                     <th>Trạng thái</th>
                   </tr>
