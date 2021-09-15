@@ -33,12 +33,12 @@
               </div>
               <!-- /.card-header -->
               <!-- form start -->
-              <form action="{{ route('student.insert-excel-process')}}" method="post" enctype="multipart/form-data">
+              <form action="{{ route('subject.insert-excel-process')}}" method="post" enctype="multipart/form-data">
                 <input type="hidden" name="_token" value="{{ csrf_token() }}">
                 <div class="card-body">
                   <div class="form-group">
                     <label for="exampleInputEmail1">Yêu cầu file phải đầy đủ các cột sau: Tên môn học, Tên ngành, Thời lượng học</label>
-                    <input type="file" name="nameTeacher" accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"  class="form-control" id="exampleInputEmail1" placeholder="Nhập tên ngành">
+                    <input type="file" name="nameSubject" accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"  class="form-control" id="exampleInputEmail1" placeholder="Nhập tên ngành">
                   </div>
                 <!-- /.card-body -->
 

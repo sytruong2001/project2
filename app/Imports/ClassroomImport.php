@@ -5,6 +5,7 @@ namespace App\Imports;
 use App\Models\Classroom;
 use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
+use DB;
 
 class ClassroomImport implements ToModel, WithHeadingRow
 {
@@ -15,10 +16,18 @@ class ClassroomImport implements ToModel, WithHeadingRow
     */
     public function model(array $row)
     {
+        $Faculty = DB::table("faculty")
+        ->where("nameFaculty", $row["ten_khoa"])
+        ->first();
+        $row["idFaculty"] = $Faculty->idFaculty;
+        $Major = DB::table("major")
+        ->where("nameMajor", $row["ten_nganh"])
+        ->first();
+        $row["idMajor"] = $Major->idMajor;
         return new Classroom([
             'nameClass' => $row["ten_lop"],
-            'idFaculty' => Faculty::where("nameFaculty", $row['ten_khoa'])->value("idFaculty"),
-            'idMajor' => Major::where("nameMajor", $row['ten_nganh'])->value("idMajor"),
+            'idFaculty' => $row["idFaculty"],
+            'idMajor' => $row["idMajor"],
             'available' => 1
         ]);
     }

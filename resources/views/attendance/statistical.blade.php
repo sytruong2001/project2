@@ -173,9 +173,9 @@
                                     @endif
                                   {{-- Đi học + muộn + nghỉ phép --}}
                                   @elseif (($dihoc->idStudent) == ($student->idStudent) && ($muon->idStudent) == ($student->idStudent) && ($nghiP->idStudent) == ($student->idStudent))
-                                    @if(( ($muon->count_dimuon/3 + ($nghiP->count_nghiP/2)) *100/$countAttendance) < 30)
+                                    @if( (($muon->count_dimuon/3 + ($nghiP->count_nghiP/2)) *100/$countAttendance) < 30)
                                       <p style="color:blue">Bình thường</p>
-                                    @elseif(( ($muon->count_dimuon/3 + ($nghiP->count_nghiP/2)) *100/$countAttendance) >= 30 && ( ($muon->count_dimuon/3 + ($nghiP->count_nghiP/2)) *100/$countAttendance) <= 50)
+                                    @elseif( (($muon->count_dimuon/3 + ($nghiP->count_nghiP/2)) *100/$countAttendance) >= 30 && ( ($muon->count_dimuon/3 + ($nghiP->count_nghiP/2)) *100/$countAttendance) <= 50)
                                       <p style="color:rgb(226, 131, 23)">Cấm thi lần 1</p>
                                     @elseif(( ($muon->count_dimuon/3 + ($nghiP->count_nghiP/2)) *100/$countAttendance) > 50)
                                       <p style="color:red">Học lại</p> 

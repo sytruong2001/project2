@@ -5,7 +5,7 @@ namespace App\Imports;
 use App\Models\Subject;
 use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
-
+use DB;
 class SubjectImport implements ToModel, WithHeadingRow
 {
     /**
@@ -15,9 +15,13 @@ class SubjectImport implements ToModel, WithHeadingRow
     */
     public function model(array $row)
     {
+        $Major = DB::table("major")
+        ->where("nameMajor", $row["ten_nganh"])
+        ->first();
+        $row["idMajor"] = $Major->idMajor;
         return new Subject([
             'nameSubject' => $row["ten_mon_hoc"],
-            'idMajor' => Major::where("nameMajor", $row['ten_nganh'])->value("idMajor"),
+            'idMajor' => $row["idMajor"],
             'duration' => $row["thoi_luong_hoc"],
             'available' => 1
         ]);

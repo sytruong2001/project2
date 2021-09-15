@@ -20,7 +20,7 @@ class TeacherImport implements ToModel, WithHeadingRow
             'lastName' => $row["ho"],
             'middleName' => $row["ten_dem"],
             'firstName' => $row["ten"],
-            'gender' => $row["gioi_tinh"] == "Nam" ? 1 : 0,
+            'gender' => $row["gioi_tinh"] == "Nam" ? 0 : 1,
             'email' => $row["email"],
             'phone' => $row["so_dien_thoai"],
             'address' => $row["dia_chi"],

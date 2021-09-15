@@ -9,6 +9,8 @@ use App\Models\LoginModel;
 use Auth;
 use DB;
 use App\Models\Subject;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Imports\SubjectImport;
 
 class SubjectController extends Controller
 {

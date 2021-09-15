@@ -9,7 +9,8 @@ use App\Models\LoginModel;
 use Auth;
 use DB;
 use App\Models\Student;
-
+use Maatwebsite\Excel\Facades\Excel;
+use App\Imports\StudentImport;
 class StudentController extends Controller
 {
     /**

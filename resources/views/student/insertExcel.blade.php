@@ -37,8 +37,8 @@
                 <input type="hidden" name="_token" value="{{ csrf_token() }}">
                 <div class="card-body">
                   <div class="form-group">
-                    <label for="exampleInputEmail1">Yêu cầu file phải đầy đủ các cột sau: Họ, Tên đệm, Tên, Giới tính, Email, Số điện thoại, Địa chỉ, Ngày sinh, Tên lớp</label>
-                    <input type="file" name="nameTeacher" accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"  class="form-control" id="exampleInputEmail1" placeholder="Nhập tên ngành">
+                    <label for="exampleInputEmail1">Yêu cầu file phải đầy đủ các cột sau: Họ, Tên đệm, Tên, Giới tính, Email, Số điện thoại, Địa chỉ, Ngày sinh, Tên lớp, Tên khóa</label>
+                    <input type="file" name="firstName" accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"  class="form-control" id="exampleInputEmail1" placeholder="Nhập tên ngành">
                   </div>
                 <!-- /.card-body -->
 

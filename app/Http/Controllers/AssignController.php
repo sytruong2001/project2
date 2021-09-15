@@ -9,6 +9,8 @@ use App\Models\LoginModel;
 use Auth;
 use DB;
 use App\Models\Assign;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Imports\AssignImport;
 
 class AssignController extends Controller
 {
@@ -319,7 +321,7 @@ class AssignController extends Controller
 
     public function insertExcelProcess(Request $request)
     {
-        Excel::import(new AssignImport, $request->file("nameClass"));
+        Excel::import(new AssignImport, $request->file("nameAssign"));
         return redirect("assign");
     }
 }
