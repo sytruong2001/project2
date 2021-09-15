@@ -5,7 +5,7 @@ namespace App\Imports;
 use App\Models\Assign;
 use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
-
+use DB;
 class AssignImport implements ToModel, WithHeadingRow
 {
     /**
