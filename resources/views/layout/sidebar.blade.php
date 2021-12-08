@@ -47,9 +47,11 @@
       <li class="nav-item">
         <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
       </li>
+      @if(Session::exists('admin_name'))
       <li class="nav-item d-none d-sm-inline-block">
-        <a href="home" class="nav-link">Home</a>
+        <a href="home" class="nav-link">Trang chủ</a>
       </li>
+      @endif
     </ul>
 
     <!-- Right navbar links -->
@@ -75,7 +77,7 @@
         <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
           
         <div class="dropdown-divider"></div>
-          <a href="/logout" class="dropdown-item dropdown-footer">Logout</a>
+          <a href="/logout" class="dropdown-item dropdown-footer">Đăng xuất</a>
         </div>
       </li>
       {{-- <!-- Notifications Dropdown Menu -->

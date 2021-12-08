@@ -13,8 +13,8 @@
           </div>
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
-              <li class="breadcrumb-item"><a href="home">Home</a></li>
-              <li class="breadcrumb-item active">Edit Student</li>
+              <li class="breadcrumb-item"><a href="home">Trang chủ</a></li>
+              <li class="breadcrumb-item active">Cập nhật sinh viên</li>
             </ol>
           </div>
         </div>
@@ -46,24 +46,24 @@
                 <input type="hidden"  name="id" value="{{ $student->idStudent }}">
                 <div class="card-body">
                   <div class="form-group">
-                    <label for="exampleInputEmail1">First Name</label>
+                    <label for="exampleInputEmail1">Tên sinh viên</label>
                     <input type="text" name="firstName" value="{{ $student->firstName }}"  class="form-control" id="exampleInputEmail1" placeholder="Enter first name">
                   </div>
                   <div class="form-group">
-                    <label for="exampleInputEmail1">Middle Name</label>
+                    <label for="exampleInputEmail1">Tên đệm</label>
                     <input type="text" name="middleName" value="{{ $student->middleName }}" class="form-control" id="exampleInputEmail1" placeholder="Enter middle name">
                   </div>
                   <div class="form-group">
-                    <label for="exampleInputEmail1">Last Name</label>
+                    <label for="exampleInputEmail1">Họ</label>
                     <input type="text" name="lastName" value="{{ $student->lastName }}" class="form-control" id="exampleInputEmail1" placeholder="Enter last name">
                   </div>
                   <div class="form-group">
-                    <label for="exampleInputEmail1">Gender</label><br>
+                    <label for="exampleInputEmail1">Giới tính</label><br>
                     <input type="radio" name="gender"  id="exampleInputEmail1" value="0" @if( $student->gender == 0) {{ "checked" }} @endif>Nam
                     <input type="radio" name="gender"  id="exampleInputEmail1" value="1" @if( $student->gender == 1) {{ "checked" }} @endif>Nữ
                   </div>
                   <div class="form-group">
-                    <label for="exampleInputEmail1">Classroom</label>
+                    <label for="exampleInputEmail1">Lớp học</label>
                     <select name="idClass" id="idClass" class="form-control">
                         @foreach ($class as $class)
                             <option value="{{ $class->idClass }}"
@@ -77,19 +77,19 @@
                     </select>
                   </div>
                   <div class="form-group">
-                    <label for="exampleInputEmail1">Email address</label>
+                    <label for="exampleInputEmail1">Địa chỉ email</label>
                     <input type="email" name="email" value="{{ $student->email }}" class="form-control" id="exampleInputEmail1" placeholder="Enter email">
                   </div>
                   <div class="form-group">
-                    <label for="exampleInputEmail1">Phone Number</label>
+                    <label for="exampleInputEmail1">Số điện thoại</label>
                     <input type="number" name="phone" value="{{ $student->phone }}" class="form-control" id="exampleInputEmail1" placeholder="Enter phone number">
                   </div>
                   <div class="form-group">
-                    <label for="exampleInputEmail1">Birthday</label>
+                    <label for="exampleInputEmail1">Ngày sinh</label>
                     <input type="date" name="birthday" value="{{ $student->birthday }}" class="form-control" id="exampleInputEmail1" placeholder="Enter birthday">
                   </div>
                   <div class="form-group">
-                    <label for="exampleInputEmail1">Address</label>
+                    <label for="exampleInputEmail1">Địa chỉ</label>
                     <input type="text" name="address" value="{{ $student->address }}" class="form-control" id="exampleInputEmail1" placeholder="Enter address">
                   </div>
                 </div>

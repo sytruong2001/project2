@@ -22,7 +22,7 @@
   <!-- /.login-logo -->
   <div class="card">
     <div class="card-body login-card-body">
-      <p class="login-box-msg">Sign in to start your session</p>
+      <p class="login-box-msg">Hãy đăng nhập để bắt đầu </p>
 
       <form action="/userlogin" method="post" enctype="multipart/form-data">
         <input type="hidden" name="_token" value="{{ csrf_token() }}">
@@ -50,14 +50,14 @@
                 <div class="icheck-primary">
                     <input type="checkbox" id="remember">
                     <label for="remember">
-                        Remember Me
+                        Nhớ mật khẩu
                     </label>
                 </div>
             </div>
         
         <!-- /.col -->
           <div class="col-4">
-            <button type="submit" class="btn btn-primary btn-block">Sign In</button>
+            <button type="submit" class="btn btn-primary btn-block">Đăng nhập</button>
           </div>
         <!-- /.col -->
         </div>

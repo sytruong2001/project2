@@ -12,8 +12,8 @@
           </div>
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
-              <li class="breadcrumb-item"><a href="home">Home</a></li>
-              <li class="breadcrumb-item active">Attendance</li>
+              <li class="breadcrumb-item"><a href="home">Trang chủ</a></li>
+              <li class="breadcrumb-item active">Điểm danh</li>
             </ol>
           </div>
         </div>
@@ -109,7 +109,7 @@
                 <h3 class="card-title">Điểm danh</h3>
               </div>
                 <div class="card-body">
-
+                  
                   <div class="row" style="color: rgb(10, 2, 29)">
                     <div class="col-sm-4">
                       <!-- radio -->
@@ -152,6 +152,7 @@
                       @endforeach
                       <div class="row">
                         <div class="col-sm-12">
+                          <hr>
                           <h4>
                             Tên lớp - môn học:
                           </h4>
