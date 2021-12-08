@@ -30,10 +30,18 @@
 
             <div class="card">
               <div class="card-header">
+                  @if(session('success'))
+                  <div class="card card-primary">
+                    <div class="card-header">
+                    <h3 class="card-title">{{session('success')}}</h3>
+                    </div>
+                  </div>
+                  @endif
                 <div class="row">
                   <div class="col-sm-10">
                     <h3 class="card-title">Danh sách lớp học</h3>
                   </div>
+                  
                   <div class="col-sm-2"> 
                     <h3 class="btn btn-success">
                       <a href="{{ route('class.create')}}">

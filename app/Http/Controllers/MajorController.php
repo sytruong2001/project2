@@ -144,7 +144,13 @@ class MajorController extends Controller
 
     public function insertExcelProcess(Request $request)
     {
-        Excel::import(new MajorImport, $request->file("nameMajor"));
-        return redirect("major");
+        try{
+            Excel::import(new MajorImport, $request->file("nameMajor"));
+            return redirect("major")->with('success', 'Thêm mới thành công!');
+        }catch(\Maatwebsite\Excel\Validators\ValidationException $e){
+            $failures = $e->failures();
+            return back()->with('failures', $failures);
+        }
+        return redirect("major")->with('success', 'Thêm mới thành công!');
     }
 }

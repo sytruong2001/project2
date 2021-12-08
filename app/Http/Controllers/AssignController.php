@@ -321,7 +321,14 @@ class AssignController extends Controller
 
     public function insertExcelProcess(Request $request)
     {
-        Excel::import(new AssignImport, $request->file("nameAssign"));
-        return redirect("assign");
+        try{
+            Excel::import(new AssignImport, $request->file("nameAssign"));
+            return redirect("assign")->with('success', 'Thêm mới thành công!');
+        }catch(\Maatwebsite\Excel\Validators\ValidationException $e){
+            $failures = $e->failures();
+            return back()->with('failures', $failures);
+        }
+        
+        return redirect("assign")->with('success', 'Thêm mới thành công!');
     }
 }

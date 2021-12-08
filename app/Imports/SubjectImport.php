@@ -5,8 +5,9 @@ namespace App\Imports;
 use App\Models\Subject;
 use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
+use Maatwebsite\Excel\Concerns\WithValidation;
 use DB;
-class SubjectImport implements ToModel, WithHeadingRow
+class SubjectImport implements ToModel, WithHeadingRow, WithValidation
 {
     /**
     * @param array $row
@@ -25,5 +26,25 @@ class SubjectImport implements ToModel, WithHeadingRow
             'duration' => $row["thoi_luong_hoc"],
             'available' => 1
         ]);
+    }
+
+    public function rules() : array{
+        return[
+            'ten_mon_hoc' => 'required | unique:Subject,nameSubject',
+            'ten_nganh' => 'required',
+            'thoi_luong_hoc' => 'required',
+
+        ];
+ 
+    }
+
+    public function customValidationMessages()
+    {
+        return[
+            'ten_mon_hoc.required' => ':attribute không được để trống',
+            'ten_mon_hoc.unique' => ':attribute đã tồn tại',
+            'ten_nganh.required' => ':attribute không được để trống',
+            'thoi_luong_hoc.required' => ':attribute không được để trống',
+        ];
     }
 }

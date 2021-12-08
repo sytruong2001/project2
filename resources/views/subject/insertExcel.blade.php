@@ -41,7 +41,28 @@
                     <input type="file" name="nameSubject" accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"  class="form-control" id="exampleInputEmail1" placeholder="Nhập tên ngành">
                   </div>
                 <!-- /.card-body -->
-
+                @if(session()->has('failures'))
+                <table id="example1" class="table table-bordered table-striped">
+                  <tr>
+                    <th>Hàng</th>
+                    <th>Thuộc tính</th>
+                    <th>Lỗi</th>
+                    <th>Giá trị</th>
+                    @foreach(session()->get('failures') as $vali)
+                      <tr>
+                        <td>{{$vali->row()}}</td>
+                        <td>{{$vali->attribute()}}</td>
+                        <td>
+                          @foreach($vali->errors() as $e)
+                            <div>{{$e}}</div>
+                          @endforeach
+                        </td>
+                        <td>{{$vali->values()[$vali->attribute()] ?? 'NULL'}}</td>
+                      </tr>
+                    @endforeach
+                  </tr>
+                </table>
+              @endif
                 <div class="card-footer">
                   <button type="submit" class="btn btn-primary">Thêm</button>
                 </div>

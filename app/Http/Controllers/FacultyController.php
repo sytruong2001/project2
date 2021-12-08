@@ -146,7 +146,13 @@ class FacultyController extends Controller
 
     public function insertExcelProcess(Request $request)
     {
-        Excel::import(new FacultyImport, $request->file("nameFaculty"));
-        return redirect("faculty");
+        try{
+            Excel::import(new FacultyImport, $request->file("nameFaculty"));
+            return redirect("faculty")->with('success', 'Thêm mới thành công!');
+        }catch(\Maatwebsite\Excel\Validators\ValidationException $e){
+            $failures = $e->failures();
+            return back()->with('failures', $failures);
+        }
+        return redirect("faculty")->with('success', 'Thêm mới thành công!');
     }
 }

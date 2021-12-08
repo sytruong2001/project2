@@ -5,8 +5,9 @@ namespace App\Imports;
 use App\Models\Student;
 use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
+use Maatwebsite\Excel\Concerns\WithValidation;
 use DB;
-class StudentImport implements ToModel, WithHeadingRow
+class StudentImport implements ToModel, WithHeadingRow, WithValidation
 {
     /**
     * @param array $row
@@ -39,5 +40,40 @@ class StudentImport implements ToModel, WithHeadingRow
             'idClass' => $row["idClass"],
             'available' => 1
         ]);
+    }
+
+    public function rules() : array{
+        return[
+            'ho' => 'required',
+            'ten_dem' => 'required',
+            'ten' => 'required',
+            'gioi_tinh' => 'required',
+            'email' => 'required | unique:Student,email',
+            'so_dien_thoai' => 'required | unique:Student,phone',
+            'dia_chi' => 'required',
+            'ngay_sinh' => 'required',
+            'ten_lop' => 'required',
+            'ten_khoa' => 'required',
+
+        ];
+ 
+    }
+
+    public function customValidationMessages()
+    {
+        return[
+            'ho.required' => ':attribute không được để trống',
+            'ten_dem.required' => ':attribute không được để trống',
+            'ten.required' => ':attribute không được để trống',
+            'gioi_tinh.required' => ':attribute không được để trống',
+            'email.required' => ':attribute không được để trống',
+            'email.unique' => ':attribute đã tồn tại',
+            'so_dien_thoai.required' => ':attribute không được để trống',
+            'so_dien_thoai.unique' => ':attribute đã tồn tại',
+            'dia_chi.required' => ':attribute không được để trống',
+            'ngay_sinh.required' => ':attribute không được để trống',
+            'ten_lop.required' => ':attribute không được để trống',
+            'ten_khoa.required' => ':attribute không được để trống',
+        ];
     }
 }

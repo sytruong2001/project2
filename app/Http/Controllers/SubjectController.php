@@ -174,7 +174,13 @@ class SubjectController extends Controller
 
     public function insertExcelProcess(Request $request)
     {
-        Excel::import(new SubjectImport, $request->file("nameSubject"));
-        return redirect("subject");
+        try{
+            Excel::import(new SubjectImport, $request->file("nameSubject"));
+            return redirect("subject")->with('success', 'Thêm mới thành công!');
+        }catch(\Maatwebsite\Excel\Validators\ValidationException $e){
+            $failures = $e->failures();
+            return back()->with('failures', $failures);
+        }
+        return redirect("subject")->with('success', 'Thêm mới thành công!');
     }
 }

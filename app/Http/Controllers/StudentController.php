@@ -199,7 +199,13 @@ class StudentController extends Controller
 
     public function insertExcelProcess(Request $request)
     {
-        Excel::import(new StudentImport, $request->file("firstName"));
-        return redirect("student");
+        try{
+            Excel::import(new StudentImport, $request->file("firstName"));
+            return redirect("student")->with('success', 'Thêm mới thành công!');
+        }catch(\Maatwebsite\Excel\Validators\ValidationException $e){
+            $failures = $e->failures();
+            return back()->with('failures', $failures);
+        }
+        return redirect("student")->with('success', 'Thêm mới thành công!');
     }
 }

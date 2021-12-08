@@ -5,8 +5,9 @@ namespace App\Imports;
 use App\Models\Assign;
 use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
+use Maatwebsite\Excel\Concerns\WithValidation;
 use DB;
-class AssignImport implements ToModel, WithHeadingRow
+class AssignImport implements ToModel, WithHeadingRow, WithValidation
 {
     /**
     * @param array $row
@@ -40,5 +41,26 @@ class AssignImport implements ToModel, WithHeadingRow
             'idTeacher' => $row["idTeacher"],
             'available' => 1
         ]);
+    }
+
+    public function rules() : array{
+        return[
+            'ten_lop' => 'required',
+            'ten_khoa' => 'required',
+            'ten_mon_hoc' => 'required',
+            'ten_giang_vien' => 'required',
+
+        ];
+ 
+    }
+
+    public function customValidationMessages()
+    {
+        return[
+            'ten_lop.required' => ':attribute không được để trống',
+            'ten_khoa.required' => ':attribute không được để trống',
+            'ten_mon_hoc.required' => ':attribute không được để trống',
+            'ten_giang_vien.required' => ':attribute không được để trống',
+        ];
     }
 }

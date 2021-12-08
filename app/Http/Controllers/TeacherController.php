@@ -228,7 +228,13 @@ class TeacherController extends Controller
 
     public function insertExcelProcess(Request $request)
     {
-        Excel::import(new TeacherImport, $request->file("nameTeacher"));
-        return redirect("teacher");
+        try{
+            Excel::import(new TeacherImport, $request->file("nameTeacher"));
+            return redirect("teacher")->with('success', 'Thêm mới thành công!');
+        }catch(\Maatwebsite\Excel\Validators\ValidationException $e){
+            $failures = $e->failures();
+            return back()->with('failures', $failures);
+        }
+        return redirect("teacher")->with('success', 'Thêm mới thành công!');
     }
 }

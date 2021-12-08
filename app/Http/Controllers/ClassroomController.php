@@ -202,7 +202,13 @@ class ClassroomController extends Controller
 
     public function insertExcelProcess(Request $request)
     {
-        Excel::import(new ClassroomImport, $request->file("nameClass"));
-        return redirect("class");
+        try{
+            Excel::import(new ClassroomImport, $request->file("nameClass"));
+            return redirect("class")->with('success', 'Thêm mới thành công!');
+        }catch(\Maatwebsite\Excel\Validators\ValidationException $e){
+            $failures = $e->failures();
+            return back()->with('failures', $failures);
+        }
+        return redirect("class")->with('success', 'Thêm mới thành công!');
     }
 }
