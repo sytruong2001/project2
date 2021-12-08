@@ -11,12 +11,12 @@
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1>Quản lý khóa học</h1>
+            <h1>Quản lý niên khóa</h1>
           </div>
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
               <li class="breadcrumb-item"><a href="home">Trang chủ</a></li>
-              <li class="breadcrumb-item active">Cập nhật khóa học</li>
+              <li class="breadcrumb-item active">Cập nhật niên khóa</li>
             </ol>
           </div>
         </div>
@@ -48,7 +48,7 @@
                 <input type="hidden"  name="id" value="{{ $faculty->idFaculty }}">
                 <div class="card-body">
                   <div class="form-group">
-                    <label for="exampleInputEmail1">Tên khóa học</label>
+                    <label for="exampleInputEmail1">Tên niên khóa</label>
                     <input type="text" name="nameFaculty" value="{{ $faculty->nameFaculty }}"  class="form-control" id="exampleInputEmail1"">
                   </div>
                 </div>

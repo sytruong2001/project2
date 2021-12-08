@@ -30,7 +30,7 @@
             <!-- general form elements -->
             <div class="card card-primary">
               <div class="card-header">
-                <h3 class="card-title">Thêm mới khóa học</h3>
+                <h3 class="card-title">Thêm mới niên khóa</h3>
               </div>
               @if(isset($message))
                 <p style="color:rgb(255, 81, 0);">
