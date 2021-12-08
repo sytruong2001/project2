@@ -224,7 +224,7 @@
             <a href="{{ route('faculty.index')}}" class="nav-link">
               <i class="nav-icon fas fa-chart-pie"></i>
               <p>
-                Quản lý khóa học
+                Quản lý niên khóa
               </p>
             </a>
           </li>
