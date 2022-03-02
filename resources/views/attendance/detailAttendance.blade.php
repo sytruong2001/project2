@@ -62,7 +62,7 @@
                                 @foreach ($facultys as $faculty)
                                   @if ($faculty->idFaculty == $class->idFaculty)
                                       {{$class->nameClass}}{{$faculty->nameFaculty}}
-                                  @endif
+                                  @endif 
                                 @endforeach  
                               @endif
                             @endforeach

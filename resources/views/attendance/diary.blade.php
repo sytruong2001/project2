@@ -32,25 +32,33 @@
               <div class="card-header">
                 <h3 class="card-title">Danh sách điểm danh</h3>
                 <br>
-                <h3 class="btn btn-default"> 
+                {{-- <h3 class="btn btn-default">  --}}
                   <form action="" >
                     {{-- Chọn những phân công muốn xem --}}
-                    Chọn lớp + môn học: 
-                    <select name="idAssign" class="form-control">
-                      <option value="">.................................</option>
-                      @foreach ($assign as $assign)
-                          <option value="{{ $assign->idAssign }}"
-                            @if ($assign->idAssign == $idAssign)
-                              {{"selected"}}
-                            @endif
-                          >
-                            {{$assign->nameClass}}{{$assign->nameFaculty}}--{{$assign->nameSubject}}
-                          </option>
-                      @endforeach
-                    </select>
-                    <button class="btn btn-default">Okkkkkkk</button>
+                    <div class="row">
+                      <div class="col-5" style="text-align: right">
+                        Chọn lớp + môn học: 
+                      </div>
+                    
+                    <div class="col-5">
+                      <select name="idAssign" class="form-control">
+                        <option value="">.................................</option>
+                        @foreach ($assign as $assign)
+                            <option value="{{ $assign->idAssign }}"
+                              @if ($assign->idAssign == $idAssign)
+                                {{"selected"}}
+                              @endif
+                            >
+                              {{$assign->nameClass}}--{{$assign->nameSubject}}
+                            </option>
+                        @endforeach
+                      </select>
+                    </div>
+                    <br><br>
+                  </div>
+                    <button class="btn btn-default" style="margin:auto; display:block">Okkkkkkk</button>
                   </form>
-                </h3>
+                {{-- </h3> --}}
               </div>
 
               <!-- /.card-header -->
@@ -74,7 +82,7 @@
                       <tr>
                         <th>{{ $index++}}</th>
                         <th>{{ $attendance->idAttendance}}</th>
-                        <th>{{ $attendance->nameClass}}{{ $attendance->nameFaculty}}</th>
+                        <th>{{ $attendance->nameClass}}</th>
                         <th>{{ $attendance->nameSubject}}</th>
                         <th>{{ $attendance->dateAttendance}}</th>
                         <th>{{ $attendance->start}}</th>

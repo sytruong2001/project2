@@ -101,12 +101,11 @@ class TeacherController extends Controller
             ->get();
         
         $query = DB::table('assign')
-        ->join('faculty', 'assign.idFaculty', '=', 'faculty.idFaculty')
         ->join('classroom', 'assign.idClass', '=', 'classroom.idClass')
         ->join('subject', 'assign.idSubject', '=', 'subject.idSubject')
         ->where('assign.idTeacher', '=', $id)
         ->where('assign.available', '=', 1)
-        ->select('assign.*', 'faculty.nameFaculty', 'classroom.nameClass', 'subject.nameSubject')
+        ->select('assign.*', 'classroom.nameClass', 'subject.nameSubject')
         ->get();
         
         return view("info.index",[

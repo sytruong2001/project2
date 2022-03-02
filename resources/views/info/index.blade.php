@@ -50,9 +50,9 @@
 
                     <li class="list-group-item">
                         <b>Giới tính: 
-                            @if ($teacher->gender == 1)
+                            @if ($teacher->gender == 0)
                                 {{ "Nam"}}
-                            @elseif ($teacher->gender == 0)
+                            @elseif ($teacher->gender == 1)
                                 {{ "Nữ"}}
                             @endif
                             
@@ -91,7 +91,6 @@
                   <tr>
                     <th>STT</th>
                     <th>Tên lớp</th>
-                    <th>Tên khóa học</th>
                     <th>Môn học</th>
                   </tr>
                   </thead>
@@ -100,7 +99,6 @@
                       <tr>
                         <th>{{ $index++}}</th>
                         <th>{{ $class->nameClass}}</th>
-                        <th>{{ $class->nameFaculty}}</th>
                         <th>{{ $class->nameSubject}}</th>
                       </tr>
                     @endforeach
@@ -109,7 +107,6 @@
                   <tr>
                     <th>STT</th>
                     <th>Tên lớp</th>
-                    <th>Tên khóa học</th>
                     <th>Môn học</th>
                   </tr>
                   </tfoot>

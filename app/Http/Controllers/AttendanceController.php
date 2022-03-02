@@ -30,8 +30,7 @@ class AttendanceController extends Controller
                 $assign = DB::table('assign')
                 ->join('classroom', 'assign.idClass', '=', 'classroom.idClass')
                 ->join('subject', 'assign.idSubject', '=', 'subject.idSubject')
-                ->join('faculty', 'classroom.idFaculty', '=', 'faculty.idFaculty')
-                ->select('assign.*', 'faculty.nameFaculty', 'classroom.nameClass', 'subject.nameSubject')
+                ->select('assign.*', 'classroom.nameClass', 'subject.nameSubject')
                 ->where('assign.available','=', 1)
                 ->get();
                 
@@ -40,9 +39,8 @@ class AttendanceController extends Controller
                         ->join('assign','attendance.idAssign','=','assign.idAssign')
                         ->join('subject','assign.idSubject','=','subject.idSubject')
                         ->join('classroom','assign.idClass','=','classroom.idClass')
-                        ->join('faculty', 'classroom.idFaculty', '=', 'faculty.idFaculty')
                         ->where('attendance.idAssign', '=', $idAssign)
-                        ->select('attendance.*','classroom.nameClass','subject.nameSubject','faculty.nameFaculty')
+                        ->select('attendance.*','classroom.nameClass','subject.nameSubject')
                         ->get();
                         // trả về trang view
                         return view('attendance.diary',[
@@ -57,9 +55,8 @@ class AttendanceController extends Controller
                 // lấy dữ liệu phân công
                 $assign = DB::table('assign')
                 ->join('classroom', 'assign.idClass', '=', 'classroom.idClass')
-                ->join('faculty', 'classroom.idFaculty', '=', 'faculty.idFaculty')
                 ->join('subject', 'assign.idSubject', '=', 'subject.idSubject')
-                ->select('assign.*','faculty.nameFaculty', 'classroom.nameClass', 'subject.nameSubject')
+                ->select('assign.*', 'classroom.nameClass', 'subject.nameSubject')
                 ->where('assign.available','=', 1)
                 ->get();
                     // lấy dữ liệu điểm danh
@@ -86,21 +83,19 @@ class AttendanceController extends Controller
             // nếu có mã phân công
             if(isset($idAssign)){
                 $assign = DB::table('assign')
-                ->join('faculty', 'assign.idFaculty', '=', 'faculty.idFaculty')
                 ->join('classroom', 'assign.idClass', '=', 'classroom.idClass')
                 ->join('subject', 'assign.idSubject', '=', 'subject.idSubject')
-                ->select('assign.*', 'faculty.nameFaculty', 'classroom.nameClass', 'subject.nameSubject')
+                ->select('assign.*', 'classroom.nameClass', 'subject.nameSubject')
                 ->where('assign.available','=', 1)
                 ->where('idTeacher','=', $idTeacher)
                 ->get();
                         // lấy dữ liệu điểm danh dựa vào mã phân công
                         $attendance = DB::table('attendance')
                         ->join('assign','attendance.idAssign','=','assign.idAssign')
-                        ->join('subject','attendance.idSubject','=','subject.idSubject')
-                        ->join('classroom','attendance.idClass','=','classroom.idClass')
-                        ->join('faculty', 'classroom.idFaculty', '=', 'faculty.idFaculty')
+                        ->join('subject','assign.idSubject','=','subject.idSubject')
+                        ->join('classroom','assign.idClass','=','classroom.idClass')
                         ->where('attendance.idAssign', '=', $idAssign)
-                        ->select('attendance.*','classroom.nameClass','subject.nameSubject','faculty.nameFaculty')
+                        ->select('attendance.*','classroom.nameClass','subject.nameSubject')
                         ->get();
                         
                         return view('attendance.diary',[
@@ -113,18 +108,17 @@ class AttendanceController extends Controller
             }else{
                 $idAssign = '';
                 $assign = DB::table('assign')
-                ->join('faculty', 'assign.idFaculty', '=', 'faculty.idFaculty')
                 ->join('classroom', 'assign.idClass', '=', 'classroom.idClass')
                 ->join('subject', 'assign.idSubject', '=', 'subject.idSubject')
-                ->select('assign.*', 'faculty.nameFaculty', 'classroom.nameClass', 'subject.nameSubject')
+                ->select('assign.*', 'classroom.nameClass', 'subject.nameSubject')
                 ->where('assign.available','=', 1)
                 ->where('idTeacher','=', $idTeacher)
                 ->get();
 
                     $attendance = DB::table('attendance')
                     ->join('assign','attendance.idAssign','=','assign.idAssign')
-                    ->join('subject','attendance.idSubject','=','subject.idSubject')
-                    ->join('classroom','attendance.idClass','=','classroom.idClass')
+                    ->join('subject','assign.idSubject','=','subject.idSubject')
+                    ->join('classroom','assign.idClass','=','classroom.idClass')
                     ->where('attendance.idAssign', '=', $idAssign)
                     ->select('attendance.*','classroom.nameClass','subject.nameSubject')
                     ->get();
@@ -139,49 +133,49 @@ class AttendanceController extends Controller
             
         }
     }
-
+    // function dùng để xử lý điểm danh rồi hay chưa?
     public function search(Request $request){
         if($request->isMethod("post")){
+            // lấy mã phân công
             $idAssign = $request->input("idAssign");
             // return $idAssign;
+            // lấy thông tin về phân công dựa vào mã lấy được
             $getID = DB::table('assign')
-            ->select('assign.*','assign.idFaculty','classroom.nameClass','faculty.nameFaculty','subject.nameSubject')
+            ->select('assign.*','classroom.nameClass','subject.nameSubject')
             ->join('subject','assign.idSubject','=','subject.idSubject')
             ->join('classroom','assign.idClass','=','classroom.idClass')
-            ->join('faculty','assign.idFaculty','=','faculty.idFaculty')
-            ->distinct('assign.idSubject','assign.idClass','assign.idFaculty')
+            ->distinct('assign.idSubject','assign.idClass')
             ->where('idAssign', '=', $idAssign)
             ->get();
             // return $idClass;
             // return $getID;
-
+            // kiểm tra thông tin có tồn tại hoặc rỗng hay không?
             if ($getID != null || count($getID) > 0) {
                 foreach($getID as $getID){
                     $mydate = new DateTime();
                     $mydate->modify('+7 hours');
                     $curentDate = $mydate->format('Y-m-d');
                     
-                   
+                   // đếm xem nay đã điểm danh cho mã phân công được nhận hay chưa
                     $count = DB::table('attendance')
-                    ->where('idClass', '=', $getID->idClass)
-                    ->where('idSubject', '=', $getID->idSubject)
+                    ->where('idAssign', '=', $getID->idAssign)
                     ->where('created_at', '>=', $curentDate)
                     ->select('*')
                     ->count();
-
+                    // nếu chưa điểm danh thì lấy dữ liệu về sinh viên sẽ được điểm danh
                     if($count == null || $count == 0){
                         $student = DB::table('student')
                         ->where('idClass', '=', $getID->idClass)
                         ->get();
+                    // nếu điểm danh rồi thì quay về trang ban đầu và hiện thông báo
                     }else{
                         if(Session::exists("user_id")){
                             $idTeacher = Session::get("user_id");
                             $view = DB::table('assign')
-                            ->select('assign.*','assign.idFaculty','classroom.nameClass','faculty.nameFaculty','subject.nameSubject')
+                            ->select('assign.*','classroom.nameClass','subject.nameSubject')
                             ->join('subject','assign.idSubject','=','subject.idSubject')
                             ->join('classroom','assign.idClass','=','classroom.idClass')
-                            ->join('faculty','assign.idFaculty','=','faculty.idFaculty')
-                            ->distinct('assign.idSubject','assign.idClass','assign.idFaculty')
+                            ->distinct('assign.idSubject','assign.idClass')
                             ->where('assign.idTeacher', '=', $idTeacher)
                             ->get();
                             // return $subject;
@@ -204,11 +198,10 @@ class AttendanceController extends Controller
             if(Session::exists("user_id")){
                 $idTeacher = Session::get("user_id");
                 $view = DB::table('assign')
-                ->select('assign.*','assign.idFaculty','classroom.nameClass','faculty.nameFaculty','subject.nameSubject')
+                ->select('assign.*','classroom.nameClass','subject.nameSubject')
                 ->join('subject','assign.idSubject','=','subject.idSubject')
                 ->join('classroom','assign.idClass','=','classroom.idClass')
-                ->join('faculty','assign.idFaculty','=','faculty.idFaculty')
-                ->distinct('assign.idSubject','assign.idClass','assign.idFaculty')
+                ->distinct('assign.idSubject','assign.idClass')
                 ->where('assign.idTeacher', '=', $idTeacher)
                 ->get();
                 // return $subject;
@@ -233,6 +226,8 @@ class AttendanceController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
+
+    // function dùng để lưu thông tin điểm danh
     public function store(Request $request)
     {
         //lấy dữ liệu từ form khi điểm danh
@@ -258,8 +253,7 @@ class AttendanceController extends Controller
         
         $attendance = new Attendance();
         $attendance->dateAttendance = new Datetime();
-        $attendance->idClass = $idClass;
-        $attendance->idSubject = $idSubject;
+        $attendance->idAssign = $idAssign;
         $attendance->start = $start;
         $attendance->end = $end;
         $attendance->save();
@@ -274,20 +268,18 @@ class AttendanceController extends Controller
         // lưu dữ liệu vào bảng điểm danh chi tiết
             $data = new DetailAttendance();
             $data->idStudent = $idStudent;
-            $data->idClass = $idClass;
-            $data->idSubject = $idSubject;
             $data->idAttendance = $idAttendance;
             $data->status = $status;
             $data->save();
         }
+        // sau khi lưu thành công thì lấy dữ liệu cuổi lần điểm danh vừa nãy
          if(Session::exists("user_id")){
             $idTeacher = Session::get("user_id");
             $view = DB::table('assign')
-            ->select('assign.*','assign.idFaculty','classroom.nameClass','faculty.nameFaculty','subject.nameSubject')
+            ->select('assign.*','classroom.nameClass','subject.nameSubject')
             ->join('subject','assign.idSubject','=','subject.idSubject')
             ->join('classroom','assign.idClass','=','classroom.idClass')
-            ->join('faculty','assign.idFaculty','=','faculty.idFaculty')
-            ->distinct('assign.idSubject','assign.idClass','assign.idFaculty')
+            ->distinct('assign.idSubject','assign.idClass')
             ->where('assign.idTeacher', '=', $idTeacher)
             ->get();
             $dihocs = DB::table('detailattendance')
