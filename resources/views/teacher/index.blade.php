@@ -79,7 +79,7 @@
                           <th>{{ $teacher->idTeacher}}</th>
                           <th>{{ $teacher->lastName }} {{ $teacher->middleName }} {{ $teacher->firstName }}</th>
                           <th>
-                            @if( $teacher->gender == 1)
+                            @if( $teacher->gender == 0)
                               Nam
                             @else
                               Nữ

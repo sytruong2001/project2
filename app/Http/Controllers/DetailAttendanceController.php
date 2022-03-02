@@ -22,10 +22,9 @@ class DetailAttendanceController extends Controller
             $idAssign = $request->get("idAssign");
             if(isset($idAssign)){
                 $assign = DB::table('assign')
-                ->join('faculty', 'assign.idFaculty', '=', 'faculty.idFaculty')
                 ->join('classroom', 'assign.idClass', '=', 'classroom.idClass')
                 ->join('subject', 'assign.idSubject', '=', 'subject.idSubject')
-                ->select('assign.*', 'faculty.nameFaculty', 'classroom.nameClass', 'subject.nameSubject')
+                ->select('assign.*','classroom.nameClass', 'subject.nameSubject')
                 ->where('assign.available','=', 1)
                 ->get();
                 $idClass = DB::table('assign')
@@ -49,10 +48,9 @@ class DetailAttendanceController extends Controller
                         ->join('subject','assign.idSubject','=','subject.idSubject')
                         ->join('classroom','assign.idClass','=','classroom.idClass')
                         ->join('student', 'classroom.idClass', '=', 'student.idClass')
-                        ->join('faculty', 'classroom.idFaculty', '=', 'faculty.idFaculty')
                         ->where('assign.idClass', '=', $idClass->idClass)
                         ->where('assign.idSubject', '=', $idSubject->idSubject)
-                        ->select(DB::raw('DISTINCT student.idStudent, classroom.nameClass,faculty.nameFaculty,student.*,subject.nameSubject'))
+                        ->select(DB::raw('DISTINCT student.idStudent, classroom.nameClass,student.*,subject.nameSubject'))
                         ->get();
                         // dd($student);
                         $countAttendance = DB::table('attendance')

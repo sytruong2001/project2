@@ -34,6 +34,7 @@
                 <br>
                 <h3 class="btn btn-default"> 
                   <form action="" >
+                    {{-- Chọn những phân công muốn xem --}}
                     Chọn lớp + môn học: 
                     <select name="idAssign" class="form-control">
                       <option value="">.................................</option>

@@ -15,7 +15,7 @@ class AuthenticateController extends Controller
 
     public function loginProcess (Request $request){
         $email = $request->get("email");
-        $password = md5($request->get("password"));
+        $password = $request->get("password");
 
         // var_dump($password);
         $admin = DB::table("admin")->where("email", $email)->where("password", $password)->first();

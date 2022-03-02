@@ -53,14 +53,6 @@
                         @endforeach
                     </select>
                   </div>
-                  <div class="form-group">
-                    <label for="exampleInputEmail1">Tên khóa</label>
-                    <select name="idFaculty" id="idFaculty" class="form-control">
-                        @foreach ($faculty as $faculty)
-                            <option value="{{ $faculty->idFaculty }}">{{ $faculty->nameFaculty }}</option>
-                        @endforeach
-                    </select>
-                  </div>
 
                   <div class="form-group">
                     <label for="exampleInputEmail1">Tên môn học</label>

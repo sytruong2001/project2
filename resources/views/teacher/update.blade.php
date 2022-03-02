@@ -60,13 +60,13 @@
                   </div>
                   <div class="form-group">
                     <label for="exampleInputEmail1">Giới tính</label><br>
-                    <input type="radio" name="gender"  id="exampleInputEmail1" value="1"
-                      @if ($teacher->gender == 1)
+                    <input type="radio" name="gender"  id="exampleInputEmail1" value="0"
+                      @if ($teacher->gender == 0)
                         checked
                       @endif
                     >Nam
-                    <input type="radio" name="gender"  id="exampleInputEmail1" value="0"
-                      @if ($teacher->gender == 0)
+                    <input type="radio" name="gender"  id="exampleInputEmail1" value="1"
+                      @if ($teacher->gender == 1)
                         checked
                       @endif
                     >Nữ

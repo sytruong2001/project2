@@ -49,9 +49,9 @@
 
                     <li class="list-group-item">
                         <b>Giới tính: 
-                            @if ($admin->gender == 1)
+                            @if ($admin->gender == 0)
                                 {{ "Nam"}}
-                            @elseif ($admin->gender == 0)
+                            @elseif ($admin->gender == 1)
                                 {{ "Nữ"}}
                             @endif
                             

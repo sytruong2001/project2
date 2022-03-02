@@ -37,7 +37,7 @@ class AssignController extends Controller
         
         $data = DB::table('assign')
         ->join('classroom', 'assign.idClass', '=', 'classroom.idClass')
-        ->join('faculty', 'assign.idFaculty', '=', 'faculty.idFaculty')
+        ->join('faculty', 'classroom.idFaculty', '=', 'faculty.idFaculty')
         ->join('subject', 'assign.idSubject', '=', 'subject.idSubject')
         ->join('teacher', 'assign.idTeacher', '=', 'teacher.idTeacher')
         ->where('assign.idClass', '=', $idClass)
@@ -47,13 +47,13 @@ class AssignController extends Controller
         ->get();
 
         $timeStart = DB::table('attendance')
-            ->select(DB::raw('idClass, idSubject, SUM(start) AS sum_start'))
-            ->groupBy('idClass','idSubject')
+            ->select(DB::raw('idAssign, SUM(start) AS sum_start'))
+            ->groupBy('idAssign')
             ->orderBy('sum_start', 'desc')
             ->get();
         $timeEnd = DB::table('attendance')
-            ->select(DB::raw('idClass, idSubject, SUM(end) AS sum_end'))
-            ->groupBy('idClass','idSubject')
+            ->select(DB::raw('idAssign, SUM(end) AS sum_end'))
+            ->groupBy('idAssign')
             ->orderBy('sum_end', 'desc')
             ->get();
         // dd($timeEnd);
@@ -90,12 +90,7 @@ class AssignController extends Controller
         $query = $query->select("*");
         $teacher = $query->paginate(10);
 
-        $query = DB::table("faculty");
-        $query = $query->where("available", "=", 1);
-        $query = $query->select("*");
-        $faculty = $query->paginate(10);
-
-        return view("assign.create",['faculty' => $faculty,'class' => $class, 'subject' => $subject, 'teacher'=> $teacher ]);
+        return view("assign.create",['class' => $class, 'subject' => $subject, 'teacher'=> $teacher ]);
     }
 
     /**
@@ -108,23 +103,21 @@ class AssignController extends Controller
     {
         if($request->isMethod("post")){
             $idClass = $request->input("idClass");
-            $idFaculty = $request->input("idFaculty");
             $idSubject = $request->input("idSubject");
             $idTeacher = $request->input("idTeacher");
             $startDate = $request->input("startDate");
 
-            if (DB::table('assign')->where('idClass', '=', $idFaculty)->exists()) {
+            
 
-                if(DB::table('assign')->where('idClass', '=', $idFaculty)->where('idSubject', '=', $idClass)->exists() ){
+                if(DB::table('assign')->where('idSubject', '=', $idClass)->exists() ){
 
-                    if (DB::table('assign')->where('idClass', '=', $idFaculty)->where('idSubject', '=', $idClass)->where('idTeacher', '=', $idSubject)->exists()){
+                    if (DB::table('assign')->where('idSubject', '=', $idClass)->where('idTeacher', '=', $idSubject)->exists()){
 
-                        if (DB::table('assign')->where('idClass', '=', $idFaculty)->where('idSubject', '=', $idClass)->where('idTeacher', '=', $idSubject)->where('idTeacher', '=', $idTeacher)->exists()){
+                        if (DB::table('assign')->where('idSubject', '=', $idClass)->where('idTeacher', '=', $idSubject)->where('idTeacher', '=', $idTeacher)->exists()){
                             return redirect('assign');
                         }else{
                             $assign = new Assign();
                             $assign->idClass = $idClass;
-                            $assign->idFaculty = $idFaculty;
                             $assign->idSubject = $idSubject;
                             $assign->idTeacher = $idTeacher;
                             $assign->start_date = $startDate;
@@ -135,7 +128,6 @@ class AssignController extends Controller
                     }else{
                         $assign = new Assign();
                         $assign->idClass = $idClass;
-                        $assign->idFaculty = $idFaculty;
                         $assign->idSubject = $idSubject;
                         $assign->idTeacher = $idTeacher;
                         $assign->start_date = $startDate;
@@ -147,7 +139,6 @@ class AssignController extends Controller
                 }else{
                     $assign = new Assign();
                     $assign->idClass = $idClass;
-                    $assign->idFaculty = $idFaculty;
                     $assign->idSubject = $idSubject;
                     $assign->idTeacher = $idTeacher;
                     $assign->start_date = $startDate;
@@ -155,17 +146,6 @@ class AssignController extends Controller
                     $assign->save();
                     return redirect('assign');
                 }
-             }else{
-                $assign = new Assign();
-                $assign->idClass = $idClass;
-                $assign->idFaculty = $idFaculty;
-                $assign->idSubject = $idSubject;
-                $assign->idTeacher = $idTeacher;
-                $assign->start_date = $startDate;
-                $assign->available = 1;
-                $assign->save();
-                return redirect('assign');
-             }
         }
             return view("assign.create");
     }
