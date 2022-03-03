@@ -23,7 +23,15 @@
   <div class="card">
     <div class="card-body login-card-body">
       <p class="login-box-msg">Hãy đăng nhập để bắt đầu !</p>
-
+      <p class="login-box-msg">
+        <?php
+          // Set the new timezone
+          date_default_timezone_set('Asia/Ho_Chi_Minh');
+          $date = date('d-m-y h:i:s');
+          echo "(".$date.")";
+        ?>
+      </p>
+      
       <form action="/login-process" method="post" enctype="multipart/form-data">
         <input type="hidden" name="_token" value="{{ csrf_token() }}">
         

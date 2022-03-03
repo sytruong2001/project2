@@ -35,11 +35,11 @@
                   <form action="" >
                     {{-- Chọn những phân công muốn xem --}}
                     <div class="row">
-                      <div class="col-5" style="text-align: right">
+                      <div class="col-4" style="text-align: right">
                         Chọn lớp + môn học: 
                       </div>
                     
-                      <div class="col-5">
+                      <div class="col-4">
                         <select name="idAssign" class="form-control">
                           <option value=""></option>
                           @foreach ($assign as $assign)
@@ -53,9 +53,36 @@
                           @endforeach
                         </select>
                       </div>
-                    <br><br>
-                  </div>
-                    <button class="btn btn-default" style="margin:auto; display:block">Okkkkkkk</button>
+                      <br><br>
+                    </div>
+                    <br>
+                    <div class="row">
+                      <div class="col-4" style="text-align: right">
+                        Hoặc 
+                      </div>
+                    </div>
+                    <br>
+                    {{-- Chọn giảng viên muốn xem thông tin --}}
+                    <div class="row">
+                      <div class="col-4" style="text-align: right">
+                        Số giờ dạy trong tháng: 
+                      </div>
+                    
+                      <div class="col-4">
+                        <select name="idTeacher" class="form-control">
+                          <option value=""></option>
+                          {{-- @foreach ($teacher as $teacher)
+                              <option style="text-align: center" value="{{ $teacher->idTeacher}}"
+                                @if ($teacher->idTeacher == $idTeacher)
+                                  {{"selected"}}
+                                @endif
+                              >{{$teacher->lastName}} {{$teacher->middleName}} {{$teacher->firstName}}</option>
+                          @endforeach --}}
+                        </select>
+                      </div>
+                    </div>
+                    <br>
+                    <button class="btn btn-primary" style="margin:auto; display:block">Okkkkkkk</button>
                   </form>
               </div>
 

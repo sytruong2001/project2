@@ -116,7 +116,7 @@
     <!-- Brand Logo -->
     <a href="#" class="brand-link">
       <img src="asset/dist/img/AdminLTELogo.png" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
-      <span class="brand-text font-weight-light">Project 2 | S-T</span>
+      <span class="brand-text font-weight-light">Project 3 | L-S</span>
     </a>
 
     <!-- Sidebar -->
@@ -179,15 +179,27 @@
 
 
           @if(Session::exists('admin_id'))
-          {{-- Thao tác với sinh viên --}}
+
+          {{-- Thao tác với thống kê --}}
           <li class="nav-item">
-            <a href="{{ route('admin.show', Session::get('admin_id') ) }}" class="nav-link">
-              <i class="nav-icon fas fa-copy"></i>
+            <a href="{{ route('detailattendance.index')}}" class="nav-link">
+              <i class="nav-icon fas fa-table"></i>
               <p>
-                Thông tin cá nhân
+                Thống kê
               </p>
             </a>
           </li>
+
+          <!-- Thao tác phân công -->
+          <li class="nav-item">
+            <a href="{{ route('assign.index')}}" class="nav-link">
+              <i class="nav-icon fas fa-table"></i>
+              <p>
+                Phân công
+              </p>
+            </a>
+          </li>
+
           <!-- Thao tác với giảng viên -->
           <li class="nav-item">
             <a href="{{ route('teacher.index')}}" class="nav-link">
@@ -249,22 +261,14 @@
             </a>
           </li>
 
-          <!-- Thao tác phân công -->
-          <li class="nav-item">
-            <a href="{{ route('assign.index')}}" class="nav-link">
-              <i class="nav-icon fas fa-table"></i>
-              <p>
-                Phân công
-              </p>
-            </a>
-          </li>
+          
 
-          {{-- Thao tác với thống kê --}}
+          {{-- Thao tác với sinh viên --}}
           <li class="nav-item">
-            <a href="{{ route('detailattendance.index')}}" class="nav-link">
-              <i class="nav-icon fas fa-table"></i>
+            <a href="{{ route('admin.show', Session::get('admin_id') ) }}" class="nav-link">
+              <i class="nav-icon fas fa-copy"></i>
               <p>
-                Thống kê
+                Thông tin cá nhân
               </p>
             </a>
           </li>
@@ -283,9 +287,9 @@
 
   <footer class="main-footer">
     <div class="float-right d-none d-sm-block">
-      <b>Version</b> 2.0
+      <b>Version</b> 3.0
     </div>
-    <strong>Copyright &copy; 2021-2022 <a href="https://adminlte.io">Project2-ST</a>.</strong> All rights reserved.
+    <strong>Copyright &copy; 2022-2023 <a href="https://adminlte.io">Project3-LS</a>.</strong> All rights reserved.
   </footer>
 
   <!-- Control Sidebar -->

@@ -52,24 +52,31 @@
                     </h3>
                   </div>
                 </div>
-                <h3 class="btn btn-default">
                   
                   <form action="" >
-                    Chọn Lớp: 
-                    <select name="idClass" class="form-control">
-                      <option value="">.................................</option>
-                      @foreach ($classs as $class)
-                          <option value="{{$class->idClass}}"
-                            @if ($class->idClass == $idClass)
-                              {{"selected"}}
-                            @endif
-                          >{{$class->nameClass}}{{$class->nameFaculty}}</option>
-                      @endforeach
-                    </select>
+                    {{-- Chọn lớp muốn xem thông tin --}}
+                  <div class="row">
+                    <div class="col-3" style="text-align: right">
+                      Chọn lớp: 
+                    </div>
+                  
+                    <div class="col-6">
+                      <select name="idClass" class="form-control">
+                        <option value=""></option>
+                        @foreach ($classs as $class)
+                            <option style="text-align: center" value="{{$class->idClass}}"
+                              @if ($class->idClass == $idClass)
+                                {{"selected"}}
+                              @endif
+                            >{{$class->nameClass}}{{$class->nameFaculty}}</option>
+                        @endforeach
+                      </select>
+                    </div>
+                  </div>
+                    
                     <br>
-                    <button class="btn btn-primary">Okkkkkkk</button>
+                    <button class="btn btn-primary" style="margin:auto; display:block">Okkkkkkk</button>
                   </form>
-                </h3>
               </div>
 
               <!-- /.card-header -->

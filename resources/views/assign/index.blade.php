@@ -54,39 +54,57 @@
                     </h3>
                   </div>
                 </div>
-                <h3 class="btn btn-default"> 
-                  <form action="" >
-                    Chọn lớp: 
-                    <select name="idClass" class="form-control">
-                      <option value="">.................................</option>
-                      @foreach ($class as $class)
-                          <option value="{{$class->idClass}}"
-                            @if ($class->idClass == $idClass)
-                              {{"selected"}}
-                            @endif
-                          >{{$class->nameClass}}{{$class->nameFaculty}}</option>
-                      @endforeach
-                    </select>
-                    <button class="btn btn-default">Okkkkkkk</button>
-                  </form>
-                </h3>
-                <h3 class="btn btn-default">
+                {{-- Phần chức năng tìm kiếm --}}
+                <form action="" >
+                  {{-- Chọn lớp muốn xem thông tin --}}
+                  <div class="row">
+                    <div class="col-3" style="text-align: right">
+                      Chọn lớp: 
+                    </div>
                   
-                  <form action="" >
-                    Chọn giảng viên: 
-                    <select name="idTeacher" class="form-control">
-                      <option value="">.................................</option>
-                      @foreach ($teacher as $teacher)
-                          <option value="{{ $teacher->idTeacher}}"
-                            @if ($teacher->idTeacher == $idTeacher)
-                              {{"selected"}}
-                            @endif
-                          >{{$teacher->lastName}} {{$teacher->middleName}} {{$teacher->firstName}}</option>
-                      @endforeach
-                    </select>
-                    <button class="btn btn-default">Okkkkkkk</button>
-                  </form>
-                </h3>
+                    <div class="col-6">
+                      <select name="idClass" class="form-control">
+                        <option value=""></option>
+                        @foreach ($class as $class)
+                            <option style="text-align: center" value="{{$class->idClass}}"
+                              @if ($class->idClass == $idClass)
+                                {{"selected"}}
+                              @endif
+                            >{{$class->nameClass}}{{$class->nameFaculty}}</option>
+                        @endforeach
+                      </select>
+                    </div>
+                </div>
+                <br>
+                <div class="row">
+                  <div class="col-3" style="text-align: right">
+                    Hoặc 
+                  </div>
+                </div>
+                <br>
+                  {{-- Chọn giảng viên muốn xem thông tin --}}
+                  <div class="row">
+                    <div class="col-3" style="text-align: right">
+                      Chọn giảng viên: 
+                    </div>
+                  
+                    <div class="col-6">
+                      <select name="idTeacher" class="form-control">
+                        <option value=""></option>
+                        @foreach ($teacher as $teacher)
+                            <option style="text-align: center" value="{{ $teacher->idTeacher}}"
+                              @if ($teacher->idTeacher == $idTeacher)
+                                {{"selected"}}
+                              @endif
+                            >{{$teacher->lastName}} {{$teacher->middleName}} {{$teacher->firstName}}</option>
+                        @endforeach
+                      </select>
+                    </div>
+                </div>
+                <br>
+                  <button class="btn btn-primary" style="margin:auto; display:block">Okkkkkkk</button>
+                </form>
+                <br>
               </div>
 
               <!-- /.card-header -->
@@ -119,7 +137,7 @@
                         <th>
                           @foreach ($timeStarts as $start)
                             @foreach ($timeEnds as $end)
-                              @if ($assign->idClass == $start->idClass && $assign->idClass == $end->idClass && $assign->idSubject == $start->idSubject && $assign->idSubject == $end->idSubject)
+                              @if ($assign->idAssign == $start->idAssign && $assign->idAssign == $end->idAssign)
                                 @if ((($end->sum_end - $start->sum_start) / 10000) > 0 && (($end->sum_end - $start->sum_start) / 10000) < $assign->duration)
                                   <p style="color:blue">Đang dạy (Hoàn thành {{ ($end->sum_end - $start->sum_start) / 10000}} giờ)</p> 
                                 @elseif((($end->sum_end - $start->sum_start) / 10000) == $assign->duration)

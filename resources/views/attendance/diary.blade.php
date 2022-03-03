@@ -32,19 +32,18 @@
               <div class="card-header">
                 <h3 class="card-title">Danh sách điểm danh</h3>
                 <br>
-                {{-- <h3 class="btn btn-default">  --}}
                   <form action="" >
                     {{-- Chọn những phân công muốn xem --}}
                     <div class="row">
-                      <div class="col-5" style="text-align: right">
+                      <div class="col-4" style="text-align: right">
                         Chọn lớp + môn học: 
                       </div>
                     
-                    <div class="col-5">
+                    <div class="col-4">
                       <select name="idAssign" class="form-control">
-                        <option value="">.................................</option>
+                        <option value=""></option>
                         @foreach ($assign as $assign)
-                            <option value="{{ $assign->idAssign }}"
+                            <option style="text-align: center" value="{{ $assign->idAssign }}"
                               @if ($assign->idAssign == $idAssign)
                                 {{"selected"}}
                               @endif
@@ -56,9 +55,8 @@
                     </div>
                     <br><br>
                   </div>
-                    <button class="btn btn-default" style="margin:auto; display:block">Okkkkkkk</button>
+                    <button class="btn btn-primary" style="margin:auto; display:block">Okkkkkkk</button>
                   </form>
-                {{-- </h3> --}}
               </div>
 
               <!-- /.card-header -->

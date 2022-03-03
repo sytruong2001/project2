@@ -55,39 +55,62 @@
                     </h3>
                   </div>
                 </div>
-                <h3 class="btn btn-default"> 
-                  <form action="" >
-                    Chọn Ngành: 
-                    <select name="idMajor" class="form-control">
-                      <option value="">.................................</option>
-                      @foreach ($major as $major)
-                          <option value="{{$major->idMajor}}"
-                            @if ($major->idMajor == $idMajor)
-                              {{"selected"}}
-                            @endif
-                          >{{$major->nameMajor}}</option>
-                      @endforeach
-                    </select>
-                    <button class="btn btn-default">Okkkkkkk</button>
-                  </form>
-                </h3>
-                <h3 class="btn btn-default">
+                {{-- test --}}
+                {{-- Phần chức năng tìm kiếm --}}
+                <form action="" >
+                  {{-- Chọn lớp muốn xem thông tin --}}
+                  <div class="row">
+                    <div class="col-3" style="text-align: right">
+                      Chọn Ngành: 
+                    </div>
                   
-                  <form action="" >
-                    Chọn Khóa: 
-                    <select name="idFaculty" class="form-control">
-                      <option value="">.................................</option>
-                      @foreach ($faculty as $faculty)
-                          <option value="{{ $faculty->idFaculty}}"
-                            @if ($faculty->idFaculty == $idFaculty)
-                              {{"selected"}}
-                            @endif
-                          >{{$faculty->nameFaculty}}</option>
-                      @endforeach
-                    </select>
-                    <button class="btn btn-default">Okkkkkkk</button>
-                  </form>
-                </h3>
+                    <div class="col-6">
+                      <select name="idMajor" class="form-control">
+                        <option value=""></option>
+                        @foreach ($major as $major)
+                            <option style="text-align: center" value="{{$major->idMajor}}"
+                              @if ($major->idMajor == $idMajor)
+                                {{"selected"}}
+                              @endif
+                            >{{$major->nameMajor}}</option>
+                        @endforeach
+                      </select>
+                    </div>
+                </div>
+                  
+                {{-- </form> --}}
+                <br>
+                <div class="row">
+                  <div class="col-3" style="text-align: right">
+                    Hoặc 
+                  </div>
+                </div>
+                <br>
+
+                {{-- <form action="" > --}}
+                  {{-- Chọn giảng viên muốn xem thông tin --}}
+                  <div class="row">
+                    <div class="col-3" style="text-align: right">
+                      Chọn Khóa: 
+                    </div>
+                  
+                    <div class="col-6">
+                      <select name="idFaculty" class="form-control">
+                        <option value=""></option>
+                        @foreach ($faculty as $faculty)
+                            <option style="text-align: center" value="{{ $faculty->idFaculty}}"
+                              @if ($faculty->idFaculty == $idFaculty)
+                                {{"selected"}}
+                              @endif
+                            >{{$faculty->nameFaculty}}</option>
+                        @endforeach
+                      </select>
+                    </div>
+                </div>
+                <br>
+                  <button class="btn btn-primary" style="margin:auto; display:block">Okkkkkkk</button>
+                </form>
+                {{-- end test --}}
               </div>
 
               <!-- /.card-header -->

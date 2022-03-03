@@ -51,24 +51,30 @@
                     </h3>
                   </div>
                 </div>
-                <h3 class="btn btn-default">
                   
-                  <form action="" >
-                    Chọn Ngành: 
+                <form action="" >
+                  {{-- Chọn những phân công muốn xem --}}
+                  <div class="row">
+                    <div class="col-4" style="text-align: right">
+                      Chọn Ngành:
+                    </div>
+                  
+                  <div class="col-4">
                     <select name="idMajor" class="form-control">
-                      <option value="">.................................</option>
+                      <option value=""></option>
                       @foreach ($major as $major)
-                          <option value="{{$major->idMajor}}"
+                          <option style="text-align: center" value="{{$major->idMajor}}"
                             @if ($major->idMajor == $idMajor)
                               {{"selected"}}
                             @endif
                           >{{$major->nameMajor}}</option>
                       @endforeach
                     </select>
-                    <br>
-                    <button class="btn btn-default">Okkkkkkk</button>
-                  </form>
-                </h3>
+                  </div>
+                  <br><br>
+                </div>
+                  <button class="btn btn-primary" style="margin:auto; display:block">Okkkkkkk</button>
+                </form>
               </div>
 
               <!-- /.card-header -->
