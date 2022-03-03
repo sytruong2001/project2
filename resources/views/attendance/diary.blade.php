@@ -64,14 +64,13 @@
                 <table id="example1" class="table table-bordered table-striped">
                   <thead>
                   <tr>
-                    <th>STT</th>
+                    <th>Buổi</th>
                     <th>Mã điểm danh</th>
                     <th>Tên lớp</th>
                     <th>Tên môn học</th>
                     <th>Ngày điểm danh</th>
                     <th>Thời gian bắt đầu</th>
                     <th>Thời gian kết thúc</th>
-                    <th>Chi tiết</th>
                     <th>Cập nhật</th>
                   </tr>
                   </thead>
@@ -85,21 +84,20 @@
                         <th>{{ $attendance->dateAttendance}}</th>
                         <th>{{ $attendance->start}}</th>
                         <th>{{ $attendance->end}}</th>
-                        <th><a href="{{ route('detailattendance.show', $attendance->idAttendance) }}" class="btn btn-success">Detail</a></th>
+                        {{-- <th><a href="{{ route('detailattendance.show', $attendance->idAttendance) }}" class="btn btn-success">Detail</a></th> --}}
                         <th><a href="{{ route('detailattendance.edit', $attendance->idAttendance) }}" class="btn btn-warning">Edit</a></th>
                       </tr>
                     @endforeach
                   </tbody>
                   <tfoot>
                   <tr>
-                    <th>STT</th>
+                    <th>Buổi</th>
                     <th>Mã điểm danh</th>
                     <th>Tên lớp</th>
                     <th>Tên môn học</th>
                     <th>Ngày điểm danh</th>
                     <th>Thời gian bắt đầu</th>
                     <th>Thời gian kết thúc</th>
-                    <th>Chi tiết</th>
                     <th>Cập nhật</th>
                   </tr>
                   </tfoot>

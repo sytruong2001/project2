@@ -155,7 +155,7 @@
                 <a href="{{ route('teacher.show', Session::get('user_id'))}}" class="nav-link">
                   <i class="nav-icon fas fa-copy"></i>
                   <p>
-                    Thông tin cá nhân
+                    Thông tin cá nhân & lịch dạy
                   </p>
                 </a>
               </li>

@@ -180,7 +180,7 @@ class AttendanceController extends Controller
                             ->get();
                             // return $subject;
                             
-                            return view('attendance.index', ['view' => $view])->with("message", "Lớp bạn vừa lựa chọn hôm nay đã được điểm danh =))");
+                            return view('attendance.index', ['view' => $view])->with("message", "Lớp bạn vừa lựa chọn hôm nay đã được điểm danh =((");
                         }
                     }
                     
@@ -339,7 +339,7 @@ class AttendanceController extends Controller
                 'countNP' => $countNP,
                 'countNKP' => $countNKP,
             
-            ])->with("success","Đã điểm danh thành công <3 <3");
+            ])->with("success","Đã điểm danh thành công =))");
         } 
 
     }

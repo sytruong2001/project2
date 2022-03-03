@@ -60,7 +60,7 @@
                       <!-- /.card-body -->
       
                       <div class="card-footer">
-                        <button type="submit" class="btn btn-primary">Cập nhật</button>
+                        <button type="submit" class="btn btn-primary" style="margin: auto; display: block">Cập nhật</button>
                       </div>
                     </form>
                     @endforeach
