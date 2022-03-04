@@ -9,6 +9,7 @@ use App\Models\Admin;
 
 class AuthenticateController extends Controller
 {
+    // Dành cho giảng viên và giáo vụ
     public function login (){
         return view("login");
     }
@@ -44,6 +45,34 @@ class AuthenticateController extends Controller
         }         
     }
 
+
+    // Dành cho sinh viên
+    public function loginStudent (){
+        return view("account.userlogin");
+    }
+
+    public function loginStudentProcess (Request $request){
+        $email = $request->get("email");
+
+        // var_dump($email);
+        $student = DB::table("student")->where("email", $email)->first();
+        // var_dump($student);
+        $countStudent = DB::table("student")->where("email", $email)->count();
+
+        if($student != null || $countStudent > 0){
+            $request->session()->put('student_id', $student->idStudent);
+            $request->session()->put('student_name', [$student->firstName,$student->middleName,$student->lastName]);
+            // var_dump($request->session()->get('admin_name')[0]);
+
+                // return Session::get('admin_id');
+            
+            return redirect('homeStudent');
+        }else{
+            return redirect('loginStudent')->with('errors', 'Sai tài khoản hoặc mật khẩu');
+        }         
+    }
+
+    // Đăng xuất
     public function logout(Request $request){
         $request->session()->flush();
         return redirect('login');

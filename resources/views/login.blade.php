@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Project 2 | Log in</title>
+  <title>Project 3 | Log in</title>
 
   <!-- Google Font: Source Sans Pro -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
@@ -23,14 +23,15 @@
   <div class="card">
     <div class="card-body login-card-body">
       <p class="login-box-msg">Hãy đăng nhập để bắt đầu !</p>
-      <p class="login-box-msg">
+      <p class="login-box-msg">Dành cho giáo vụ và giảng viên của LS</p>
+      <h4 class="login-box-msg">
         <?php
           // Set the new timezone
           date_default_timezone_set('Asia/Ho_Chi_Minh');
           $date = date('d-m-y h:i:s');
           echo "(".$date.")";
         ?>
-      </p>
+      </h4>
       
       <form action="/login-process" method="post" enctype="multipart/form-data">
         <input type="hidden" name="_token" value="{{ csrf_token() }}">
@@ -52,7 +53,11 @@
             </div>
           </div>
         </div>
-        
+        @if(Session::exists("errors"))
+          <p style="color:red; text-align:center;">      
+              {{ Session::get("errors") }}
+          </p>
+        @endif
         <div class="row">
             <div class="col-8">
                 <div class="icheck-primary">
@@ -69,13 +74,15 @@
           </div>
         <!-- /.col -->
         </div>
+        <br>
+        <div class="row" style="text-align:center">
+          <div class="col-12">
+            <th><a href="/loginStudent" class="btn btn-success">Đăng nhập cho sinh viên</a></th>
+          </div>
+        </div>
       </form>
-      @if(Session::exists("errors"))
-        <p style="color:red; text-align:center;">      
-            {{ Session::get("errors") }}
-        </p>
-      @endif
-    
+      
+      
       <!-- /.social-auth-links -->
     </div>
     <!-- /.login-card-body -->

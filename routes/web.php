@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthenticateController;
 use App\Http\Middleware\CheckLogin;
+use App\Http\Middleware\CheckLoginStudent;
 
 
 /*
@@ -17,11 +18,24 @@ use App\Http\Middleware\CheckLogin;
 */
 
 
-
+// Đăng nhập dành cho giảng viên và giáo vụ
 Route::get('/login', [AuthenticateController::class, "login"])->name("login");
 Route::post('/login-process', [AuthenticateController::class, "loginProcess"])->name("login-process");
 
+// Đăng nhập dành cho sinh viên
+Route::get('/loginStudent', [AuthenticateController::class, "loginStudent"])->name("loginStudent");
+Route::post('/loginStudent-process', [AuthenticateController::class, "loginStudentProcess"])->name("loginStudent-process");
 
+//  Middleware của sinh viên
+Route::middleware([CheckLoginStudent::class])->group( function(){
+    Route::get('/logout', [AuthenticateController::class, "logout"])->name("logout");
+
+    Route::get('/homeStudent', 'DashboardController@create');
+    Route::get('/statisticStudent/show/{id}', 'DashboardController@show');
+});
+
+
+// Middleware của giảng viên & giáo vụ
 Route::middleware([CheckLogin::class])->group( function(){
     Route::get('/logout', [AuthenticateController::class, "logout"])->name("logout");
     

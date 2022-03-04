@@ -63,16 +63,21 @@
         <a class="nav-link" data-toggle="dropdown" href="#">
           <i class="fas fa-user-graduate"></i>
           @if(Session::exists('admin_name'))
-          {{ Session::get('admin_name')[2] }}
-          {{ Session::get('admin_name')[1] }}
-          {{ Session::get('admin_name')[0] }}
-          {{ "(Giáo vụ)"}}
-        @elseif (Session::exists('user_name'))
-          {{ Session::get('user_name')[2] }}
-          {{ Session::get('user_name')[1] }}
-          {{ Session::get('user_name')[0] }}
-          {{ "(Giảng viên)"}}
-        @endif
+            {{ Session::get('admin_name')[2] }}
+            {{ Session::get('admin_name')[1] }}
+            {{ Session::get('admin_name')[0] }}
+            {{ "(Giáo vụ)"}}
+          @elseif (Session::exists('user_name'))
+            {{ Session::get('user_name')[2] }}
+            {{ Session::get('user_name')[1] }}
+            {{ Session::get('user_name')[0] }}
+            {{ "(Giảng viên)"}}
+          @elseif (Session::exists('student_name'))
+            {{ Session::get('student_name')[2] }}
+            {{ Session::get('student_name')[1] }}
+            {{ Session::get('student_name')[0] }}
+            {{ "(Sinh viên)"}}
+          @endif
         </a>
         <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
           
@@ -151,6 +156,7 @@
               </li>
 
               {{-- Thao tác với giảng viên --}}
+              {{-- Thông tin cá nhân --}}
               <li class="nav-item">
                 <a href="{{ route('teacher.show', Session::get('user_id'))}}" class="nav-link">
                   <i class="nav-icon fas fa-copy"></i>
@@ -159,6 +165,7 @@
                   </p>
                 </a>
               </li>
+              {{-- Đổi mật khẩu --}}
               <li class="nav-item">
                 <a href="{{ route('teacher.showPassword', Session::get('user_id'))}}" class="nav-link">
                   <i class="nav-icon fas fa-edit"></i>
@@ -169,109 +176,124 @@
               </li>
             
             @endif
-
+          @if(Session::exists('admin_id') || Session::exists('user_id'))
             <li class="nav-item">
               <a href="/attendance" class="nav-link">
                 <i class="nav-icon fas fa-chart-pie"></i>
                 <p>Nhật ký điểm danh</p>
               </a>
             </li>
-
-
+          @endif
+          {{-- Dành cho sinh viên --}}
+          @if(Session::exists('student_id')) 
+            {{-- <li class="nav-item">
+              <a href="/statisticStudent/show/{{Session::get('student_id')}}" class="nav-link">
+                <i class="nav-icon fas fa-chart-pie"></i>
+                <p>Nhật ký điểm danh</p>
+              </a>
+            </li> --}}
+            <li class="nav-item">
+              <a href="/schedule/search/{{Session::get('student_id')}}" class="nav-link">
+                <i class="nav-icon fas fa-copy"></i>
+                <p>Lịch học</p>
+              </a>
+            </li>
+          @endif
+          {{-- Dành cho giáo vụ --}}
           @if(Session::exists('admin_id'))
 
-          {{-- Thao tác với thống kê --}}
-          <li class="nav-item">
-            <a href="{{ route('detailattendance.index')}}" class="nav-link">
-              <i class="nav-icon fas fa-table"></i>
-              <p>
-                Thống kê
-              </p>
-            </a>
-          </li>
+            {{-- Thao tác với thống kê --}}
+            <li class="nav-item">
+              <a href="{{ route('detailattendance.index')}}" class="nav-link">
+                <i class="nav-icon fas fa-table"></i>
+                <p>
+                  Thống kê
+                </p>
+              </a>
+            </li>
 
-          <!-- Thao tác phân công -->
-          <li class="nav-item">
-            <a href="{{ route('assign.index')}}" class="nav-link">
-              <i class="nav-icon fas fa-table"></i>
-              <p>
-                Phân công
-              </p>
-            </a>
-          </li>
+            <!-- Thao tác phân công -->
+            <li class="nav-item">
+              <a href="{{ route('assign.index')}}" class="nav-link">
+                <i class="nav-icon fas fa-table"></i>
+                <p>
+                  Phân công
+                </p>
+              </a>
+            </li>
 
-          <!-- Thao tác với giảng viên -->
-          <li class="nav-item">
-            <a href="{{ route('teacher.index')}}" class="nav-link">
-              <i class="nav-icon fas fa-th"></i>
-              <p>
-                Quản lý giảng viên
-              </p>
-            </a>
+            <!-- Thao tác với giảng viên -->
+            <li class="nav-item">
+              <a href="{{ route('teacher.index')}}" class="nav-link">
+                <i class="nav-icon fas fa-th"></i>
+                <p>
+                  Quản lý giảng viên
+                </p>
+              </a>
 
-          </li>
+            </li>
 
-          {{-- Thao tác với sinh viên --}}
-          <li class="nav-item">
-            <a href="{{ route('student.index')}}" class="nav-link">
-              <i class="nav-icon fas fa-copy"></i>
-              <p>
-                Quản lý sinh viên
-              </p>
-            </a>
-          </li>
+            {{-- Thao tác với sinh viên --}}
+            <li class="nav-item">
+              <a href="{{ route('student.index')}}" class="nav-link">
+                <i class="nav-icon fas fa-copy"></i>
+                <p>
+                  Quản lý sinh viên
+                </p>
+              </a>
+            </li>
 
-          {{-- Thao tác với lớp --}}
-          <li class="nav-item">
-            <a href="{{ route('class.index')}}" class="nav-link">
-              <i class="nav-icon fas fa-copy"></i>
-              <p>
-                Quản lý lớp
-              </p>
-            </a>
-          </li>
+            {{-- Thao tác với lớp --}}
+            <li class="nav-item">
+              <a href="{{ route('class.index')}}" class="nav-link">
+                <i class="nav-icon fas fa-copy"></i>
+                <p>
+                  Quản lý lớp
+                </p>
+              </a>
+            </li>
 
-          <!-- Thao tác với khóa học -->
-          <li class="nav-item">
-            <a href="{{ route('faculty.index')}}" class="nav-link">
-              <i class="nav-icon fas fa-chart-pie"></i>
-              <p>
-                Quản lý niên khóa
-              </p>
-            </a>
-          </li>
+            <!-- Thao tác với khóa học -->
+            <li class="nav-item">
+              <a href="{{ route('faculty.index')}}" class="nav-link">
+                <i class="nav-icon fas fa-chart-pie"></i>
+                <p>
+                  Quản lý niên khóa
+                </p>
+              </a>
+            </li>
 
-          <!-- Thao tác với ngành học -->
-          <li class="nav-item">
-            <a href="{{ route('major.index')}}" class="nav-link">
-              <i class="nav-icon fas fa-tree"></i>
-              <p>
-                Quản lý ngành học
-              </p>
-            </a>
-          </li>
+            <!-- Thao tác với ngành học -->
+            <li class="nav-item">
+              <a href="{{ route('major.index')}}" class="nav-link">
+                <i class="nav-icon fas fa-tree"></i>
+                <p>
+                  Quản lý ngành học
+                </p>
+              </a>
+            </li>
 
-          <!-- Thao tác với môn học -->
-          <li class="nav-item">
-            <a href="{{ route('subject.index')}}" class="nav-link">
-              <i class="nav-icon fas fa-edit"></i>
-              <p>
-                Quản lý môn học
-              </p>
-            </a>
-          </li>
+            <!-- Thao tác với môn học -->
+            <li class="nav-item">
+              <a href="{{ route('subject.index')}}" class="nav-link">
+                <i class="nav-icon fas fa-edit"></i>
+                <p>
+                  Quản lý môn học
+                </p>
+              </a>
+            </li>
 
-          
+            
 
-          {{-- Thao tác với sinh viên --}}
-          <li class="nav-item">
-            <a href="{{ route('admin.show', Session::get('admin_id') ) }}" class="nav-link">
-              <i class="nav-icon fas fa-copy"></i>
-              <p>
-                Thông tin cá nhân
-              </p>
-            </a>
-          </li>
+            {{-- Thao tác với thông tin cá nhân giáo vụ --}}
+            <li class="nav-item">
+              <a href="{{ route('admin.show', Session::get('admin_id') ) }}" class="nav-link">
+                <i class="nav-icon fas fa-copy"></i>
+                <p>
+                  Thông tin cá nhân
+                </p>
+              </a>
+            </li>
           @endif
 
         </ul>

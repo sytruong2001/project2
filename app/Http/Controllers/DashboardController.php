@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use DB;
+use DB,Session;
 
 class DashboardController extends Controller
 {
@@ -52,9 +52,105 @@ class DashboardController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(Request $request)
     {
-        //
+        if(Session::exists("student_id")){
+            $idStudent = Session::get("student_id");
+        }
+        // lấy mã lớp từ bảng student thông qua mã idStudent
+        $student = DB::table('student')->select('student.*')->where('idStudent', $idStudent)->get();
+        foreach($student as $student){
+            $idClass = $student->idClass;
+        }
+        $idAssign = $request->get("idAssign");
+        if(isset($idAssign))
+        {
+            $attendance = DB::table('attendance')
+                ->join('assign','attendance.idAssign','=','assign.idAssign')
+                ->join('subject','assign.idSubject','=','subject.idSubject')
+                ->join('classroom','assign.idClass','=','classroom.idClass')
+                ->join('detailattendance','attendance.idAttendance','=','detailattendance.idAttendance')
+                ->where('attendance.idAssign', '=', $idAssign)
+                ->where('detailattendance.idStudent', '=', $idStudent)
+                ->select('attendance.*','classroom.nameClass','subject.nameSubject','detailattendance.status')
+                ->get();
+            $idAtt = DB::table('attendance')
+                ->join('assign','attendance.idAssign','=','assign.idAssign')
+                ->where('attendance.idAssign', '=', $idAssign)
+                ->select('attendance.idAttendance')
+                ->get();
+            // foreach($idAtt as $idAtt)
+            // {
+            //     $status = DB::table('detailattendance')
+            //     ->join('attendance','detailattendance.idAttendance','=','attendance.idAttendance')
+            //     ->join('student','detailattendance.idStudent','=','student.idStudent')
+            //     ->where('detailattendance.idAttendance', '=', $idAtt->idAttendance)
+            //     ->where('detailattendance.idStudent', '=', $idStudent)
+            //     ->select('detailattendance.*')
+            //     ->get();
+            // }
+            // dd($status);
+            $info = DB::table('student')
+                ->join('classroom', 'student.idClass', '=', 'classroom.idClass')
+                ->select('student.*', 'classroom.nameClass')
+                ->where('idStudent', $idStudent)
+                ->get();
+            $resultAssign = DB::table('assign')
+                ->join('subject', 'assign.idSubject', '=', 'subject.idSubject')
+                ->join('classroom', 'assign.idClass', '=', 'classroom.idClass')
+                ->select('assign.*', 'classroom.nameClass', 'subject.nameSubject')
+                ->where('assign.available','=', 1)
+                ->where('assign.idClass','=', $idClass)
+                ->get();
+            return view('indexStudent',[
+                'index' => 1,
+                'attendance' => $attendance,
+                'assign' => $resultAssign,
+                'idAssign' => $idAssign,
+                'student' => $info,
+                // 'status' => $status,
+            ]);
+            // Nếu không nhận được mã phân công
+        }else{
+            $idAssign = '';
+           
+            $assign = DB::table('assign')
+            ->join('subject', 'assign.idSubject', '=', 'subject.idSubject')
+            ->join('classroom', 'assign.idClass', '=', 'classroom.idClass')
+            ->select('assign.*', 'classroom.nameClass', 'subject.nameSubject')
+            ->where('assign.available','=', 1)
+            ->where('assign.idClass','=', $idClass)
+            ->get();
+            foreach ($assign as $assign) {
+                $attendance = DB::table('attendance')
+                    ->join('assign','attendance.idAssign','=','assign.idAssign')
+                    ->join('subject','assign.idSubject','=','subject.idSubject')
+                    ->join('classroom','assign.idClass','=','classroom.idClass')
+                    ->where('attendance.idAssign', '=', $assign->idAssign)
+                    ->select('attendance.*','classroom.nameClass','subject.nameSubject')
+                    ->get();
+            }
+            $info = DB::table('student')
+                ->join('classroom', 'student.idClass', '=', 'classroom.idClass')
+                ->select('student.*', 'classroom.nameClass')
+                ->where('idStudent', $idStudent)
+                ->get();
+            $resultAssign = DB::table('assign')
+                ->join('subject', 'assign.idSubject', '=', 'subject.idSubject')
+                ->join('classroom', 'assign.idClass', '=', 'classroom.idClass')
+                ->select('assign.*', 'classroom.nameClass', 'subject.nameSubject')
+                ->where('assign.available','=', 1)
+                ->where('assign.idClass','=', $idClass)
+                ->get();
+            return view('indexStudent',[
+                'index' => 1,
+                'attendance' => $attendance,
+                'assign' => $resultAssign,
+                'idAssign' => $idAssign,
+                'student' => $info,
+            ]);
+        }
+        // return view('indexStudent');
     }
 
     /**
@@ -76,7 +172,7 @@ class DashboardController extends Controller
      */
     public function show($id)
     {
-        //
+        return "ahihi";
     }
 
     /**

@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>AdminLTE 3 | Log in</title>
+  <title>Project 3 | Log in</title>
 
   <!-- Google Font: Source Sans Pro -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
@@ -17,18 +17,22 @@
 <body class="hold-transition login-page">
 <div class="login-box">
   <div class="login-logo">
-    <b>User</b>Login
+    <b>Đăng nhập</b>
   </div>
   <!-- /.login-logo -->
   <div class="card">
     <div class="card-body login-card-body">
       <p class="login-box-msg">Hãy đăng nhập để bắt đầu </p>
+      <p class="login-box-msg">Dành cho sinh viên của LS </p>
+      <h4 class="login-box-msg">
         <?php
+          // Set the new timezone
           date_default_timezone_set('Asia/Ho_Chi_Minh');
           $date = date('d-m-y h:i:s');
-          echo $date;
+          echo "(".$date.")";
         ?>
-      <form action="/userlogin" method="post" enctype="multipart/form-data">
+      </h4>
+      <form action="/loginStudent-process" method="post" enctype="multipart/form-data">
         <input type="hidden" name="_token" value="{{ csrf_token() }}">
         
         <div class="input-group mb-3">
@@ -38,47 +42,32 @@
               <span class="fas fa-envelope"></span>
             </div>
           </div>
+          
         </div>
-        
-        <div class="input-group mb-3">
-          <input type="password" class="form-control" name="password" placeholder="Password">
-          <div class="input-group-append">
-            <div class="input-group-text">
-              <span class="fas fa-lock"></span>
-            </div>
-          </div>
-        </div>
-        
+        @if(Session::exists("errors"))
+          <p style="color:red; text-align:center;">      
+              {{ Session::get("errors") }}
+          </p>
+        @endif
         <div class="row">
-            <div class="col-8">
-                <div class="icheck-primary">
-                    <input type="checkbox" id="remember">
-                    <label for="remember">
-                        Nhớ mật khẩu
-                    </label>
-                </div>
-            </div>
         
         <!-- /.col -->
-          <div class="col-4">
-            <button type="submit" class="btn btn-primary btn-block">Đăng nhập</button>
+          <div class="col-12">
+            <button type="submit" class="btn btn-primary btn-block">Sign In</button>
           </div>
         <!-- /.col -->
+        </div>
+        <br>
+        <div class="row" style="text-align:center">
+          <div class="col-12">
+            <th><a href="/login" class="btn btn-success">Đăng nhập cho giảng viên & giáo vụ</a></th>
+          </div>
         </div>
       </form>
-      @if(isset($errors))
-        <p style="color:red;">
-          @foreach($errors->all() as $error)
-            {{ $error }}
-          @endforeach
-        </p>
-      @endif
+      
 
       <!-- /.social-auth-links -->
 
-      <p class="mb-1">
-        <a href="forgot_password">I forgot my password</a>
-      </p>
     </div>
     <!-- /.login-card-body -->
   </div>
