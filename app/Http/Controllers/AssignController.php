@@ -23,8 +23,7 @@ class AssignController extends Controller
     {   
         $idClass = $request->get("idClass");
         $class = DB::table('classroom')
-        ->join('faculty', 'classroom.idFaculty', '=', 'faculty.idFaculty')
-        ->select('classroom.*', 'faculty.nameFaculty')
+        ->select('classroom.*')
         ->where('classroom.available','=', 1)
         ->get();
 
@@ -75,10 +74,10 @@ class AssignController extends Controller
      */
     public function create()
     {
-        $query = DB::table("classroom");
-        $query = $query->where("available", "=", 1);
-        $query = $query->select("*");
-        $class = $query->paginate(10);
+        $class = DB::table("classroom")
+            ->where("available", "=", 1)
+            ->select("*")
+            ->get();
 
         $query = DB::table("subject");
         $query = $query->where("available", "=", 1);

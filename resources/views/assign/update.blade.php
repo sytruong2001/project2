@@ -61,21 +61,6 @@
                   </div>
 
                   <div class="form-group">
-                    <label for="exampleInputEmail1">Tên khóa học</label>
-                    <select name="idFaculty" id="idFaculty" class="form-control">
-                        @foreach ($faculty as $faculty)
-                            <option value="{{ $faculty->idFaculty }}" 
-                                @if( $faculty->idFaculty == $assign->idFaculty)
-                                    {{"selected"}}
-                                @endif
-                            >
-                                {{ $faculty->nameFaculty }}
-                            </option>
-                        @endforeach
-                    </select>
-                  </div>
-
-                  <div class="form-group">
                     <label for="exampleInputEmail1">Tên môn học</label>
                     <select name="idSubject" id="idSubject" class="form-control">
                         @foreach ($subject as $subject)
@@ -111,7 +96,7 @@
                 <!-- /.card-body -->
 
                 <div class="card-footer">
-                  <button type="submit" class="btn btn-primary">Cập nhật</button>
+                  <button type="submit" class="btn btn-primary" style="margin:auto;display:block">Cập nhật</button>
                 </div>
               </form>
               @endforeach

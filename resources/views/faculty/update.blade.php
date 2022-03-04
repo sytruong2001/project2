@@ -46,16 +46,16 @@
                 <input type="hidden" name="_token" value="{{ csrf_token() }}">
                 @method("put")
                 <input type="hidden"  name="id" value="{{ $faculty->idFaculty }}">
-                <div class="card-body">
-                  <div class="form-group">
-                    <label for="exampleInputEmail1">Tên niên khóa</label>
-                    <input type="text" name="nameFaculty" value="{{ $faculty->nameFaculty }}"  class="form-control" id="exampleInputEmail1"">
+                <div class="card-body" style="text-align: center">
+                  <div class="form-group" >
+                    <label for="exampleInputEmail1" >Tên niên khóa</label>
+                    <input style="text-align: center" type="text" name="nameFaculty" value="{{ $faculty->nameFaculty }}"  class="form-control" id="exampleInputEmail1"">
                   </div>
                 </div>
                 <!-- /.card-body -->
 
                 <div class="card-footer">
-                  <button type="submit" class="btn btn-primary">Cập nhật</button>
+                  <button type="submit" class="btn btn-primary" style="margin:auto;display:block">Cập nhật</button>
                 </div>
               </form>
               @endforeach

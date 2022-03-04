@@ -14,12 +14,17 @@ class teacher extends Model
         "firstName", "middleName", "lastName", "gender", "email", "phone", "address", "birthday", "password", "create_at", "update_at", "available"
     ];
 
-    // public function getGenderNameAttribute()
-    // {
-    //     if($this->gender == 0){
-    //         return "Nữ";
-    //     }else{
-    //         return "Nam";
-    //     }
-    // }
+    public function getGendernameAttribute()
+    {
+        if($this->gender == 1){
+            return "Nữ";
+        }else{
+            return "Nam";
+        }   
+    }
+
+    public function getFullnameAttribute()
+    {
+        return $this->lastName . " " . $this->middleName . " " . $this->firstName;
+    }
 }

@@ -11,4 +11,18 @@ class student extends Model
     protected $fillable = [
         "firstName","middleName","lastName","gender","email","phone","address","birthday","idClass", "create_at", "update_at", "available"
     ];
+
+    public function getGendernameAttribute()
+    {
+        if($this->gender == 1){
+            return "Nữ";
+        }else{
+            return "Nam";
+        }   
+    }
+
+    public function getFullnameAttribute()
+    {
+        return $this->lastName . " " . $this->middleName . " " . $this->firstName;
+    }
 }

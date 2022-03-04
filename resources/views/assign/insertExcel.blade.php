@@ -64,7 +64,7 @@
                 </table>
               @endif
                 <div class="card-footer">
-                  <button type="submit" class="btn btn-primary">Thêm</button>
+                  <button type="submit" class="btn btn-primary" style="margin: auto;display:block">Thêm</button>
                 </div>
               </form>
             </div>

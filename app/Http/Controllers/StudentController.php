@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Redirect;
 use App\Models\LoginModel;
 use Auth;
 use DB;
-use App\Models\Student;
+use App\Models\student;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Imports\StudentImport;
 class StudentController extends Controller
@@ -28,9 +28,8 @@ class StudentController extends Controller
         ->select('student.*', 'classroom.nameClass')
         ->get();
         $class = DB::table('classroom')
-        ->join('faculty', 'classroom.idFaculty', '=', 'faculty.idFaculty')
         ->where('classroom.available','=', 1)
-        ->select('classroom.*', 'faculty.nameFaculty')
+        ->select('classroom.*')
         ->get();
         return view("student.index",['students' => $student,'classs' => $class, 'idClass' => $idClass]);
     }

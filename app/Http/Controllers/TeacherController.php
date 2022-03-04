@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Redirect;
 use App\Models\LoginModel;
 use Auth;
 use DB;
-use App\Models\Teacher;
+use App\Models\teacher;
 use App\Models\Assign;
 use App\Http\Controllers\ClassroomController;
 use Maatwebsite\Excel\Facades\Excel;

@@ -75,24 +75,24 @@
                   </thead>
                   <tbody>
                     @foreach ($data as $teacher)
-                        <tr>
-                          <th>{{ $teacher->idTeacher}}</th>
-                          <th>{{ $teacher->lastName }} {{ $teacher->middleName }} {{ $teacher->firstName }}</th>
-                          <th>
-                            @if( $teacher->gender == 0)
+                      <tr>
+                        <th>{{ $teacher->idTeacher}}</th>
+                        <th>{{ $teacher->lastName }} {{ $teacher->middleName }} {{ $teacher->firstName }}</th>
+                        <th>
+                          @if( $teacher->gender == 0)
                               Nam
                             @else
                               Nữ
                             @endif
-                          </th>
-                          <th>{{ $teacher->email}}</th>
-                          <th>{{ $teacher->password}}</th>
-                          <th>{{ $teacher->birthday}}</th>
-                          <th>{{ $teacher->phone}}</th>
-                          <th>{{ $teacher->address}}</th>
-                          <th><a href="{{ route('teacher.edit', $teacher->idTeacher)}}" class="btn btn-warning">Edit</a></th>
-                          <th><a href="{{ route('teacher.hide', $teacher->idTeacher)}}" class="btn btn-danger">Hide</a></th>
-                        </tr>
+                        </th>
+                        <th>{{ $teacher->email}}</th>
+                        <th>{{ $teacher->password}}</th>
+                        <th>{{ $teacher->birthday}}</th>
+                        <th>{{ $teacher->phone}}</th>
+                        <th>{{ $teacher->address}}</th>
+                        <th><a href="{{ route('teacher.edit', $teacher->idTeacher)}}" class="btn btn-warning">Edit</a></th>
+                        <th><a href="{{ route('teacher.hide', $teacher->idTeacher)}}" class="btn btn-danger">Hide</a></th>
+                      </tr>
                     @endforeach
                   </tbody>
                   <tfoot>

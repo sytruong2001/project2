@@ -43,16 +43,16 @@
                 @method("put")
                 <input type="hidden" name="_token" value="{{ csrf_token() }}">
                 <input type="hidden"  name="id" value="{{ $subject->idSubject }}">
-                <div class="card-body">
+                <div class="card-body" style="text-align: center">
                   <div class="form-group">
                     <label for="exampleInputEmail1">Tên môn học</label>
-                    <input type="text" name="nameSubject" value="{{ $subject->nameSubject }}"  class="form-control" id="exampleInputEmail1">
+                    <input style="text-align: center" type="text" name="nameSubject" value="{{ $subject->nameSubject }}"  class="form-control" id="exampleInputEmail1">
                   </div>
                   <div class="form-group">
                     <label for="exampleInputEmail1">Ngành</label>
                     <select name="idMajor" id="idMajor" class="form-control" >
                         @foreach ($majors as $major)
-                            <option value="{{ $major->idMajor }}"
+                            <option style="text-align: center" value="{{ $major->idMajor }}"
                               @if($major->idMajor == $subject->idMajor)
                                 {{ "selected" }}
                               @endif
@@ -64,13 +64,13 @@
                   </div>
                   <div class="form-group">
                     <label for="exampleInputEmail1">Thời lượng học</label>
-                    <input type="number" name="duration" value="{{ $subject->duration }}" class="form-control" id="exampleInputEmail1" >
+                    <input style="text-align: center" type="number" name="duration" value="{{ $subject->duration }}" class="form-control" id="exampleInputEmail1" >
                   </div>
                 </div>
                 <!-- /.card-body -->
 
                 <div class="card-footer">
-                  <button type="submit" class="btn btn-primary">Cập nhật</button>
+                  <button type="submit" class="btn btn-primary" style="margin:auto;display:block">Cập nhật</button>
                 </div>
               </form>
               @endforeach

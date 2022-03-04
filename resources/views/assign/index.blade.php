@@ -70,7 +70,7 @@
                               @if ($class->idClass == $idClass)
                                 {{"selected"}}
                               @endif
-                            >{{$class->nameClass}}{{$class->nameFaculty}}</option>
+                            >{{$class->nameClass}}</option>
                         @endforeach
                       </select>
                     </div>
@@ -111,7 +111,7 @@
               <div class="card-body">
                 <table id="example1" class="table table-bordered table-striped">
                   <thead>
-                  <tr>
+                  <tr style="text-align: center">
                     <th>Mã số</th>
                     <th>Tên lớp</th>
                     <th>Tên khóa</th>
@@ -127,35 +127,34 @@
                   <tbody>
                     @foreach ($data as $assign)
                       <tr>
-                        <th>{{ $assign->idAssign}}</th>
-                        <th>{{ $assign->nameClass}}</th>
-                        <th>{{ $assign->nameFaculty}}</th>
-                        <th>{{ $assign->nameSubject}}</th>
-                        <th>{{ $assign->lastName}} {{ $assign->middleName}} {{ $assign->firstName}}</th>
-                        <th>{{ $assign->start_date }}</th>
-                        <th>{{ $assign->duration }}</th>
-                        <th>
-                          @foreach ($timeStarts as $start)
-                            @foreach ($timeEnds as $end)
-                              @if ($assign->idAssign == $start->idAssign && $assign->idAssign == $end->idAssign)
-                                @if ((($end->sum_end - $start->sum_start) / 10000) > 0 && (($end->sum_end - $start->sum_start) / 10000) < $assign->duration)
-                                  <p style="color:blue">Đang dạy (Hoàn thành {{ ($end->sum_end - $start->sum_start) / 10000}} giờ)</p> 
-                                @elseif((($end->sum_end - $start->sum_start) / 10000) == $assign->duration)
-                                  <p style="color:green">Đã hoàn thành</p> 
-                                @else
-                                  <p style="color: rgb(248, 107, 14)">Chưa dạy</p>
+                        <th style="text-align: center">{{ $assign->idAssign}}</th>
+                        <th style="text-align: center">{{ $assign->nameClass}}</th>
+                        <th style="text-align: center">{{ $assign->nameFaculty}}</th>
+                        <th style="text-align: center">{{ $assign->nameSubject}}</th>
+                        <th style="text-align: center">{{ $assign->lastName}} {{ $assign->middleName}} {{ $assign->firstName}}</th>
+                        <th style="text-align: center">{{ $assign->start_date }}</th>
+                        <th style="text-align: center">{{ $assign->duration }}</th>
+                        <th style="text-align: center">
+                          
+                            @foreach ($timeStarts as $start)
+                              @foreach ($timeEnds as $end)
+                                @if ($assign->idAssign == $start->idAssign && $assign->idAssign == $end->idAssign)
+                                  @if ((($end->sum_end - $start->sum_start) / 10000) > 0 && (($end->sum_end - $start->sum_start) / 10000) < $assign->duration)
+                                    <p style="color:blue">Đang dạy (Hoàn thành {{ ($end->sum_end - $start->sum_start) / 10000}} giờ)</p> 
+                                  @elseif((($end->sum_end - $start->sum_start) / 10000) == $assign->duration)
+                                    <p style="color:green">Đã hoàn thành</p>
+                                  @endif
                                 @endif
-                              @endif
+                              @endforeach
                             @endforeach
-                          @endforeach
                         </th>
-                        <th><a href="{{ route('assign.edit',$assign->idAssign)}}" class="btn btn-warning">Edit</a></th>
-                        <th><a href="{{ route('assign.hide', $assign->idAssign)}}" class="btn btn-danger">Hide</a></th>
+                        <th style="text-align: center"><a href="{{ route('assign.edit',$assign->idAssign)}}" class="btn btn-warning">Edit</a></th>
+                        <th style="text-align: center"><a href="{{ route('assign.hide', $assign->idAssign)}}" class="btn btn-danger">Hide</a></th>
                       </tr>
                     @endforeach
                   </tbody>
                   <tfoot>
-                  <tr>
+                  <tr style="text-align: center">
                     <th>Mã số</th>
                     <th>Tên lớp</th>
                     <th>Tên khóa</th>

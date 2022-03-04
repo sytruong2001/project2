@@ -264,7 +264,7 @@ class AttendanceController extends Controller
         //dùng vòng lặp để lấy ra được mã sinh viên và trạng thái điểm danh lấy từ mã sinh viên request từ bên form gửi qua 
         foreach($student as $student){
             $idStudent = $student->idStudent;
-            $status = $_REQUEST[$student->idStudent];
+            $status = $request[$student->idStudent];
         // lưu dữ liệu vào bảng điểm danh chi tiết
             $data = new DetailAttendance();
             $data->idStudent = $idStudent;

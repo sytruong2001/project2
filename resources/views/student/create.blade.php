@@ -64,7 +64,7 @@
                     <label for="exampleInputEmail1">Lớp học</label>
                     <select name="idClass" id="idClass" class="form-control">
                         @foreach ($class as $class)
-                            <option value="{{ $class->idClass }}">{{ $class->nameClass }}{{ $class->nameFaculty }}</option>
+                            <option value="{{ $class->idClass }}">{{ $class->nameClass }}</option>
                         @endforeach
                     </select>
                   </div>

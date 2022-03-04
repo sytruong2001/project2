@@ -43,16 +43,16 @@
                 @method("put")
                 <input type="hidden" name="_token" value="{{ csrf_token() }}">
                 <input type="hidden"  name="id" value="{{ $major->idMajor }}">
-                <div class="card-body">
+                <div class="card-body" style="text-align: center">
                   <div class="form-group">
                     <label for="exampleInputEmail1">Name Major</label>
-                    <input type="text" name="nameMajor" value="{{ $major->nameMajor }}"  class="form-control" id="exampleInputEmail1"">
+                    <input style="text-align: center" type="text" name="nameMajor" value="{{ $major->nameMajor }}"  class="form-control" id="exampleInputEmail1"">
                   </div>
                 </div>
                 <!-- /.card-body -->
 
                 <div class="card-footer">
-                  <button type="submit" class="btn btn-primary">Cập nhật</button>
+                  <button type="submit" class="btn btn-primary" style="margin:auto;display:block">Cập nhật</button>
                 </div>
               </form>
               @endforeach

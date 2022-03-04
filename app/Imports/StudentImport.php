@@ -24,10 +24,10 @@ class StudentImport implements ToModel, WithHeadingRow, WithValidation
         // dd($idFaculty);
         $Class = DB::table("classroom")
         ->where("nameClass", "like", "%".$row['ten_lop']."%")
-        ->where("idFaculty", "=", $idFaculty)
         ->first();
         // dd($Class);
         $row["idClass"] = $Class->idClass;
+        // dd($row["idClass"]);
         return new Student([
             'lastName' => $row["ho"],
             'middleName' => $row["ten_dem"],

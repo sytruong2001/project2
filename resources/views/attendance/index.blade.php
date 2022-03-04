@@ -159,7 +159,7 @@
                   {{-- test  --}}
                   <form action="{{ route('attendance-post') }}" method="post" >
                     @csrf
-                  <table id="example1" class="table table-bordered table-striped">
+                  <table id="example" class="table table-bordered table-striped">
                     <thead>
                     <tr>
                       <th>Họ tên sinh viên</th>

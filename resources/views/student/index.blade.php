@@ -68,7 +68,7 @@
                               @if ($class->idClass == $idClass)
                                 {{"selected"}}
                               @endif
-                            >{{$class->nameClass}}{{$class->nameFaculty}}</option>
+                            >{{$class->nameClass}}</option>
                         @endforeach
                       </select>
                     </div>
@@ -111,7 +111,7 @@
                           <th>
                             @foreach($classs as $class)
                               @if($student->idClass == $class->idClass)
-                                {{ $class->nameClass }}{{ $class->nameFaculty }}
+                                {{ $class->nameClass }}
                               @endif
                             @endforeach
                           </th>

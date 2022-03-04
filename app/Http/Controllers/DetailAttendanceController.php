@@ -50,76 +50,64 @@ class DetailAttendanceController extends Controller
                 foreach($idClass as $idClass){
                     
                     foreach($idSubject as $idSubject){
-
-                        $student = DB::table('assign')
-                        ->join('subject','assign.idSubject','=','subject.idSubject')
-                        ->join('classroom','assign.idClass','=','classroom.idClass')
-                        ->join('student', 'classroom.idClass', '=', 'student.idClass')
-                        ->where('assign.idClass', '=', $idClass->idClass)
-                        ->where('assign.idSubject', '=', $idSubject->idSubject)
-                        ->select(DB::raw('DISTINCT student.idStudent, classroom.nameClass,student.*,subject.nameSubject'))
-                        ->get();
                         
                         $countAttendance = DB::table('attendance')
                         ->where('attendance.idAssign', '=', $idAssign)
                         ->count();
                         
                         $tong = 0;
-
-                            $dihoc = DB::table('detailattendance')
-                                ->join('attendance','detailattendance.idAttendance','=','attendance.idAttendance')
-                                ->join('assign','attendance.idAssign','=','assign.idAssign')
-                                ->select(DB::raw('idStudent, COUNT(status) AS count_dihoc'))
-                                ->where('status', 0)
-                                ->where('attendance.idAssign', '=', $idAssign)
+                        // test thống kê
+                        $idStudent = DB::table('assign')
+                        ->join('subject','assign.idSubject','=','subject.idSubject')
+                        ->join('classroom','assign.idClass','=','classroom.idClass')
+                        ->join('student', 'classroom.idClass', '=', 'student.idClass')
+                        ->where('assign.idClass', '=', $idClass->idClass)
+                        ->where('assign.idSubject', '=', $idSubject->idSubject)
+                        ->select('student.idStudent')
+                        ->get();
+                        $resultArray = [];
+                        foreach($idStudent as $student){
+                            $query = DB::table('attendance')
+                                ->join('detailattendance', 'attendance.idAttendance', '=', 'detailattendance.idAttendance')
+                                ->where('attendance.idAssign', $idAssign)
+                                ->where('detailattendance.idStudent', $student->idStudent)
+                                ->selectRaw('idStudent,SUM(IF(detailattendance.status = 0, 1, 0)) as dihoc, 
+                                    SUM(IF(detailattendance.status = 1, 1, 0)) as nghiKp, 
+                                    SUM(IF(detailattendance.status = 2, 1, 0)) as dimuon, 
+                                    SUM(IF(detailattendance.status = 3, 1, 0)) as nghiP')
                                 ->groupBy('idStudent')
-                                ->orderBy('count_dihoc', 'desc')
                                 ->get();
-                                
-                            $dimuon = DB::table('detailattendance')
-                                ->join('attendance','detailattendance.idAttendance','=','attendance.idAttendance')
-                                ->join('assign','attendance.idAssign','=','assign.idAssign')
-                                ->select(DB::raw('idStudent, COUNT(status) AS count_dimuon'))
-                                ->where('status', 2)
-                                ->where('attendance.idAssign', '=', $idAssign)
-                                ->groupBy('idStudent')
-                                ->orderBy('count_dimuon', 'desc')
-                                ->get();
-
-                            $nghiP = DB::table('detailattendance')
-                                ->join('attendance','detailattendance.idAttendance','=','attendance.idAttendance')
-                                ->join('assign','attendance.idAssign','=','assign.idAssign')
-                                ->select(DB::raw('idStudent, COUNT(status) AS count_nghiP'))
-                                ->where('status', '=', 3)
-                                ->where('attendance.idAssign', '=', $idAssign)
-                                ->groupBy('idStudent')
-                                ->orderBy('count_nghiP', 'desc')
-                                ->get();
-                                
-                            $nghiKp = DB::table('detailattendance')
-                                ->join('attendance','detailattendance.idAttendance','=','attendance.idAttendance')
-                                ->join('assign','attendance.idAssign','=','assign.idAssign')
-                                ->select(DB::raw('idStudent, COUNT(status) AS count_nghiKp'))
-                                ->where('status', '=', 1)
-                                ->where('attendance.idAssign', '=', $idAssign)
-                                ->groupBy('idStudent')
-                                ->orderBy('count_nghiKp', 'desc')
-                                ->get();
-
-                              
+                                array_push($resultArray, $query);
+                        }
+                        $total = DB::table('attendance')
+                        ->join('assign', 'attendance.idAssign', '=', 'assign.idAssign')
+                        ->join('detailattendance', 'attendance.idAttendance', '=', 'detailattendance.idAttendance')
+                        ->where('attendance.idAssign', $idAssign)
+                        ->selectRaw('SUM(IF(detailattendance.status = 0, 1, 0)) as dihoc, 
+                                    SUM(IF(detailattendance.status = 1, 1, 0)) as nghiKp, 
+                                    SUM(IF(detailattendance.status = 2, 1, 0)) as dimuon, 
+                                    SUM(IF(detailattendance.status = 3, 1, 0)) as nghiP,
+                                    COUNT(idDetail) as total')
+                        ->get();
+                        // dd($total);
+                        $student = DB::table('assign')
+                            ->join('subject','assign.idSubject','=','subject.idSubject')
+                            ->join('classroom','assign.idClass','=','classroom.idClass')
+                            ->join('student', 'classroom.idClass', '=', 'student.idClass')
+                            ->where('assign.idClass', '=', $idClass->idClass)
+                            ->where('assign.idSubject', '=', $idSubject->idSubject)
+                            ->select(DB::raw('DISTINCT student.idStudent, classroom.nameClass,student.*,subject.nameSubject'))
+                            ->get();
                         return view('attendance.statistical',[
                             'index' => 1,
                             'assign' => $assign,
                             'idAssign' => $idAssign,
-                            'students' => $student,
-                            'dihocs' => $dihoc,
-                            'dimuons' => $dimuon,
-                            'nghiKps' => $nghiKp,
-                            'nghiPs' => $nghiP,
+                            'student' => $student,
+                            'results' => $resultArray,
                             'countAttendance' => $countAttendance,
                             'tong'=> $tong,
-                        ]);
-                         
+                            'totals' => $total,
+                        ]);   
                     }
                 }   
             }else{
