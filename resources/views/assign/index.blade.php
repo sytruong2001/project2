@@ -64,7 +64,7 @@
                   
                     <div class="col-6">
                       <select name="idClass" class="form-control">
-                        <option value=""></option>
+                        <option style="text-align: center" value="">--------------------</option>
                         @foreach ($class as $class)
                             <option style="text-align: center" value="{{$class->idClass}}"
                               @if ($class->idClass == $idClass)
@@ -90,7 +90,7 @@
                   
                     <div class="col-6">
                       <select name="idTeacher" class="form-control">
-                        <option value=""></option>
+                        <option style="text-align: center" value="">--------------------</option>
                         @foreach ($teacher as $teacher)
                             <option style="text-align: center" value="{{ $teacher->idTeacher}}"
                               @if ($teacher->idTeacher == $idTeacher)

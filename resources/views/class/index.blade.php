@@ -66,7 +66,7 @@
                   
                     <div class="col-6">
                       <select name="idMajor" class="form-control">
-                        <option value=""></option>
+                        <option style="text-align: center" value="">--------------------</option>
                         @foreach ($major as $major)
                             <option style="text-align: center" value="{{$major->idMajor}}"
                               @if ($major->idMajor == $idMajor)
@@ -96,7 +96,7 @@
                   
                     <div class="col-6">
                       <select name="idFaculty" class="form-control">
-                        <option value=""></option>
+                        <option style="text-align: center" value="">--------------------</option>
                         @foreach ($faculty as $faculty)
                             <option style="text-align: center" value="{{ $faculty->idFaculty}}"
                               @if ($faculty->idFaculty == $idFaculty)

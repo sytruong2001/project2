@@ -50,7 +50,7 @@
                     
                     <div class="col-4">
                       <select name="idAssign" class="form-control">
-                        <option value=""></option>
+                        <option style="text-align: center" value="">--------------------</option>
                         @foreach ($assign as $assign)
                             <option style="text-align: center" value="{{ $assign->idAssign }}"
                               @if ($assign->idAssign == $idAssign)

@@ -74,13 +74,9 @@ class AuthenticateController extends Controller
 
     // Đăng xuất
     public function logout(Request $request){
-        if(Session::exists("student_id")){
-            $request->session()->flush();
-            return redirect('loginStudent');
-        }elseif(Session::exists("user_id") || Session::exists("admin_id")){
-            $request->session()->flush();
-            return redirect('login');
-        }
+        
+        $request->session()->flush();
+        return redirect('login');
         
     }
 }
