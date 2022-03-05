@@ -155,6 +155,7 @@ class AssignController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
+    // Hàm dành cho việc xem lịch học
     public function show($id)
     {
         //

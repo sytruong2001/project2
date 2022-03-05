@@ -92,14 +92,20 @@
                     <th>STT</th>
                     <th>Tên lớp</th>
                     <th>Môn học</th>
+                    <th>Ngày bắt đầu</th>
+                    <th>Thời lượng dạy</th>
+                    <th>Trạng thái</th>
                   </tr>
                   </thead>
                   <tbody>
                     @foreach ($class as $class)
                       <tr>
-                        <th>{{ $index++}}</th>
+                        <th>{{ $class->idAssign}}</th>
                         <th>{{ $class->nameClass}}</th>
                         <th>{{ $class->nameSubject}}</th>
+                        <th>{{ $class->start_date}}</th>
+                        <th>{{ $class->duration}}</th>
+                        <th>{{ $class->available == 1 ? "Đang dạy" : "Chưa dạy" }}</th>
                       </tr>
                     @endforeach
                   </tbody>
@@ -108,6 +114,9 @@
                     <th>STT</th>
                     <th>Tên lớp</th>
                     <th>Môn học</th>
+                    <th>Ngày bắt đầu</th>
+                    <th>Thời lượng dạy</th>
+                    <th>Trạng thái</th>
                   </tr>
                   </tfoot>
                 </table>

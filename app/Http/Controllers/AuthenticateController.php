@@ -66,7 +66,7 @@ class AuthenticateController extends Controller
 
                 // return Session::get('admin_id');
             
-            return redirect('homeStudent');
+            return redirect('homeStudent/index');
         }else{
             return redirect('loginStudent')->with('errors', 'Sai tài khoản hoặc mật khẩu');
         }         
@@ -74,7 +74,13 @@ class AuthenticateController extends Controller
 
     // Đăng xuất
     public function logout(Request $request){
-        $request->session()->flush();
-        return redirect('login');
+        if(Session::exists("student_id")){
+            $request->session()->flush();
+            return redirect('loginStudent');
+        }elseif(Session::exists("user_id") || Session::exists("admin_id")){
+            $request->session()->flush();
+            return redirect('login');
+        }
+        
     }
 }

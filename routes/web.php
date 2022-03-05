@@ -29,9 +29,9 @@ Route::post('/loginStudent-process', [AuthenticateController::class, "loginStude
 //  Middleware của sinh viên
 Route::middleware([CheckLoginStudent::class])->group( function(){
     Route::get('/logout', [AuthenticateController::class, "logout"])->name("logout");
-
-    Route::get('/homeStudent', 'DashboardController@create');
-    Route::get('/statisticStudent/show/{id}', 'DashboardController@show');
+    Route::match(["get", "post"],'/homeStudent/index',["as" =>'/homeStudent/index', "uses"=> "DashboardController@create" ] );
+    // Route::get('/homeStudent', 'DashboardController@create');
+    Route::get('/schedule/search/{id}', 'DashboardController@show');
 });
 
 

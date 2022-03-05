@@ -105,7 +105,7 @@ class TeacherController extends Controller
         ->join('subject', 'assign.idSubject', '=', 'subject.idSubject')
         ->where('assign.idTeacher', '=', $id)
         ->where('assign.available', '=', 1)
-        ->select('assign.*', 'classroom.nameClass', 'subject.nameSubject')
+        ->select('assign.*', 'classroom.nameClass', 'subject.*')
         ->get();
         
         return view("info.index",[

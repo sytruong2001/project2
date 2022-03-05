@@ -82,6 +82,7 @@
                   </tr>
                   </thead>
                   <tbody>
+                    @if(!empty($attendance))
                     @foreach ($attendance as $attendance)
                       <tr>
                         <th>{{ $attendance->idAttendance}}</th>
@@ -105,6 +106,7 @@
                         
                       </tr>
                     @endforeach
+                    @endif
                   </tbody>
                   <tfoot>
                   <tr>

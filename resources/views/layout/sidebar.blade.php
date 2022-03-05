@@ -186,12 +186,12 @@
           @endif
           {{-- Dành cho sinh viên --}}
           @if(Session::exists('student_id')) 
-            {{-- <li class="nav-item">
-              <a href="/statisticStudent/show/{{Session::get('student_id')}}" class="nav-link">
+            <li class="nav-item">
+              <a href="/homeStudent/index" class="nav-link">
                 <i class="nav-icon fas fa-chart-pie"></i>
                 <p>Nhật ký điểm danh</p>
               </a>
-            </li> --}}
+            </li>
             <li class="nav-item">
               <a href="/schedule/search/{{Session::get('student_id')}}" class="nav-link">
                 <i class="nav-icon fas fa-copy"></i>
