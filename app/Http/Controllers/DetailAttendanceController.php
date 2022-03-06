@@ -200,7 +200,7 @@ class DetailAttendanceController extends Controller
         ->join('student','detailattendance.idStudent','=','student.idStudent')
         ->join('attendance','detailattendance.idAttendance','=','attendance.idAttendance')
         ->where('detailattendance.idAttendance',$id)
-        ->select('detailattendance.*','student.firstName','student.lastName','student.middleName')
+        ->select('detailattendance.*','student.*')
         ->get();
         return view('attendance.updateDetail',[
             'index' => 1,
@@ -237,14 +237,18 @@ class DetailAttendanceController extends Controller
         ->join('student','detailattendance.idStudent','=','student.idStudent')
         ->join('attendance','detailattendance.idAttendance','=','attendance.idAttendance')
         ->where('detailattendance.idAttendance',$idAttendance)
-        ->select('detailattendance.*','student.firstName','student.lastName','student.middleName')
+        ->select('detailattendance.*','student.*')
         ->get();
 
-        return view('attendance.updateDetail',[
-            'index' => 1,
-            'detail' => $detail,
-            'idAttendance' => $id
-        ]);
+        // return view('attendance.updateDetail',[
+        //     'index' => 1,
+        //     'detail' => $detail,
+        //     'idAttendance' => $id
+        // ])->with("success","Thay đổi thành công!");
+        
+        $alert="Điểm danh đã được cập nhật thành công!";
+        return redirect()->back()->with('alert',$alert);
+
     }
 
     /**

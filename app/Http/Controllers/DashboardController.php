@@ -52,8 +52,10 @@ class DashboardController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+    //  Chức năng xem thông tin điểm danh dành cho sinh viên
     public function create(Request $request)
     {
+        
         if(Session::exists("student_id")){
             $idStudent = Session::get("student_id");
         }
@@ -62,9 +64,11 @@ class DashboardController extends Controller
         foreach($student as $student){
             $idClass = $student->idClass;
         }
+        // nhận mã phân công khi sinh viên chọn 1 môn được phân công học
         $idAssign = $request->get("idAssign");
         if(isset($idAssign))
         {
+            // lấy thông tin bảng điểm danh dựa vào mã phân công và mã sinh viên
             $attendance = DB::table('attendance')
                 ->join('assign','attendance.idAssign','=','assign.idAssign')
                 ->join('subject','assign.idSubject','=','subject.idSubject')
@@ -79,11 +83,13 @@ class DashboardController extends Controller
                 ->where('attendance.idAssign', '=', $idAssign)
                 ->select('attendance.idAttendance')
                 ->get();
+            // lấy thông tin của sinh viên
             $info = DB::table('student')
                 ->join('classroom', 'student.idClass', '=', 'classroom.idClass')
                 ->select('student.*', 'classroom.nameClass')
                 ->where('idStudent', $idStudent)
                 ->get();
+            // lấy thông tin phân công của lớp mà sinh viên có mặt
             $resultAssign = DB::table('assign')
                 ->join('subject', 'assign.idSubject', '=', 'subject.idSubject')
                 ->join('classroom', 'assign.idClass', '=', 'classroom.idClass')
@@ -102,7 +108,7 @@ class DashboardController extends Controller
             // Nếu không nhận được mã phân công
         }else{
             $idAssign = '';
-           
+            // lấy thông tin phân công dựa vào mã lớp
             $assign = DB::table('assign')
             ->join('subject', 'assign.idSubject', '=', 'subject.idSubject')
             ->join('classroom', 'assign.idClass', '=', 'classroom.idClass')
@@ -110,9 +116,11 @@ class DashboardController extends Controller
             ->where('assign.available','=', 1)
             ->where('assign.idClass','=', $idClass)
             ->get();
+            // gán biến kiểm tra thông tin phân công có tồn tại dữ liệu hay không nếu có giá trị được gán vào là 1 ngược lại là 2
             $checkAssign = empty($assign) ? 1 : 2; 
             if($checkAssign == 1 && $checkAssign != 2)
             {
+                // dùng vòng lặp để lấy dữ liệu điểm danh cho từng mã phân công tìm thấy
                 foreach ($assign as $assign) {
                     $attendance = DB::table('attendance')
                         ->join('assign','attendance.idAssign','=','assign.idAssign')
@@ -122,12 +130,13 @@ class DashboardController extends Controller
                         ->select('attendance.*','classroom.nameClass','subject.nameSubject')
                         ->get();
                 }
-
+                // thông tin sinh viên
                 $info = DB::table('student')
                     ->join('classroom', 'student.idClass', '=', 'classroom.idClass')
                     ->select('student.*', 'classroom.nameClass')
                     ->where('idStudent', $idStudent)
                     ->get();
+                // thông tin phân công
                 $resultAssign = DB::table('assign')
                     ->join('subject', 'assign.idSubject', '=', 'subject.idSubject')
                     ->join('classroom', 'assign.idClass', '=', 'classroom.idClass')
@@ -142,6 +151,7 @@ class DashboardController extends Controller
                     'idAssign' => $idAssign,
                     'student' => $info,
                 ]);
+                // những sinh viên chưa được phân công học bất cứ môn nào
             }else
             {
                 $attendance = "";

@@ -172,15 +172,19 @@ class AttendanceController extends Controller
                         if(Session::exists("user_id")){
                             $idTeacher = Session::get("user_id");
                             $view = DB::table('assign')
-                            ->select('assign.*','classroom.nameClass','subject.nameSubject')
-                            ->join('subject','assign.idSubject','=','subject.idSubject')
-                            ->join('classroom','assign.idClass','=','classroom.idClass')
-                            ->distinct('assign.idSubject','assign.idClass')
-                            ->where('assign.idTeacher', '=', $idTeacher)
-                            ->get();
+                                ->select('assign.*','classroom.nameClass','subject.nameSubject')
+                                ->join('subject','assign.idSubject','=','subject.idSubject')
+                                ->join('classroom','assign.idClass','=','classroom.idClass')
+                                ->distinct('assign.idSubject','assign.idClass')
+                                ->where('assign.idTeacher', '=', $idTeacher)
+                                ->get();
                             // return $subject;
-                            
-                            return view('attendance.index', ['view' => $view])->with("message", "Lớp bạn vừa lựa chọn hôm nay đã được điểm danh =((");
+                            $infoError = DB::table('attendance')
+                                ->where('idAssign', '=', $getID->idAssign)
+                                ->where('created_at', '>=', $curentDate)
+                                ->select('*')
+                                ->get();
+                            return view('attendance.index', ['view' => $view, 'infoError' => $infoError])->with("message", "Lớp bạn vừa lựa chọn hôm nay đã được điểm danh =((");
                         }
                     }
                     
@@ -275,13 +279,57 @@ class AttendanceController extends Controller
         // sau khi lưu thành công thì lấy dữ liệu cuổi lần điểm danh vừa nãy
          if(Session::exists("user_id")){
             $idTeacher = Session::get("user_id");
+            // lấy dữ liệu phân công
             $view = DB::table('assign')
-            ->select('assign.*','classroom.nameClass','subject.nameSubject')
-            ->join('subject','assign.idSubject','=','subject.idSubject')
-            ->join('classroom','assign.idClass','=','classroom.idClass')
-            ->distinct('assign.idSubject','assign.idClass')
-            ->where('assign.idTeacher', '=', $idTeacher)
-            ->get();
+                ->select('assign.*','classroom.nameClass','subject.*')
+                ->join('subject','assign.idSubject','=','subject.idSubject')
+                ->join('classroom','assign.idClass','=','classroom.idClass')
+                ->distinct('assign.idSubject','assign.idClass')
+                ->where('assign.idTeacher', '=', $idTeacher)
+                ->get();
+            // lấy dữ liệu điểm danh
+            $inforAttendance = DB::table('attendance')
+                ->select(DB::raw('idAssign, COUNT(idAttendance) AS count_attendance'))
+                ->where('attendance.idAssign',$idAssign)
+                ->groupBy('idAssign')
+                ->orderBy('count_attendance', 'desc')
+                ->get();
+            // Thời lượng môn học
+            $duration = DB::table('assign')
+                ->select('subject.duration')
+                ->join('subject','assign.idSubject','=','subject.idSubject')
+                ->where('assign.idTeacher', '=', $idTeacher)
+                ->where('assign.idAssign', '=', $idAssign)
+                ->get();
+            // Thời lượng đã dạy học
+            $timeStart = DB::table('attendance')
+                ->select(DB::raw('idAssign, SUM(start) AS sum_start'))
+                ->where('attendance.idAssign',$idAssign)
+                ->groupBy('idAssign')
+                ->orderBy('sum_start', 'desc')
+                ->get();
+            $timeEnd = DB::table('attendance')
+                ->select(DB::raw('idAssign, SUM(end) AS sum_end'))
+                ->where('attendance.idAssign',$idAssign)
+                ->groupBy('idAssign')
+                ->orderBy('sum_end', 'desc')
+                ->get();
+            foreach($duration as $duration){
+                foreach($timeStart as $timeStart){
+                    foreach($timeEnd as $timeEnd){
+                        $timeDone = ($timeEnd->sum_end - $timeStart->sum_start) / 10000;
+                        $timeHave = ($duration->duration - $timeDone);
+                    }
+                }
+            }
+
+            $duration1 = DB::table('assign')
+                ->select('subject.duration')
+                ->join('subject','assign.idSubject','=','subject.idSubject')
+                ->where('assign.idTeacher', '=', $idTeacher)
+                ->where('assign.idAssign', '=', $idAssign)
+                ->get();
+            // Tình trạng điểm danh của buổi hôm nay
             $dihocs = DB::table('detailattendance')
                 ->select(DB::raw('idAttendance, COUNT(status) AS count_dihoc'))
                 ->where('status', 0)
@@ -326,7 +374,6 @@ class AttendanceController extends Controller
             if($countNKP == 0){
                 $nghiKps = $countNKP;
             }
-            // dd($nghiKps);
             return view('attendance.index', 
             [
                 'view' => $view,
@@ -338,8 +385,12 @@ class AttendanceController extends Controller
                 'countDM' => $countDM,
                 'countNP' => $countNP,
                 'countNKP' => $countNKP,
+                'inforAttendance' =>$inforAttendance,
+                'timeHave' => $timeHave,
+                'timeDone' => $timeDone,
+                'duration' => $duration1,
             
-            ])->with("success","Đã điểm danh thành công =))");
+            ])->with("success","Đã điểm danh thành công");
         } 
 
     }

@@ -116,12 +116,6 @@ class StudentController extends Controller
      */
     public function edit($id)
     {
-        // $data = DB::table('student')
-        // ->join('classroom', 'student.idClass', '=', 'classroom.idClass')
-        // ->select('student.*', 'classroom.nameClass')
-        // ->get();
-        // return view("student.update",['class' => $data]);
-
         $student = DB::table("student")->where("idStudent","$id")->select("*")->get();
 
         $class = DB::table('classroom')
@@ -151,7 +145,6 @@ class StudentController extends Controller
         $birthday = $request->input("birthday");
         $address = $request->input("address");
 
-        // return $request->input('firstName');
         $data = Student::find($id);
         
         $data->firstName = $firstName;
@@ -165,7 +158,20 @@ class StudentController extends Controller
         $data->address = $address;
 
         $data->save();
+
+        $student = DB::table('student')
+            ->join('classroom', 'student.idClass', '=', 'classroom.idClass')
+            ->where('student.idClass','=', $idClass)
+            ->where('student.available','=', 1)
+            ->select('student.*', 'classroom.nameClass')
+            ->get();
+        $class = DB::table('classroom')
+            ->where('classroom.available','=', 1)
+            ->select('classroom.*')
+            ->get();
+        // return view("student.index",['students' => $student,'classs' => $class, 'idClass' => $idClass]);
         return redirect('student');
+        // return redirect('student')->back();
     }
 
     /**
@@ -181,9 +187,6 @@ class StudentController extends Controller
 
     public function hide($id)
     {
-        // $detailAttendance = detailAttendance::find($id);       
-        // $data->available = 0;
-        // $data->save();
 
         $data = Student::find($id);       
         $data->available = 0;

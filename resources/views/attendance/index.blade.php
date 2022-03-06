@@ -14,7 +14,7 @@
                   // Set the new timezone
                   date_default_timezone_set('Asia/Ho_Chi_Minh');
                   $date = date('d-m-Y');
-                  echo $date;
+                  echo '"'.$date.'"';
                 ?>
               </span>
             </h1>
@@ -64,14 +64,42 @@
                       {{-- Kết thúc chức năng tìm kiếm --}}
                       
                       {{-- Thông báo ngày hôm nay đã điểm danh và chọn lại từ đầu --}}
-                        @if (isset($message))
-                          <h3 style="color: rgb(231, 97, 35); text-align:center"><br>{{ $message }}</h3>
-                        @endif
+                      @if (isset($message))
+                      <br>
+                        <div class="row">
+                          <div class="col-5" style="text-align: right">
+                            <h4>Trạng thái:</h4>
+                          </div>
+                          <div class="col-7">
+                            <h4 style="color: rgb(231, 97, 35); text-align:left">{{ $message }}</h4>
+                          </div>
+                        </div> 
+                        <br>
+                        <div class="row">
+                          <div class="col-5" style="text-align: right">
+                            <h4>Thời gian:</h4>
+                          </div>
+                          <div class="col-7">
+                            @foreach ($infoError as $item)
+                                <h4 style="color:green"> {{$item->created_at}}</h4>
+                              @endforeach
+                          </div>
+                        </div>
+                      @endif
                       {{-- Kết thúc thông báo --}}
 
                       {{-- Thông báo điểm danh thành công và số liệu từ buổi điểm danh --}}
                       @if (isset($success))
-                        <h3 style="color: rgb(32, 11, 219); text-align:center"><br>{{ $success }}</h3>
+                        <br>
+                        <div class="row">
+                          <div class="col-5" style="text-align: right">
+                            <h4>Trạng thái điểm danh:</h4>
+                          </div>
+                          <div class="col-7">
+                            <h3 style="color: rgb(32, 11, 219); text-align:left">{{ $success }}</h3>
+                          </div>
+                        </div>
+                        
                         {{-- Số sinh viên đi học --}}
                         <div class="row">
                           <div class="col-5" style="text-align: right">
@@ -132,6 +160,37 @@
                             @endif
                           </div>
                         </div>
+
+                        {{-- Thời lượng môn học --}}
+                        
+                            <div class="row">
+                              <div class="col-4" style="text-align: left">
+                                <h4>
+                                  Thời lượng môn học - 
+                                  @foreach ($duration as $duration)
+                                    {{ $duration->duration}} giờ.
+                                  @endforeach
+                                </h4>
+                              </div>
+                              <div class="col-4" style="text-align: left">
+                                @if(isset($inforAttendance) || isset($timeDone))
+                                  @foreach ($inforAttendance as $item)
+                                    <h4>
+                                      Thời lượng giờ đã dạy - 
+                                        {{ $timeDone }} giờ ~ {{ $item->count_attendance}} buổi.
+                                    </h4>
+                                  @endforeach
+                                @endif
+                              </div>
+                              <div class="col-4" style="text-align: left">
+                                @if(isset($timeHave))
+                                  <h4>
+                                    Thời lượng giờ còn lại - 
+                                    {{$timeHave}} giờ.  
+                                  </h4>
+                                @endif
+                              </div>
+                            </div>
                       @endif
                     </div>
                   </div>
