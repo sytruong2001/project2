@@ -98,6 +98,7 @@ class DetailAttendanceController extends Controller
                             ->where('assign.idSubject', '=', $idSubject->idSubject)
                             ->select(DB::raw('DISTINCT student.idStudent, classroom.nameClass,student.*,subject.nameSubject'))
                             ->get();
+                            
                         return view('attendance.statistical',[
                             'index' => 1,
                             'assign' => $assign,

@@ -32,7 +32,7 @@
 
               <!-- /.card-header -->
               <div class="card-body">
-                <table id="example1" class="table table-bordered table-striped">
+                <table id="example1" class="table table-bordered table-striped" style="text-align: center">
                   <thead>
                   <tr>
                     <th>Mã số</th>
@@ -41,6 +41,7 @@
                     <th>Tên môn</th>
                     <th>Thời lượng học</th>
                     <th>Ngày bắt đầu</th>
+                    <th>Ngày trong tuần</th>
                     <th>Trạng thái</th>
                   </tr>
                   </thead>
@@ -54,6 +55,13 @@
                         <th>{{ $data->nameSubject}}</th>
                         <th>{{ $data->duration}}</th>
                         <th>{{ $data->start_date}}</th>
+                        <th>
+                          @if( $data->date == 0)
+                            T2, 4, 6
+                          @elseif( $data->date == 1)
+                            T3, 5, 7
+                          @endif
+                        </th>
                         <th>
                             @foreach ($timeStart as $start)
                                 @foreach ($timeEnd as $end)
@@ -79,6 +87,7 @@
                     <th>Tên môn</th>
                     <th>Thời lượng học</th>
                     <th>Ngày bắt đầu</th>
+                    <th>Ngày trong tuần</th>
                     <th>Trạng thái</th>
                   </tr>
                   </tfoot>

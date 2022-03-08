@@ -185,6 +185,7 @@
                             @endforeach
                           @endforeach
                         </th>
+                        
                         <th>
                           @if(isset($results))
                             @foreach ($results as $value)

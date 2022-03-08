@@ -79,15 +79,15 @@ class AssignController extends Controller
             ->select("*")
             ->get();
 
-        $query = DB::table("subject");
-        $query = $query->where("available", "=", 1);
-        $query = $query->select("*");
-        $subject = $query->paginate(10);
+        $subject = DB::table("subject")
+            ->where("available", "=", 1)
+            ->select("*")
+            ->get();
         
-        $query = DB::table("teacher");
-        $query = $query->where("available", "=", 1);
-        $query = $query->select("*");
-        $teacher = $query->paginate(10);
+        $teacher = DB::table("teacher")
+            ->where("available", "=", 1)
+            ->select("*")
+            ->get();
 
         return view("assign.create",['class' => $class, 'subject' => $subject, 'teacher'=> $teacher ]);
     }
@@ -105,6 +105,7 @@ class AssignController extends Controller
             $idSubject = $request->input("idSubject");
             $idTeacher = $request->input("idTeacher");
             $startDate = $request->input("startDate");
+            $date = $request->input("date");
 
             
 
@@ -120,9 +121,11 @@ class AssignController extends Controller
                             $assign->idSubject = $idSubject;
                             $assign->idTeacher = $idTeacher;
                             $assign->start_date = $startDate;
+                            $assign->date = $date;
                             $assign->available = 1;
                             $assign->save();
-                            return redirect('assign');
+                            $alert="Phân công đã được thêm thành công!";
+                            return redirect()->back()->with('alert',$alert);
                         }
                     }else{
                         $assign = new Assign();
@@ -130,9 +133,11 @@ class AssignController extends Controller
                         $assign->idSubject = $idSubject;
                         $assign->idTeacher = $idTeacher;
                         $assign->start_date = $startDate;
+                        $assign->date = $date;
                         $assign->available = 1;
                         $assign->save();
-                        return redirect('assign');
+                        $alert="Phân công đã được thêm thành công!";
+                        return redirect()->back()->with('alert',$alert);
                     }
                     
                 }else{
@@ -141,9 +146,11 @@ class AssignController extends Controller
                     $assign->idSubject = $idSubject;
                     $assign->idTeacher = $idTeacher;
                     $assign->start_date = $startDate;
+                    $assign->date = $date;
                     $assign->available = 1;
                     $assign->save();
-                    return redirect('assign');
+                    $alert="Phân công đã được thêm thành công!";
+                    return redirect()->back()->with('alert',$alert);
                 }
         }
             return view("assign.create");
@@ -205,73 +212,85 @@ class AssignController extends Controller
     public function update(Request $request, $id)
     {
         $idClass = $request->input("idClass");
-        $idFaculty = $request->input("idFaculty");
         $idSubject = $request->input("idSubject");
         $idTeacher = $request->input("idTeacher");
         $startDate = $request->input("startDate");
-
+        $date = $request->input("date");
+        // dd($date);
         // return $startDate;
         // return $request->input('firstName');
 
-        if (DB::table('assign')->where('idFaculty', '=', $idFaculty)->exists()) {
 
-            if(DB::table('assign')->where('idFaculty', '=', $idFaculty)->where('idClass', '=', $idClass)->exists()){
+            if(DB::table('assign')->where('idClass', '=', $idClass)->exists()){
 
-                if (DB::table('assign')->where('idFaculty', '=', $idFaculty)->where('idClass', '=', $idClass)->where('idSubject', '=', $idSubject)->exists()) {
+                if (DB::table('assign')->where('idClass', '=', $idClass)->where('idSubject', '=', $idSubject)->exists()) {
                     
-                    if (DB::table('assign')->where('idFaculty', '=', $idFaculty)->where('idClass', '=', $idClass)->where('idSubject', '=', $idSubject)->where('idTeacher', '=', $idTeacher)->exists()) {
-                        return redirect('assign');
+                    if (DB::table('assign')->where('idClass', '=', $idClass)->where('idSubject', '=', $idSubject)->where('idTeacher', '=', $idTeacher)->exists()) {
+
+                        if (DB::table('assign')->where('idClass', '=', $idClass)->where('idSubject', '=', $idSubject)->where('idTeacher', '=', $idTeacher)->where('date', '=', $date)->exists()){
+                            return redirect('assign');
+                        }else{
+                            $data = Assign::find($id);
+            
+                            $data->idClass = $idClass;
+                            $data->idSubject = $idSubject;
+                            $data->idTeacher = $idTeacher;
+                            $data->start_date = $startDate;
+                            $data->date = $date;
+        
+                            $data->save();
+                            // return $data;
+                            // return redirect('assign');
+                            $alert="Phân công đã được cập nhật thành công!";
+                            return redirect()->back()->with('alert',$alert);
+                        }
+                        
                     }else{
                         $data = Assign::find($id);
             
                         $data->idClass = $idClass;
-                        $data->idFaculty = $idFaculty;
                         $data->idSubject = $idSubject;
                         $data->idTeacher = $idTeacher;
                         $data->start_date = $startDate;
+                        $data->date = $date;
     
                         $data->save();
                         // return $data;
-                        return redirect('assign');
+                        // return redirect('assign');
+                        $alert="Phân công đã được cập nhật thành công!";
+                        return redirect()->back()->with('alert',$alert);
                     }
                 }else{
                     $data = Assign::find($id);
         
                     $data->idClass = $idClass;
-                    $data->idFaculty = $idFaculty;
                     $data->idSubject = $idSubject;
                     $data->idTeacher = $idTeacher;
                     $data->start_date = $startDate;
+                    $data->date = $date;
 
                     $data->save();
                     // return $data;
-                    return redirect('assign');
+                    // return redirect('assign');
+                    $alert="Phân công đã được cập nhật thành công!";
+                    return redirect()->back()->with('alert',$alert);
                 }
             }else{
 
                 $data = Assign::find($id);
                 $data->idClass = $idClass;
-                $data->idFaculty = $idFaculty;
                 $data->idSubject = $idSubject;
                 $data->idTeacher = $idTeacher;
                 $data->start_date = $startDate;
+                $data->date = $date;
 
                 $data->save();
                 // return $data;
-                return redirect('assign');
+                // return redirect('assign');
+                $alert="Phân công đã được cập nhật thành công!";
+                return redirect()->back()->with('alert',$alert);
             }
-        }else{
-            $data = Assign::find($id);
-            $data->idClass = $idClass;
-            $data->idFaculty = $idFaculty;
-            $data->idSubject = $idSubject;
-            $data->idTeacher = $idTeacher;
-            $data->start_date = $startDate;
-
-            $data->save();
-            // return $data;
-            return redirect('assign');
-         }
+         
     }
 
     /**

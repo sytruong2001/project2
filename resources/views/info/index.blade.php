@@ -94,6 +94,7 @@
                     <th>Môn học</th>
                     <th>Ngày bắt đầu</th>
                     <th>Thời lượng dạy</th>
+                    <th>Ngày trong tuần</th>
                     <th>Trạng thái</th>
                   </tr>
                   </thead>
@@ -105,6 +106,13 @@
                         <th>{{ $class->nameSubject}}</th>
                         <th>{{ $class->start_date}}</th>
                         <th>{{ $class->duration}}</th>
+                        <th>
+                          @if( $class->date == 0)
+                            T2, 4, 6
+                          @elseif( $class->date == 1)
+                            T3, 5, 7
+                          @endif
+                        </th>
                         <th>{{ $class->available == 1 ? "Đang dạy" : "Chưa dạy" }}</th>
                       </tr>
                     @endforeach
@@ -116,6 +124,7 @@
                     <th>Môn học</th>
                     <th>Ngày bắt đầu</th>
                     <th>Thời lượng dạy</th>
+                    <th>Ngày trong tuần</th>
                     <th>Trạng thái</th>
                   </tr>
                   </tfoot>

@@ -45,7 +45,7 @@
                     {{-- Chọn những phân công muốn xem --}}
                     <div class="row">
                       <div class="col-4" style="text-align: right">
-                        Chọn lớp + môn học: 
+                        Môn học: 
                       </div>
                     
                     <div class="col-4">
@@ -57,7 +57,7 @@
                                 {{"selected"}}
                               @endif
                             >
-                              {{$assign->nameClass}}--{{$assign->nameSubject}}
+                              {{$assign->nameSubject}}
                             </option>
                         @endforeach
                       </select>

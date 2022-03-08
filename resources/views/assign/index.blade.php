@@ -118,6 +118,7 @@
                     <th>Tên môn học</th>
                     <th>Tên giảng viên</th>
                     <th>Thời gian bắt đầu</th>
+                    <th>Ngày trong tuần</th>
                     <th>Thời lượng học</th>
                     <th>Tình trạng dạy</th>
                     <th>Sửa</th>
@@ -133,6 +134,13 @@
                         <th style="text-align: center">{{ $assign->nameSubject}}</th>
                         <th style="text-align: center">{{ $assign->lastName}} {{ $assign->middleName}} {{ $assign->firstName}}</th>
                         <th style="text-align: center">{{ $assign->start_date }}</th>
+                        <th style="text-align: center">
+                          @if( $assign->date == 0)
+                            T2, 4, 6
+                          @elseif( $assign->date == 1)
+                            T3, 5, 7
+                          @endif
+                        </th>
                         <th style="text-align: center">{{ $assign->duration }}</th>
                         <th style="text-align: center">
                           
@@ -162,6 +170,7 @@
                     <th>Tên giảng viên</th>
                     <th>Thời gian bắt đầu</th>
                     <th>Thời lượng học</th>
+                    <th>Ngày trong tuần</th>
                     <th>Tình trạng dạy</th>
                     <th>Sửa</th>
                     <th>Ẩn</th>

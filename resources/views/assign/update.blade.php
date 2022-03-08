@@ -5,6 +5,9 @@
 
   <div class="content-wrapper">
     <!-- Content Header (Page header) -->
+    @if(session('alert'))
+      <section class='alert alert-success'>{{session('alert')}}</section>
+    @endif
     <section class="content-header">
       <div class="container-fluid">
         <div class="row mb-2">
@@ -92,7 +95,15 @@
                     <label for="exampleInputEmail1">Ngày bắt đầu </label>
                     <input type="date" name="startDate" id="startDate" class="form-control" value="{{ $assign->start_date }}">
                   </div>
+                  <div class="form-group">
+                    <label for="exampleInputEmail1">Ngày trong tuần </label>
+                    <select name="date" id="date" class="form-control">
+                      <option value="0" @if($assign->date == 0){{"selected"}}@endif>Thứ 2, 4, 6</option>
+                      <option value="1" @if($assign->date == 1){{"selected"}}@endif>Thứ 3, 5, 7</option>
+                    </select>
+                  </div>
                 </div>
+                
                 <!-- /.card-body -->
 
                 <div class="card-footer">

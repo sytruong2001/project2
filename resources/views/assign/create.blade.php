@@ -6,6 +6,9 @@
 
   <div class="content-wrapper">
     <!-- Content Header (Page header) -->
+    @if(session('alert'))
+      <section class='alert alert-success'>{{session('alert')}}</section>
+    @endif
     <section class="content-header">
       <div class="container-fluid">
         <div class="row mb-2">
@@ -76,10 +79,18 @@
                     <label for="exampleInputEmail1">Ngày bắt đầu</label>
                     <input type="date" name="startDate" id="startDate" class="form-control">
                   </div>
+
+                  <div class="form-group">
+                    <label for="exampleInputEmail1">Ngày trong tuần </label>
+                    <select name="date" id="date" class="form-control">
+                      <option value="0">Thứ 2, 4, 6</option>
+                      <option value="1">Thứ 3, 5, 7</option>
+                    </select>
+                  </div>
                 <!-- /.card-body -->
 
                 <div class="card-footer">
-                  <button type="submit" class="btn btn-primary">Thêm</button>
+                  <button type="submit" class="btn btn-primary" style="margin:auto;display:block">Thêm</button>
                 </div>
               </form>
             </div>

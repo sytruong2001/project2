@@ -6,6 +6,7 @@ use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
 use Auth;
+use Carbon\Carbon;
 use DB,Session,DateTime;
 use App\Models\Attendance;
 use App\Models\DetailAttendance;
@@ -164,6 +165,54 @@ class AttendanceController extends Controller
                     ->count();
                     // nếu chưa điểm danh thì lấy dữ liệu về sinh viên sẽ được điểm danh
                     if($count == null || $count == 0){
+                        // lấy dữ liệu bảng lớp
+                        $idClass = DB::table('assign')
+                        ->join('classroom', 'assign.idClass', '=', 'classroom.idClass')
+                        ->select('assign.idClass')
+                        ->where('assign.available','=', 1)
+                        ->where('assign.idAssign', '=', $idAssign)
+                        ->get();
+                        // lấy dữ liệu bảng môn học
+                        $idSubject = DB::table('assign')
+                        ->join('subject','assign.idSubject','=','subject.idSubject')
+                        ->select('assign.idSubject')
+                        ->where('assign.available','=', 1)
+                        ->where('assign.idAssign', '=', $idAssign)
+                        ->get();
+                        
+                        foreach($idClass as $idClass){
+                            
+                            foreach($idSubject as $idSubject){
+                                
+                                $countAttendance = DB::table('attendance')
+                                ->where('attendance.idAssign', '=', $idAssign)
+                                ->count();
+                                
+                                // test thống kê
+                                $idStudent = DB::table('assign')
+                                ->join('subject','assign.idSubject','=','subject.idSubject')
+                                ->join('classroom','assign.idClass','=','classroom.idClass')
+                                ->join('student', 'classroom.idClass', '=', 'student.idClass')
+                                ->where('assign.idClass', '=', $idClass->idClass)
+                                ->where('assign.idSubject', '=', $idSubject->idSubject)
+                                ->select('student.idStudent')
+                                ->get();
+                                $resultArray = [];
+                                foreach($idStudent as $student){
+                                    $query = DB::table('attendance')
+                                        ->join('detailattendance', 'attendance.idAttendance', '=', 'detailattendance.idAttendance')
+                                        ->where('attendance.idAssign', $idAssign)
+                                        ->where('detailattendance.idStudent', $student->idStudent)
+                                        ->selectRaw('idStudent,SUM(IF(detailattendance.status = 0, 1, 0)) as dihoc, 
+                                            SUM(IF(detailattendance.status = 1, 1, 0)) as nghiKp, 
+                                            SUM(IF(detailattendance.status = 2, 1, 0)) as dimuon, 
+                                            SUM(IF(detailattendance.status = 3, 1, 0)) as nghiP')
+                                        ->groupBy('idStudent')
+                                        ->get();
+                                        array_push($resultArray, $query);
+                                }
+                            }
+                        }
                         $student = DB::table('student')
                         ->where('idClass', '=', $getID->idClass)
                         ->get();
@@ -190,23 +239,32 @@ class AttendanceController extends Controller
                     
                 }
             }
-            
+            // dd($resultArray);
             return view('attendance.index', [
                 'index' => 1,
                 'student' => $student, 
                 'count' => $count,
+                'results' => $resultArray,
+                'countAttendance' => $countAttendance,
                 'assign' => $getID
             ]);
 
         }
             if(Session::exists("user_id")){
                 $idTeacher = Session::get("user_id");
+                $date = Carbon::now()->dayOfWeek;
+                if($date == 1 || $date == 3 || $date == 5){
+                    $date = 0;
+                }elseif( $date == 2 || $date == 4 || $date == 6){
+                    $date = 1;
+                }
                 $view = DB::table('assign')
                 ->select('assign.*','classroom.nameClass','subject.nameSubject')
                 ->join('subject','assign.idSubject','=','subject.idSubject')
                 ->join('classroom','assign.idClass','=','classroom.idClass')
                 ->distinct('assign.idSubject','assign.idClass')
                 ->where('assign.idTeacher', '=', $idTeacher)
+                ->where('assign.date', '=', $date)
                 ->get();
                 // return $subject;
                 

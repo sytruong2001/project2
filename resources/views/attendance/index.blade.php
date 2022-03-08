@@ -221,7 +221,7 @@
                   <table id="example" class="table table-bordered table-striped">
                     <thead>
                     <tr>
-                      <th>Họ tên sinh viên</th>
+                      <th>Họ tên sinh viên(Nghỉ/Tổng số buổi)</th>
                       <th>Tình trạng điểm danh</th>
                     </tr>
                     </thead>
@@ -230,9 +230,41 @@
                         @foreach( $student as $student)
                         <tr>
                           <th>
-                                {{ $index++}})  {{ $student->idStudent}} - {{ $student->lastName}} {{ $student->middleName}} {{ $student->firstName}}
-                                <br>
-                                ({{ $student->birthday}})
+                            @if($countAttendance != 0)
+                              @foreach ($results as $value)
+                                @foreach ($value as $result)
+                                {{-- nếu tỉ lệ nghỉ < 30%: bình thường, >30% <=50%: cấm thi lần 1, >50%: học lại --}}
+                                  @if (($result->idStudent) == ($student->idStudent))
+                                    @if(( ($result->dimuon/3 + ($result->nghiP/2) + $result->nghiKp) *100/$countAttendance) < 30)
+                                      <p style="color:blue">
+                                        {{ $index++}})  {{ $student->idStudent}} - {{ $student->lastName}} {{ $student->middleName}} {{ $student->firstName}} ({{number_format(($result->dimuon/3 + ($result->nghiP/2) + $result->nghiKp),1)}}/{{$countAttendance}})
+                                        <br>
+                                        ({{ $student->birthday}})
+                                      </p>
+                                    @elseif(( ($result->dimuon/3 + ($result->nghiP/2) + $result->nghiKp) *100/$countAttendance) >= 30 && ( ($result->dimuon/3 + ($result->nghiP/2) + $result->nghiKp) *100/$countAttendance) <=50)
+                                      <p style="color:rgb(226, 131, 23)">
+                                        {{ $index++}})  {{ $student->idStudent}} - {{ $student->lastName}} {{ $student->middleName}} {{ $student->firstName}} ({{number_format(($result->dimuon/3 + ($result->nghiP/2) + $result->nghiKp),1)}}/{{$countAttendance}})
+                                        <br>
+                                        ({{ $student->birthday}})
+                                      </p>
+                                    @elseif(( ($result->dimuon/3 + ($result->nghiP/2) + $result->nghiKp) *100/$countAttendance) > 50)
+                                      <p style="color:red">
+                                        {{ $index++}})  {{ $student->idStudent}} - {{ $student->lastName}} {{ $student->middleName}} {{ $student->firstName}} ({{number_format(($result->dimuon/3 + ($result->nghiP/2) + $result->nghiKp),1)}}/{{$countAttendance}})
+                                        <br>
+                                        ({{ $student->birthday}})
+                                      </p>
+                                    @endif 
+                                  @endif
+                                @endforeach
+                              @endforeach
+                            {{-- @endif --}}
+                            @else
+                            <p style="color:blue">
+                              {{ $index++}})  {{ $student->idStudent}} - {{ $student->lastName}} {{ $student->middleName}} {{ $student->firstName}} (0/0)
+                              <br>
+                              ({{ $student->birthday}})
+                            </p>
+                            @endif
                           </th>
                           <th>
                               <b><input type="radio" id="status" name="{{ $student->idStudent}}" value="0" checked> Đi học</b> &nbsp;
