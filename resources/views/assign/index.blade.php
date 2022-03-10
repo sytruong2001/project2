@@ -102,6 +102,29 @@
                     </div>
                 </div>
                 <br>
+                <br>
+                  {{-- Chọn giảng viên muốn xem thông tin --}}
+                  <div class="row">
+                    <div class="col-3" style="text-align: right">
+                      Chức năng khác: 
+                    </div>
+                  
+                    <div class="col-6">
+                      <select name="date" class="form-control">
+                        <option style="text-align: center" value="">--------------------</option>
+                        <option style="text-align: center" 
+                          value="<?php
+                                  // Set the new timezone
+                                  date_default_timezone_set('Asia/Ho_Chi_Minh');
+                                  $date = date('y-m-d');
+                                  echo "$date";
+                                  ?>">
+                          Buổi học hôm nay
+                        </option>
+                      </select>
+                    </div>
+                </div>
+                <br>
                   <button class="btn btn-primary" style="margin:auto; display:block">Okkkkkkk</button>
                 </form>
                 <br>
@@ -121,8 +144,10 @@
                     <th>Ngày trong tuần</th>
                     <th>Thời lượng học</th>
                     <th>Tình trạng dạy</th>
-                    <th>Sửa</th>
-                    <th>Ẩn</th>
+                    @if (!isset($attendance))
+                      <th>Sửa</th>
+                      <th>Ẩn</th>
+                    @endif
                   </tr>
                   </thead>
                   <tbody>
@@ -143,7 +168,17 @@
                         </th>
                         <th style="text-align: center">{{ $assign->duration }}</th>
                         <th style="text-align: center">
-                          
+                          @if (isset($attendance))
+                            @foreach ($attendance as $value)
+                              @foreach ($value as $item)
+                                @if ($item->idAssign == $assign->idAssign)
+                                  <p style="color:blue">Đã điểm danh</p>
+                                @else
+                                  Chưa dạy
+                                @endif
+                              @endforeach
+                            @endforeach
+                          @else
                             @foreach ($timeStarts as $start)
                               @foreach ($timeEnds as $end)
                                 @if ($assign->idAssign == $start->idAssign && $assign->idAssign == $end->idAssign)
@@ -155,9 +190,12 @@
                                 @endif
                               @endforeach
                             @endforeach
+                          @endif
                         </th>
-                        <th style="text-align: center"><a href="{{ route('assign.edit',$assign->idAssign)}}" class="btn btn-warning">Edit</a></th>
-                        <th style="text-align: center"><a href="{{ route('assign.hide', $assign->idAssign)}}" class="btn btn-danger">Hide</a></th>
+                        @if (!isset($attendance))
+                          <th style="text-align: center"><a href="{{ route('assign.edit',$assign->idAssign)}}" class="btn btn-warning">Edit</a></th>
+                          <th style="text-align: center"><a href="{{ route('assign.hide', $assign->idAssign)}}" class="btn btn-danger">Hide</a></th>
+                        @endif
                       </tr>
                     @endforeach
                   </tbody>
@@ -172,8 +210,10 @@
                     <th>Thời lượng học</th>
                     <th>Ngày trong tuần</th>
                     <th>Tình trạng dạy</th>
-                    <th>Sửa</th>
-                    <th>Ẩn</th>
+                    @if (!isset($attendance))
+                      <th>Sửa</th>
+                      <th>Ẩn</th>
+                    @endif
                   </tr>
                   </tfoot>
                 </table>

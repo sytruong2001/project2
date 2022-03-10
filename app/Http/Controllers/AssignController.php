@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Redirect;
 use App\Models\LoginModel;
 use Auth;
 use DB;
+use Carbon\Carbon;
 use App\Models\Assign;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Imports\AssignImport;
@@ -32,7 +33,65 @@ class AssignController extends Controller
         ->where('available','=', 1)
         ->get();
 
-        
+        // lấy thời gian dành cho chức năng tìm buổi học ngày hôm nay
+        $date = $request->get("date");
+        if(!isset($date)){
+            $date = "";
+        }else{
+            $day = Carbon::now()->dayOfWeek;
+            if($day == 1 || $day == 3 || $day == 5){
+                $day = 0;
+            }elseif( $day == 2 || $day == 4 || $day == 6){
+                $day = 1;
+            }
+            // lấy thông tin của bảng phân công của ngày hôm nay
+            $data = DB::table('assign')
+            ->join('classroom', 'assign.idClass', '=', 'classroom.idClass')
+            ->join('faculty', 'classroom.idFaculty', '=', 'faculty.idFaculty')
+            ->join('subject', 'assign.idSubject', '=', 'subject.idSubject')
+            ->join('teacher', 'assign.idTeacher', '=', 'teacher.idTeacher')
+            ->where([ ['assign.start_date', '<=', $date] , ['assign.date', '=', $day] ])
+            ->where('assign.available', '=', 1)
+            ->select('assign.*', 'classroom.nameClass', 'subject.*','faculty.nameFaculty', 'teacher.firstName', 'teacher.middleName', 'teacher.lastName' )
+            ->get();
+            // dd($data);
+            // lấy mã phân công
+            $idAssign = DB::table('assign')
+            ->where([ ['assign.start_date', '<=', $date] , ['assign.date', '=', $day] ])
+            ->where('assign.available', '=', 1)
+            ->select('assign.idAssign')
+            ->get();
+            $array = [];
+            foreach ($idAssign as $idAssign) {
+                $attendance = DB::table('attendance')
+                        ->join('assign', 'attendance.idAssign', '=', 'assign.idAssign')
+                        ->where('attendance.idAssign', '=', $idAssign->idAssign)
+                        ->where('attendance.dateAttendance', '=', $date)
+                        ->select('attendance.*')
+                        ->get(); 
+                array_push($array, $attendance); 
+            }
+            $timeStart = DB::table('attendance')
+                ->select(DB::raw('idAssign, SUM(start) AS sum_start'))
+                ->groupBy('idAssign')
+                ->orderBy('sum_start', 'desc')
+                ->get();
+            $timeEnd = DB::table('attendance')
+                ->select(DB::raw('idAssign, SUM(end) AS sum_end'))
+                ->groupBy('idAssign')
+                ->orderBy('sum_end', 'desc')
+                ->get();
+            return view("assign.index",[
+                'data' => $data,
+                'idClass' => $idClass,
+                'idTeacher' => $idTeacher,
+                'class' => $class,
+                'teacher' => $teacher,
+                'timeStarts' => $timeStart,
+                'timeEnds' => $timeEnd,
+                'attendance' => $array,
+            ]);
+        }   
         
         $data = DB::table('assign')
         ->join('classroom', 'assign.idClass', '=', 'classroom.idClass')

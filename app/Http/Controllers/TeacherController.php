@@ -25,7 +25,7 @@ class TeacherController extends Controller
     {
         $data = DB::table("teacher")
             ->where("available", "=", 1)
-            ->paginate(10);
+            ->get();
 
         return view("teacher.index",['data' => $data]);
     }
