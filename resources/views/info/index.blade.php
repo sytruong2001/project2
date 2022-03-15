@@ -113,7 +113,13 @@
                             T3, 5, 7
                           @endif
                         </th>
-                        <th>{{ $class->available == 1 ? "Đang dạy" : "Chưa dạy" }}</th>
+                        <th>
+                          @if ($class->available == 1)
+                            <p style="color:blue">Đang dạy</p>
+                          @else
+                            Chưa dạy
+                          @endif
+                        </th>
                       </tr>
                     @endforeach
                   </tbody>

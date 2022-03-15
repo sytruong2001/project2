@@ -6,6 +6,7 @@ use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
 use Auth;
+// use Carbon\Carbon;
 use DB,Session,DateTime;
 use App\Models\Attendance;
 use App\Models\DetailAttendance;
@@ -24,6 +25,7 @@ class DetailAttendanceController extends Controller
         if(Session::exists("admin_id")){
             // lấy mã phân công
             $idAssign = $request->get("idAssign");
+            $choose = $request->get("choose");
             if(isset($idAssign)){
                 // lấy dữ liệu phân công
                 $assign = DB::table('assign')
@@ -111,6 +113,55 @@ class DetailAttendanceController extends Controller
                         ]);   
                     }
                 }   
+            
+            
+            
+            }elseif(isset($choose)){
+                if($choose === "hours"){
+                    $idAssign = '';
+                    $assign = DB::table('assign')
+                    ->join('classroom', 'assign.idClass', '=', 'classroom.idClass')
+                    ->join('subject', 'assign.idSubject', '=', 'subject.idSubject')
+                    ->select('assign.*', 'classroom.*', 'subject.*')
+                    ->where('assign.available','=', 1)
+                    ->get();
+                        
+                    $mydate = new DateTime();
+                    $mydate->modify('+7 hours');
+                    $curentMonth = $mydate->format('m');
+                    $curentYear = $mydate->format('Y');
+
+                    $idTeacher = DB::table('teacher')->select('idTeacher')->get();
+                    $resultArray = [];
+                    foreach ($idTeacher as $idTeacher) {
+                        $info = DB::table('assign')
+                        ->join('teacher', 'assign.idTeacher', '=', 'teacher.idTeacher')
+                        ->join('attendance', 'assign.idAssign', '=', 'attendance.idAssign')
+                        ->where('assign.idTeacher', $idTeacher->idTeacher)
+                        ->selectRaw('assign.idTeacher , SUM(attendance.start) as start, SUM(attendance.end) as end')
+                        ->groupBy('assign.idTeacher')
+                        ->get();
+                        array_push($resultArray, $info);
+                    }
+                    
+                    foreach ($resultArray as $object) {
+                        $arrays[] = $object->toArray();
+                    }
+                    // dd($arrays);
+                    $teacher = DB::table('teacher')->select('*')->get();
+                    return view('attendance.statistical',[
+                        'index' => 1,
+                        'HOT' => $arrays,
+                        'assign' => $assign,
+                        'idAssign' => $idAssign,
+                        'month' => $curentMonth,
+                        'year' => $curentYear,
+                        'teacher' => $teacher
+                    ]);
+                }else{
+                    dd($choose);
+                }
+                
             }else{
                 $idAssign = '';
                 $assign = DB::table('assign')

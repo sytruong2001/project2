@@ -6,6 +6,9 @@
   
   <div class="content-wrapper">
     <!-- Content Header (Page header) -->
+    @if(session('alert'))
+      <section class='alert alert-success'>{{session('alert')}}</section>
+    @endif
     <section class="content-header">
       <div class="container-fluid">
         <div class="row mb-2">
@@ -80,10 +83,6 @@
                       <div class="form-group">
                         <label for="exampleInputEmail1">Địa chỉ email</label>
                         <input type="email" name="email" value="{{ $teacher->email }}" class="form-control" id="exampleInputEmail1" placeholder="Enter email">
-                      </div>
-                      <div class="form-group">
-                        <label for="exampleInputPassword1">Mật khẩu</label>
-                        <input type="text" name="password" value="{{ $teacher->password }}" class="form-control" id="exampleInputPassword1" placeholder="Password">
                       </div>
                       <div class="form-group">
                         <label for="exampleInputEmail1">Số điện thoại</label>

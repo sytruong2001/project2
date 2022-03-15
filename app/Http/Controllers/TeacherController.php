@@ -146,7 +146,6 @@ class TeacherController extends Controller
         $lastName = $request->input("lastName");
         $gender = $request->input("gender");
         $email = $request->input("email");
-        $password = $request->input("password");
         $phone = $request->input("phone");
         $birthday = $request->input("birthday");
         $address = $request->input("address");
@@ -158,14 +157,14 @@ class TeacherController extends Controller
         $data->lastName = $lastName;
         $data->gender = $gender;
         $data->email = $email;
-        $data->password = md5($password);
         $data->phone = $phone;
         $data->birthday = $birthday;
         $data->address = $address;
         
 
         $data->save();
-        return redirect('teacher');
+        $alert="Thông tin giảng viên đã được cập nhật thành công!";
+        return redirect()->back()->with('alert',$alert);
     }
 
     /**

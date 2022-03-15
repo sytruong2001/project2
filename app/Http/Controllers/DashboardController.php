@@ -14,37 +14,41 @@ class DashboardController extends Controller
      */
     public function index()
     {
-        $teacher = DB::table("teacher")
-            ->where('available', 1)
-            ->count();
-        $student = DB::table("student")
-            ->where('available', 1)
-            ->count();
-        $subject = DB::table("subject")
-            ->where('available', 1)
-            ->count();
-        $class = DB::table("classroom")
-            ->where('available', 1)
-            ->count();
-        $major = DB::table("major")
-            ->where('available', 1)
-            ->count();
-        $faculty = DB::table("faculty")
-            ->where('available', 1)
-            ->count();
-        $assign = DB::table("assign")
-            ->where('available', 1)
-            ->count();
-        
-        return view('index',[
-            'teacher'=> $teacher,
-            'student'=> $student,
-            'subject'=> $subject,
-            'class'=> $class,
-            'major'=> $major,
-            'faculty'=> $faculty,
-            'assign'=> $assign
-        ]);
+        if(Session::exists('admin_id')){
+            $teacher = DB::table("teacher")
+                ->where('available', 1)
+                ->count();
+            $student = DB::table("student")
+                ->where('available', 1)
+                ->count();
+            $subject = DB::table("subject")
+                ->where('available', 1)
+                ->count();
+            $class = DB::table("classroom")
+                ->where('available', 1)
+                ->count();
+            $major = DB::table("major")
+                ->where('available', 1)
+                ->count();
+            $faculty = DB::table("faculty")
+                ->where('available', 1)
+                ->count();
+            $assign = DB::table("assign")
+                ->where('available', 1)
+                ->count();
+            
+            return view('index',[
+                'teacher'=> $teacher,
+                'student'=> $student,
+                'subject'=> $subject,
+                'class'=> $class,
+                'major'=> $major,
+                'faculty'=> $faculty,
+                'assign'=> $assign
+            ]);
+        }else{
+            return redirect('logout');
+        }
     }
 
     /**

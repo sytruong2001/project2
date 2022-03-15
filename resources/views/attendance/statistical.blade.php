@@ -62,22 +62,17 @@
                       </div>
                     </div>
                     <br>
-                    {{-- Chọn giảng viên muốn xem thông tin --}}
+                    {{-- Chọn chức năng muốn xem thông tin --}}
                     <div class="row">
                       <div class="col-4" style="text-align: right">
-                        Số giờ dạy trong tháng: 
+                        Lựa chọn khác: 
                       </div>
                     
                       <div class="col-4">
-                        <select name="idTeacher" class="form-control">
+                        <select name="choose" class="form-control">
                           <option style="text-align: center" value="">--------------------</option>
-                          {{-- @foreach ($teacher as $teacher)
-                              <option style="text-align: center" value="{{ $teacher->idTeacher}}"
-                                @if ($teacher->idTeacher == $idTeacher)
-                                  {{"selected"}}
-                                @endif
-                              >{{$teacher->lastName}} {{$teacher->middleName}} {{$teacher->firstName}}</option>
-                          @endforeach --}}
+                          <option style="text-align: center" value="hours">Số giờ dạy của giảng viên trong tháng</option>
+                          <option style="text-align: center" value="faculty">Thống kê theo khóa học</option>
                         </select>
                       </div>
                     </div>
@@ -88,6 +83,7 @@
 
               <!-- /.card-header -->
               <div class="card-body">
+              @if (isset($student))
                 <table id="example1" class="table table-bordered table-striped">
                   <thead>
                   <tr>
@@ -108,7 +104,7 @@
                   </tr>
                   </thead>
                   <tbody>
-                  @if (isset($student))
+                  
                     @foreach ($student as $student)
                       <tr>
                         <th>{{ $index++}}</th>
@@ -206,8 +202,6 @@
                         </th>
                       </tr>
                     @endforeach
-                      
-                  @endif
                   </tbody>
                   <tfoot>
                     <tr style="text-align: center">
@@ -255,6 +249,62 @@
                     </tr>
                   </tfoot>
                 </table>
+              @endif
+              @if(isset($HOT))
+              <table id="example1" class="table table-bordered table-striped" style="text-align: center">
+                <thead>
+                  <tr>
+                    <th>STT</th>
+                    <th>Tên giảng viên</th>
+                    <th>Thời gian(Từ... -> đến...)</th>
+                    <th>Số giờ dạy</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  @foreach ($teacher as $item)
+                    <tr>
+                      <th>{{ $index++}}</th>
+                      <th>
+                        {{ $item->lastName}} {{ $item->middleName}} {{ $item->firstName}}
+                      </th>
+                      <th>
+                        <span style="color: rgb(5, 106, 146)"> 01 - {{$month}} - {{$year}}</span>
+                        ->
+                        <span style="color: rgb(187, 102, 33)">
+                        <?php
+                            // Set the new timezone
+                            date_default_timezone_set('Asia/Ho_Chi_Minh');
+                            $date = date('d-m-Y');
+                            echo "$date";
+                        ?>
+                        </span>
+                      </th>
+
+                      {{-- Lấy thông tin thống kê --}}
+                        
+                      <th style="color:blue; text-align:center">
+                        @foreach ($HOT as $key)
+                            @foreach ($key as $value)
+                              @if ($value->idTeacher === $item->idTeacher)
+                                {{ (($value->end) - ($value->start)) / 10000}}h
+                              @endif
+                            @endforeach
+                        @endforeach
+                          0'
+                      </th>
+                    </tr>
+                  @endforeach
+                </tbody>
+                <tfoot>
+                  <tr style="text-align: center">
+                    <th>STT</th>
+                    <th>Tên giảng viên</th>
+                    <th>Thời gian(Từ... -> đến...)</th>
+                    <th>Số giờ dạy</th>
+                  </tr>
+                </tfoot>
+              </table>
+              @endif
               </div>
               <!-- /.card-body -->
             </div>

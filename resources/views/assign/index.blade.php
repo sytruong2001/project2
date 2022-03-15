@@ -173,8 +173,6 @@
                               @foreach ($value as $item)
                                 @if ($item->idAssign == $assign->idAssign)
                                   <p style="color:blue">Đã điểm danh</p>
-                                @else
-                                  Chưa dạy
                                 @endif
                               @endforeach
                             @endforeach

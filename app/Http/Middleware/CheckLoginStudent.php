@@ -15,6 +15,7 @@ class CheckLoginStudent
      */
     public function handle($request, Closure $next)
     {
+        
         // Kiểm tra session: trường hợp có session 
         if($request->session()->exists("student_id")){
             return $next($request);

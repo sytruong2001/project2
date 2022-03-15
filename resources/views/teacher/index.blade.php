@@ -65,7 +65,6 @@
                     <th>Họ tên</th>
                     <th>Giới tính</th>
                     <th>Email</th>
-                    <th>Mật khẩu</th>
                     <th>Ngày sinh</th>
                     <th>Số điện thoại</th>
                     <th>Địa chỉ</th>
@@ -86,7 +85,6 @@
                             @endif
                         </th>
                         <th>{{ $teacher->email}}</th>
-                        <th>{{ $teacher->password}}</th>
                         <th>{{ $teacher->birthday}}</th>
                         <th>{{ $teacher->phone}}</th>
                         <th>{{ $teacher->address}}</th>
@@ -101,7 +99,6 @@
                     <th>Họ tên</th>
                     <th>Giới tính</th>
                     <th>Email</th>
-                    <th>Mật khẩu</th>
                     <th>Ngày sinh</th>
                     <th>Số điện thoại</th>
                     <th>Địa chỉ</th>
