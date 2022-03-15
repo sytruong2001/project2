@@ -256,7 +256,8 @@
                   <tr>
                     <th>STT</th>
                     <th>Tên giảng viên</th>
-                    <th>Thời gian(Từ... -> đến...)</th>
+                    <th>Từ ngày</th>
+                    <th>Đến ngày</th>
                     <th>Số giờ dạy</th>
                   </tr>
                 </thead>
@@ -268,8 +269,9 @@
                         {{ $item->lastName}} {{ $item->middleName}} {{ $item->firstName}}
                       </th>
                       <th>
-                        <span style="color: rgb(5, 106, 146)"> 01 - {{$month}} - {{$year}}</span>
-                        ->
+                        <span style="color: rgb(5, 106, 146)"> 01-{{$month}}-{{$year}}</span>
+                      </th>
+                      <th>
                         <span style="color: rgb(187, 102, 33)">
                         <?php
                             // Set the new timezone
@@ -299,7 +301,8 @@
                   <tr style="text-align: center">
                     <th>STT</th>
                     <th>Tên giảng viên</th>
-                    <th>Thời gian(Từ... -> đến...)</th>
+                    <th>Từ ngày</th>
+                    <th>Đến ngày</th>
                     <th>Số giờ dạy</th>
                   </tr>
                 </tfoot>
