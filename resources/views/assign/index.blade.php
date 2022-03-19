@@ -205,8 +205,8 @@
                     <th>Tên môn học</th>
                     <th>Tên giảng viên</th>
                     <th>Thời gian bắt đầu</th>
-                    <th>Thời lượng học</th>
                     <th>Ngày trong tuần</th>
+                    <th>Thời lượng học</th>
                     <th>Tình trạng dạy</th>
                     @if (!isset($attendance))
                       <th>Sửa</th>

@@ -256,6 +256,7 @@
                   <tr>
                     <th>STT</th>
                     <th>Tên giảng viên</th>
+                    <th>Ngày sinh</th>
                     <th>Từ ngày</th>
                     <th>Đến ngày</th>
                     <th>Số giờ dạy</th>
@@ -267,6 +268,9 @@
                       <th>{{ $index++}}</th>
                       <th>
                         {{ $item->lastName}} {{ $item->middleName}} {{ $item->firstName}}
+                      </th>
+                      <th>
+                        {{ $item->birthday}}
                       </th>
                       <th>
                         <span style="color: rgb(5, 106, 146)"> 01-{{$month}}-{{$year}}</span>
@@ -301,6 +305,7 @@
                   <tr style="text-align: center">
                     <th>STT</th>
                     <th>Tên giảng viên</th>
+                    <th>Ngày sinh</th>
                     <th>Từ ngày</th>
                     <th>Đến ngày</th>
                     <th>Số giờ dạy</th>

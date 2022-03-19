@@ -296,6 +296,8 @@
                               <option value="10:00:00">10:00</option>
                               <option value="13:30:00">13:30</option>
                               <option value="15:30:00">15:30</option>
+                              <option value="17:30:00">17:30</option>
+                              <option value="19:30:00">19:30</option>
                             </select>
                             <br>
                             Thời gian kết thúc:
@@ -304,6 +306,8 @@
                               <option value="12:00:00">12:00</option>
                               <option value="15:30:00">15:30</option>
                               <option value="17:30:00">17:30</option>
+                              <option value="19:30:00">19:30</option>
+                              <option value="21:30:00">21:30</option>
                             </select>
                           </div>
                         </div>
