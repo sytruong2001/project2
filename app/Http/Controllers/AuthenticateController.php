@@ -4,17 +4,19 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
-use DB,Session;
+use DB, Session;
 use App\Models\Admin;
 
 class AuthenticateController extends Controller
 {
     // Dành cho giảng viên và giáo vụ
-    public function login (){
+    public function login()
+    {
         return view("login");
     }
 
-    public function loginProcess (Request $request){
+    public function loginProcess(Request $request)
+    {
         $email = $request->get("email");
         $password = md5($request->get("password"));
 
@@ -26,32 +28,34 @@ class AuthenticateController extends Controller
         $user = DB::table("teacher")->where("email", $email)->where("password", $password)->first();
         // var_dump($admin->password);
         $countUser = DB::table("teacher")->where("email", $email)->where("password", $password)->count();
-        if($admin != null || $countAdmin > 0){
+        if ($admin != null || $countAdmin > 0) {
             $request->session()->put('admin_id', $admin->idAdmin);
-            $request->session()->put('admin_name', [$admin->firstName,$admin->middleName,$admin->lastName]);
+            $request->session()->put('admin_name', [$admin->firstName, $admin->middleName, $admin->lastName]);
             // var_dump($request->session()->get('admin_name')[0]);
 
-                // return Session::get('admin_id');
-            
+            // return Session::get('admin_id');
+
             return redirect('home');
-        }else{
-            if($user != null || $countUser > 0){
-                $request->session()->put('user_name', [$user->firstName,$user->middleName,$user->lastName]);
+        } else {
+            if ($user != null || $countUser > 0) {
+                $request->session()->put('user_name', [$user->firstName, $user->middleName, $user->lastName]);
                 $request->session()->put('user_id', $user->idTeacher);
-                    // return Session::get('user_id');
+                // return Session::get('user_id');
                 return redirect('attendance/create');
             }
             return redirect('login')->with('errors', 'Sai tài khoản hoặc mật khẩu');
-        }         
+        }
     }
 
 
     // Dành cho sinh viên
-    public function loginStudent (){
+    public function loginStudent()
+    {
         return view("account.userlogin");
     }
 
-    public function loginStudentProcess (Request $request){
+    public function loginStudentProcess(Request $request)
+    {
         $email = $request->get("email");
 
         // var_dump($email);
@@ -59,22 +63,24 @@ class AuthenticateController extends Controller
         // var_dump($student);
         $countStudent = DB::table("student")->where("email", $email)->count();
 
-        if($student != null || $countStudent > 0){
+        if ($student != null || $countStudent > 0) {
             $request->session()->put('student_id', $student->idStudent);
-            $request->session()->put('student_name', [$student->firstName,$student->middleName,$student->lastName]);
+            $request->session()->put('student_name', [$student->firstName, $student->middleName, $student->lastName]);
             // var_dump($request->session()->get('admin_name')[0]);
 
-                // return Session::get('admin_id');
-            
+            // return Session::get('admin_id');
+
             return redirect('homeStudent/index');
-        }else{
+        } else {
             return redirect('loginStudent')->with('errors', 'Sai tài khoản hoặc mật khẩu');
-        }         
+        }
     }
 
     // Đăng xuất
-    public function logout(Request $request){
+    public function logout(Request $request)
+    {
         $request->session()->flush();
+
         return redirect('login');
     }
 }
