@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
 use App\Models\LoginModel;
 use Auth;
-use DB;
+use Illuminate\Support\Facades\DB;
 use App\Models\Faculty;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Imports\FacultyImport;
@@ -25,7 +25,7 @@ class FacultyController extends Controller
         $data = DB::table("faculty")
             ->where("available", "=", 1)
             ->paginate(5);
-        return view("faculty.index",['data'=>$data]);
+        return view("faculty.index", ['data' => $data]);
     }
 
     /**
@@ -46,14 +46,14 @@ class FacultyController extends Controller
      */
     public function store(Request $request)
     {
-        if($request->isMethod("post")){
+        if ($request->isMethod("post")) {
             $nameFaculty = $request->input("nameFaculty");
 
             $check = DB::table("faculty")
                 ->where("nameFaculty", "=", $nameFaculty)
                 ->where("available", "=", 1)
                 ->count();
-            if($check == 0 || $check == null){
+            if ($check == 0 || $check == null) {
                 $faculty = new Faculty();
                 $faculty->nameFaculty = $nameFaculty;
                 $faculty->available = 1;
@@ -62,7 +62,6 @@ class FacultyController extends Controller
                 return redirect('faculty');
             }
             return redirect('faculty');
-            
         }
         return view("faculty.create");
     }
@@ -87,11 +86,11 @@ class FacultyController extends Controller
     public function edit($id)
     {
         $query = DB::table("faculty");
-        $query = $query->where("idFaculty","$id");
+        $query = $query->where("idFaculty", "$id");
         $query = $query->select("*");
         $data = $query->paginate(10);
         // return $data;
-        return view("faculty.update",['data' => $data ]);
+        return view("faculty.update", ['data' => $data]);
     }
 
     /**
@@ -106,7 +105,7 @@ class FacultyController extends Controller
         $nameFaculty = $request->input("nameFaculty");
 
         $data = Faculty::find($id);
-        
+
         $data->nameFaculty = $nameFaculty;
 
         $data->save();
@@ -121,22 +120,20 @@ class FacultyController extends Controller
      */
     public function destroy($id)
     {
-        
     }
 
     public function hide($id)
-    {  
+    {
         $class = DB::table("classroom")
-                ->where("idFaculty", "=", $id)
-                ->update(["available" => 0]);
+            ->where("idFaculty", "=", $id)
+            ->update(["available" => 0]);
         $assign = DB::table("assign")
-                ->where("idFaculty", "=", $id)
-                ->update(["available" => 0]);
-        $data = Faculty::find($id);       
+            ->where("idFaculty", "=", $id)
+            ->update(["available" => 0]);
+        $data = Faculty::find($id);
         $data->available = 0;
         $data->save();
         return redirect('faculty');
-        
     }
 
     public function insertExcel()
@@ -146,10 +143,10 @@ class FacultyController extends Controller
 
     public function insertExcelProcess(Request $request)
     {
-        try{
+        try {
             Excel::import(new FacultyImport, $request->file("nameFaculty"));
             return redirect("faculty")->with('success', 'Thêm mới thành công!');
-        }catch(\Maatwebsite\Excel\Validators\ValidationException $e){
+        } catch (\Maatwebsite\Excel\Validators\ValidationException $e) {
             $failures = $e->failures();
             return back()->with('failures', $failures);
         }

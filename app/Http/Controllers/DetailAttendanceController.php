@@ -7,9 +7,11 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
 use Auth;
 // use Carbon\Carbon;
-use DB,Session,DateTime;
+use Illuminate\Support\Facades\DB;
+use Session, DateTime;
 use App\Models\Attendance;
 use App\Models\DetailAttendance;
+
 class DetailAttendanceController extends Controller
 {
     /**
@@ -18,114 +20,111 @@ class DetailAttendanceController extends Controller
      * @return \Illuminate\Http\Response
      */
 
-     // function dùng để thống kê điểm danh của sinh viên
+    // function dùng để thống kê điểm danh của sinh viên
     public function index(Request $request)
     {
         // chỉ dành cho giáo vụ
-        if(Session::exists("admin_id")){
+        if (Session::exists("admin_id")) {
             // lấy mã phân công
             $idAssign = $request->get("idAssign");
             $choose = $request->get("choose");
-            if(isset($idAssign)){
+            if (isset($idAssign)) {
                 // lấy dữ liệu phân công
                 $assign = DB::table('assign')
-                ->join('classroom', 'assign.idClass', '=', 'classroom.idClass')
-                ->join('subject', 'assign.idSubject', '=', 'subject.idSubject')
-                ->select('assign.*','classroom.nameClass', 'subject.nameSubject')
-                ->where('assign.available','=', 1)
-                ->get();
+                    ->join('classroom', 'assign.idClass', '=', 'classroom.idClass')
+                    ->join('subject', 'assign.idSubject', '=', 'subject.idSubject')
+                    ->select('assign.*', 'classroom.nameClass', 'subject.nameSubject')
+                    ->where('assign.available', '=', 1)
+                    ->get();
                 // lấy dữ liệu bảng lớp
                 $idClass = DB::table('assign')
-                ->join('classroom', 'assign.idClass', '=', 'classroom.idClass')
-                ->select('assign.idClass')
-                ->where('assign.available','=', 1)
-                ->where('assign.idAssign', '=', $idAssign)
-                ->get();
+                    ->join('classroom', 'assign.idClass', '=', 'classroom.idClass')
+                    ->select('assign.idClass')
+                    ->where('assign.available', '=', 1)
+                    ->where('assign.idAssign', '=', $idAssign)
+                    ->get();
                 // lấy dữ liệu bảng môn học
                 $idSubject = DB::table('assign')
-                ->join('subject','assign.idSubject','=','subject.idSubject')
-                ->select('assign.idSubject')
-                ->where('assign.available','=', 1)
-                ->where('assign.idAssign', '=', $idAssign)
-                ->get();
-                
-                foreach($idClass as $idClass){
-                    
-                    foreach($idSubject as $idSubject){
-                        
+                    ->join('subject', 'assign.idSubject', '=', 'subject.idSubject')
+                    ->select('assign.idSubject')
+                    ->where('assign.available', '=', 1)
+                    ->where('assign.idAssign', '=', $idAssign)
+                    ->get();
+
+                foreach ($idClass as $idClass) {
+
+                    foreach ($idSubject as $idSubject) {
+
                         $countAttendance = DB::table('attendance')
-                        ->where('attendance.idAssign', '=', $idAssign)
-                        ->count();
-                        
+                            ->where('attendance.idAssign', '=', $idAssign)
+                            ->count();
+
                         $tong = 0;
                         // test thống kê
                         $idStudent = DB::table('assign')
-                        ->join('subject','assign.idSubject','=','subject.idSubject')
-                        ->join('classroom','assign.idClass','=','classroom.idClass')
-                        ->join('student', 'classroom.idClass', '=', 'student.idClass')
-                        ->where('assign.idClass', '=', $idClass->idClass)
-                        ->where('assign.idSubject', '=', $idSubject->idSubject)
-                        ->select('student.idStudent')
-                        ->get();
+                            ->join('subject', 'assign.idSubject', '=', 'subject.idSubject')
+                            ->join('classroom', 'assign.idClass', '=', 'classroom.idClass')
+                            ->join('student', 'classroom.idClass', '=', 'student.idClass')
+                            ->where('assign.idClass', '=', $idClass->idClass)
+                            ->where('assign.idSubject', '=', $idSubject->idSubject)
+                            ->select('student.idStudent')
+                            ->get();
                         $resultArray = [];
-                        foreach($idStudent as $student){
+                        foreach ($idStudent as $student) {
                             $query = DB::table('attendance')
                                 ->join('detailattendance', 'attendance.idAttendance', '=', 'detailattendance.idAttendance')
                                 ->where('attendance.idAssign', $idAssign)
                                 ->where('detailattendance.idStudent', $student->idStudent)
-                                ->selectRaw('idStudent,SUM(IF(detailattendance.status = 0, 1, 0)) as dihoc, 
-                                    SUM(IF(detailattendance.status = 1, 1, 0)) as nghiKp, 
-                                    SUM(IF(detailattendance.status = 2, 1, 0)) as dimuon, 
+                                ->selectRaw('idStudent,SUM(IF(detailattendance.status = 0, 1, 0)) as dihoc,
+                                    SUM(IF(detailattendance.status = 1, 1, 0)) as nghiKp,
+                                    SUM(IF(detailattendance.status = 2, 1, 0)) as dimuon,
                                     SUM(IF(detailattendance.status = 3, 1, 0)) as nghiP')
                                 ->groupBy('idStudent')
                                 ->get();
-                                array_push($resultArray, $query);
+                            array_push($resultArray, $query);
                         }
                         $total = DB::table('attendance')
-                        ->join('assign', 'attendance.idAssign', '=', 'assign.idAssign')
-                        ->join('detailattendance', 'attendance.idAttendance', '=', 'detailattendance.idAttendance')
-                        ->where('attendance.idAssign', $idAssign)
-                        ->selectRaw('SUM(IF(detailattendance.status = 0, 1, 0)) as dihoc, 
-                                    SUM(IF(detailattendance.status = 1, 1, 0)) as nghiKp, 
-                                    SUM(IF(detailattendance.status = 2, 1, 0)) as dimuon, 
+                            ->join('assign', 'attendance.idAssign', '=', 'assign.idAssign')
+                            ->join('detailattendance', 'attendance.idAttendance', '=', 'detailattendance.idAttendance')
+                            ->where('attendance.idAssign', $idAssign)
+                            ->selectRaw('SUM(IF(detailattendance.status = 0, 1, 0)) as dihoc,
+                                    SUM(IF(detailattendance.status = 1, 1, 0)) as nghiKp,
+                                    SUM(IF(detailattendance.status = 2, 1, 0)) as dimuon,
                                     SUM(IF(detailattendance.status = 3, 1, 0)) as nghiP,
                                     COUNT(idDetail) as total')
-                        ->get();
+                            ->get();
                         // dd($total);
                         $student = DB::table('assign')
-                            ->join('subject','assign.idSubject','=','subject.idSubject')
-                            ->join('classroom','assign.idClass','=','classroom.idClass')
+                            ->join('subject', 'assign.idSubject', '=', 'subject.idSubject')
+                            ->join('classroom', 'assign.idClass', '=', 'classroom.idClass')
                             ->join('student', 'classroom.idClass', '=', 'student.idClass')
                             ->where('assign.idClass', '=', $idClass->idClass)
                             ->where('assign.idSubject', '=', $idSubject->idSubject)
                             ->select(DB::raw('DISTINCT student.idStudent, classroom.nameClass,student.*,subject.nameSubject'))
                             ->get();
-                            
-                        return view('attendance.statistical',[
+
+                        return view('attendance.statistical', [
                             'index' => 1,
                             'assign' => $assign,
                             'idAssign' => $idAssign,
                             'student' => $student,
                             'results' => $resultArray,
                             'countAttendance' => $countAttendance,
-                            'tong'=> $tong,
+                            'tong' => $tong,
                             'totals' => $total,
-                        ]);   
+                        ]);
                     }
-                }   
-            
-            
-            
-            }elseif(isset($choose)){
-                if($choose === "hours"){
+                }
+            } elseif (isset($choose)) {
+                if ($choose === "hours") {
                     $idAssign = '';
                     $assign = DB::table('assign')
-                    ->join('classroom', 'assign.idClass', '=', 'classroom.idClass')
-                    ->join('subject', 'assign.idSubject', '=', 'subject.idSubject')
-                    ->select('assign.*', 'classroom.*', 'subject.*')
-                    ->where('assign.available','=', 1)
-                    ->get();
-                        
+                        ->join('classroom', 'assign.idClass', '=', 'classroom.idClass')
+                        ->join('subject', 'assign.idSubject', '=', 'subject.idSubject')
+                        ->select('assign.*', 'classroom.*', 'subject.*')
+                        ->where('assign.available', '=', 1)
+                        ->get();
+
                     $mydate = new DateTime();
                     $mydate->modify('+7 hours');
                     $curentMonth = $mydate->format('m');
@@ -135,21 +134,21 @@ class DetailAttendanceController extends Controller
                     $resultArray = [];
                     foreach ($idTeacher as $idTeacher) {
                         $info = DB::table('assign')
-                        ->join('teacher', 'assign.idTeacher', '=', 'teacher.idTeacher')
-                        ->join('attendance', 'assign.idAssign', '=', 'attendance.idAssign')
-                        ->where('assign.idTeacher', $idTeacher->idTeacher)
-                        ->selectRaw('assign.idTeacher , SUM(attendance.start) as start, SUM(attendance.end) as end')
-                        ->groupBy('assign.idTeacher')
-                        ->get();
+                            ->join('teacher', 'assign.idTeacher', '=', 'teacher.idTeacher')
+                            ->join('attendance', 'assign.idAssign', '=', 'attendance.idAssign')
+                            ->where('assign.idTeacher', $idTeacher->idTeacher)
+                            ->selectRaw('assign.idTeacher , SUM(attendance.start) as start, SUM(attendance.end) as end')
+                            ->groupBy('assign.idTeacher')
+                            ->get();
                         array_push($resultArray, $info);
                     }
-                    
+
                     foreach ($resultArray as $object) {
                         $arrays[] = $object->toArray();
                     }
                     // dd($arrays);
                     $teacher = DB::table('teacher')->select('*')->get();
-                    return view('attendance.statistical',[
+                    return view('attendance.statistical', [
                         'index' => 1,
                         'HOT' => $arrays,
                         'assign' => $assign,
@@ -158,32 +157,31 @@ class DetailAttendanceController extends Controller
                         'year' => $curentYear,
                         'teacher' => $teacher
                     ]);
-                }else{
+                } else {
                     dd($choose);
                 }
-                
-            }else{
+            } else {
                 $idAssign = '';
                 $assign = DB::table('assign')
-                ->join('classroom', 'assign.idClass', '=', 'classroom.idClass')
-                ->join('subject', 'assign.idSubject', '=', 'subject.idSubject')
-                ->select('assign.*', 'classroom.*', 'subject.*')
-                ->where('assign.available','=', 1)
-                ->get();
-                    $attendance = DB::table('attendance')
-                    ->join('assign','attendance.idAssign','=','assign.idAssign')
+                    ->join('classroom', 'assign.idClass', '=', 'classroom.idClass')
+                    ->join('subject', 'assign.idSubject', '=', 'subject.idSubject')
+                    ->select('assign.*', 'classroom.*', 'subject.*')
+                    ->where('assign.available', '=', 1)
+                    ->get();
+                $attendance = DB::table('attendance')
+                    ->join('assign', 'attendance.idAssign', '=', 'assign.idAssign')
                     ->join('classroom', 'assign.idClass', '=', 'classroom.idClass')
                     ->join('subject', 'assign.idSubject', '=', 'subject.idSubject')
                     ->where('attendance.idAssign', '=', $idAssign)
-                    ->select('attendance.*','classroom.nameClass','subject.nameSubject')
+                    ->select('attendance.*', 'classroom.nameClass', 'subject.nameSubject')
                     ->get();
-    
-                    return view('attendance.statistical',[
-                        'index' => 1,
-                        'attendance' => $attendance,
-                        'assign' => $assign,
-                        'idAssign' => $idAssign
-                    ]);
+
+                return view('attendance.statistical', [
+                    'index' => 1,
+                    'attendance' => $attendance,
+                    'assign' => $assign,
+                    'idAssign' => $idAssign
+                ]);
             }
         }
     }
@@ -218,10 +216,10 @@ class DetailAttendanceController extends Controller
     public function show($id)
     {
         $detail = DB::table('detailattendance')
-            ->join('student','detailattendance.idStudent','=','student.idStudent')
-            ->join('attendance','detailattendance.idAttendance','=','attendance.idAttendance')
-            ->where('detailattendance.idAttendance',$id)
-            ->select('detailattendance.*','student.firstName','student.lastName','student.middleName', 'attendance.*')
+            ->join('student', 'detailattendance.idStudent', '=', 'student.idStudent')
+            ->join('attendance', 'detailattendance.idAttendance', '=', 'attendance.idAttendance')
+            ->where('detailattendance.idAttendance', $id)
+            ->select('detailattendance.*', 'student.firstName', 'student.lastName', 'student.middleName', 'attendance.*')
             ->get();
 
         $class = DB::table('classroom')
@@ -230,8 +228,8 @@ class DetailAttendanceController extends Controller
             ->get();
         $subject = DB::table('subject')
             ->get();
-        
-        return view('attendance.detailAttendance',[
+
+        return view('attendance.detailAttendance', [
             'index' => 1,
             'detail' => $detail,
             'subjects' => $subject,
@@ -249,16 +247,16 @@ class DetailAttendanceController extends Controller
     public function edit($id)
     {
         $detail = DB::table('detailattendance')
-        ->join('student','detailattendance.idStudent','=','student.idStudent')
-        ->join('attendance','detailattendance.idAttendance','=','attendance.idAttendance')
-        ->where('detailattendance.idAttendance',$id)
-        ->select('detailattendance.*','student.*')
-        ->get();
-        return view('attendance.updateDetail',[
+            ->join('student', 'detailattendance.idStudent', '=', 'student.idStudent')
+            ->join('attendance', 'detailattendance.idAttendance', '=', 'attendance.idAttendance')
+            ->where('detailattendance.idAttendance', $id)
+            ->select('detailattendance.*', 'student.*')
+            ->get();
+        return view('attendance.updateDetail', [
             'index' => 1,
             'detail' => $detail,
             'idAttendance' => $id
-        ]); 
+        ]);
     }
 
     /**
@@ -276,9 +274,9 @@ class DetailAttendanceController extends Controller
             ->where("detailattendance.idAttendance", "=", $idAttendance)
             ->select("student.*")
             ->get();
-        
-        foreach($student as $student){
-            $idStudent = $student->idStudent;   
+
+        foreach ($student as $student) {
+            $idStudent = $student->idStudent;
             $status = $_REQUEST[$student->idStudent];
             $data = DB::table("detailattendance")
                 ->where("idAttendance", "=", $idAttendance)
@@ -286,21 +284,20 @@ class DetailAttendanceController extends Controller
                 ->update(['status' => $status]);
         }
         $detail = DB::table('detailattendance')
-        ->join('student','detailattendance.idStudent','=','student.idStudent')
-        ->join('attendance','detailattendance.idAttendance','=','attendance.idAttendance')
-        ->where('detailattendance.idAttendance',$idAttendance)
-        ->select('detailattendance.*','student.*')
-        ->get();
+            ->join('student', 'detailattendance.idStudent', '=', 'student.idStudent')
+            ->join('attendance', 'detailattendance.idAttendance', '=', 'attendance.idAttendance')
+            ->where('detailattendance.idAttendance', $idAttendance)
+            ->select('detailattendance.*', 'student.*')
+            ->get();
 
         // return view('attendance.updateDetail',[
         //     'index' => 1,
         //     'detail' => $detail,
         //     'idAttendance' => $id
         // ])->with("success","Thay đổi thành công!");
-        
-        $alert="Điểm danh đã được cập nhật thành công!";
-        return redirect()->back()->with('alert',$alert);
 
+        $alert = "Điểm danh đã được cập nhật thành công!";
+        return redirect()->back()->with('alert', $alert);
     }
 
     /**

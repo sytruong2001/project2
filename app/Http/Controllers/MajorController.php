@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
 use App\Models\LoginModel;
 use Auth;
-use DB;
+use Illuminate\Support\Facades\DB;
 use App\Models\Major;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Imports\MajorImport;
@@ -22,9 +22,9 @@ class MajorController extends Controller
     public function index()
     {
         $data = DB::table("major")
-                ->where("available", "=", 1)
-                ->paginate(5);
-        return view("major.index",['data' => $data]);
+            ->where("available", "=", 1)
+            ->paginate(5);
+        return view("major.index", ['data' => $data]);
     }
 
     /**
@@ -45,14 +45,14 @@ class MajorController extends Controller
      */
     public function store(Request $request)
     {
-        if($request->isMethod("post")){
+        if ($request->isMethod("post")) {
             $nameMajor = $request->input("nameMajor");
 
             $check = DB::table("major")
                 ->where("nameMajor", "=", $nameMajor)
                 ->where("available", "=", 1)
                 ->count();
-            if($check == 0 || $check == null){
+            if ($check == 0 || $check == null) {
                 $major = new Major();
                 $major->nameMajor = $nameMajor;
                 $major->available = 1;
@@ -85,11 +85,11 @@ class MajorController extends Controller
     public function edit($id)
     {
         $query = DB::table("major");
-        $query = $query->where("idMajor","$id");
+        $query = $query->where("idMajor", "$id");
         $query = $query->select("*");
         $data = $query->paginate(10);
         // return $data;
-        return view("major.update",['data' => $data ]);
+        return view("major.update", ['data' => $data]);
     }
 
     /**
@@ -104,7 +104,7 @@ class MajorController extends Controller
         $nameMajor = $request->input("nameMajor");
 
         $data = Major::find($id);
-        
+
         $data->nameMajor = $nameMajor;
 
         $data->save();
@@ -119,22 +119,20 @@ class MajorController extends Controller
      */
     public function destroy($id)
     {
-        
     }
 
     public function hide($id)
-    {  
+    {
         $class = DB::table("classroom")
-                ->where("idMajor", "=", $id)
-                ->update(["available" => 0]);
+            ->where("idMajor", "=", $id)
+            ->update(["available" => 0]);
         $subject = DB::table("subject")
-                ->where("idMajor", "=", $id)
-                ->update(["available" => 0]);
-        $data = Major::find($id);       
+            ->where("idMajor", "=", $id)
+            ->update(["available" => 0]);
+        $data = Major::find($id);
         $data->available = 0;
         $data->save();
         return redirect('major');
-        
     }
 
     public function insertExcel()
@@ -144,10 +142,10 @@ class MajorController extends Controller
 
     public function insertExcelProcess(Request $request)
     {
-        try{
+        try {
             Excel::import(new MajorImport, $request->file("nameMajor"));
             return redirect("major")->with('success', 'Thêm mới thành công!');
-        }catch(\Maatwebsite\Excel\Validators\ValidationException $e){
+        } catch (\Maatwebsite\Excel\Validators\ValidationException $e) {
             $failures = $e->failures();
             return back()->with('failures', $failures);
         }

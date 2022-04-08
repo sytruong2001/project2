@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
 use App\Models\LoginModel;
 use Auth;
-use DB;
+use Illuminate\Support\Facades\DB;
 use App\Models\Classroom;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Imports\ClassroomImport;
@@ -24,20 +24,20 @@ class ClassroomController extends Controller
         $idMajor = $request->get("idMajor");
         $idFaculty = $request->get("idFaculty");
         $major = DB::table("major")
-            ->where('available', '=', 1)    
+            ->where('available', '=', 1)
             ->get();
         $faculty = DB::table("faculty")
             ->where('available', '=', 1)
             ->get();
         $query = DB::table('classroom')
-        ->join('faculty', 'classroom.idFaculty', '=', 'faculty.idFaculty')
-        ->join('major', 'classroom.idMajor', '=', 'major.idMajor')
-        ->where('classroom.available', '=', 1)
-        ->where('classroom.idMajor', '=', $idMajor)
-        ->orwhere('classroom.idFaculty', '=', $idFaculty)
-        ->select('classroom.*', 'faculty.nameFaculty', 'major.nameMajor')
-        ->get();
-        return view("class.index",[
+            ->join('faculty', 'classroom.idFaculty', '=', 'faculty.idFaculty')
+            ->join('major', 'classroom.idMajor', '=', 'major.idMajor')
+            ->where('classroom.available', '=', 1)
+            ->where('classroom.idMajor', '=', $idMajor)
+            ->orwhere('classroom.idFaculty', '=', $idFaculty)
+            ->select('classroom.*', 'faculty.nameFaculty', 'major.nameMajor')
+            ->get();
+        return view("class.index", [
             'data' => $query,
             'major' => $major,
             'faculty' => $faculty,
@@ -63,7 +63,7 @@ class ClassroomController extends Controller
         $query = $query->select("*");
         $major = $query->paginate(10);
 
-        return view("class.create",['faculty' => $faculty, 'major' => $major ]);
+        return view("class.create", ['faculty' => $faculty, 'major' => $major]);
     }
 
     /**
@@ -74,7 +74,7 @@ class ClassroomController extends Controller
      */
     public function store(Request $request)
     {
-        if($request->isMethod("post")){
+        if ($request->isMethod("post")) {
             $nameClass = $request->input("nameClass");
             $idFaculty = $request->input("nameFaculty");
             $idMajor = $request->input("nameMajor");
@@ -85,7 +85,7 @@ class ClassroomController extends Controller
                 ->where("idMajor", "=", $idMajor)
                 ->where("available", "=", 1)
                 ->count();
-            if($check == 0 || $check == null){
+            if ($check == 0 || $check == null) {
                 $class = new Classroom();
                 $class->nameClass = $nameClass;
                 $class->idFaculty = $idFaculty;
@@ -96,9 +96,8 @@ class ClassroomController extends Controller
                 return redirect('class');
             }
             return redirect('class');
-
         }
-            return view("class.create");
+        return view("class.create");
     }
 
     /**
@@ -121,26 +120,26 @@ class ClassroomController extends Controller
     public function edit($id)
     {
         $query = DB::table("classroom");
-        $query = $query->where("idClass","$id");
+        $query = $query->where("idClass", "$id");
         $query = $query->select("*");
         $class = $query->paginate(10);
 
         $query = DB::table("faculty");
-        $query = $query->orderBy("idFaculty","Asc");
+        $query = $query->orderBy("idFaculty", "Asc");
         $query = $query->select("*");
         $faculty = $query->paginate(10);
 
         $query = DB::table("major");
-        $query = $query->orderBy("idMajor","Asc");
+        $query = $query->orderBy("idMajor", "Asc");
         $query = $query->select("*");
         $major = $query->paginate(10);
         // return $class;
         // return $faculty;
         // return $major;
-        return view("class.update",[
-            'class' => $class, 
-            'faculty' => $faculty, 
-            'major' => $major 
+        return view("class.update", [
+            'class' => $class,
+            'faculty' => $faculty,
+            'major' => $major
         ]);
     }
 
@@ -159,7 +158,7 @@ class ClassroomController extends Controller
 
         // return $request->input('firstName');
         $data = Classroom::find($id);
-        
+
         $data->nameClass = $nameClass;
         $data->idFaculty = $idFaculty;
         $data->idMajor = $idMajor;
@@ -176,23 +175,21 @@ class ClassroomController extends Controller
      */
     public function destroy($id)
     {
-       
     }
 
     public function hide($id)
-    {  
+    {
         $assign = DB::table("assign")
-                ->where("idClass", "=", $id)
-                ->update(["available" => 0]);
+            ->where("idClass", "=", $id)
+            ->update(["available" => 0]);
         $student = DB::table("student")
-                ->where("idClass", "=", $id)
-                ->update(["available" => 0]);
+            ->where("idClass", "=", $id)
+            ->update(["available" => 0]);
 
-        $data = Classroom::find($id);       
+        $data = Classroom::find($id);
         $data->available = 0;
         $data->save();
         return redirect('class');
-        
     }
 
     public function insertExcel()
@@ -202,10 +199,10 @@ class ClassroomController extends Controller
 
     public function insertExcelProcess(Request $request)
     {
-        try{
+        try {
             Excel::import(new ClassroomImport, $request->file("nameClass"));
             return redirect("class")->with('success', 'Thêm mới thành công!');
-        }catch(\Maatwebsite\Excel\Validators\ValidationException $e){
+        } catch (\Maatwebsite\Excel\Validators\ValidationException $e) {
             $failures = $e->failures();
             return back()->with('failures', $failures);
         }

@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use DB;
+use Illuminate\Support\Facades\DB;
 use App\Models\Admin;
 
 class AdminController extends Controller
@@ -50,23 +50,23 @@ class AdminController extends Controller
         $data = DB::table("admin")
             ->where("idAdmin", "=", $id)
             ->get();
-        return view("info.infoAdmin", [ "data" => $data]);
+        return view("info.infoAdmin", ["data" => $data]);
     }
 
     public function changePassword(Request $request, $id)
     {
         $newPass = $request->input("newPassword");
         $rePass = $request->input("rePassword");
-        if($newPass != $rePass){
+        if ($newPass != $rePass) {
             $data = DB::table("admin")->where("idAdmin", "=", $id)->get();
             // return $data;
-            return view("info.infoAdmin",['data' => $data ])->with("error","Mật khẩu không trùng khớp! Vui lòng nhập lại");
-        }else{
-            $data = Admin::find($id);       
+            return view("info.infoAdmin", ['data' => $data])->with("error", "Mật khẩu không trùng khớp! Vui lòng nhập lại");
+        } else {
+            $data = Admin::find($id);
             $data->password = md5($newPass);
             $data->save();
             $admin = DB::table("admin")->where("idAdmin", "=", $id)->get();
-            return view("info.infoAdmin",['data' => $admin])->with("message","Thay đổi mật khẩu thành công");
+            return view("info.infoAdmin", ['data' => $admin])->with("message", "Thay đổi mật khẩu thành công");
         }
     }
     /**

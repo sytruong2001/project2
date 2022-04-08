@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
 use App\Models\LoginModel;
 use Auth;
-use DB;
+use Illuminate\Support\Facades\DB;
 use App\Models\teacher;
 use App\Models\Assign;
 use App\Http\Controllers\ClassroomController;
@@ -27,7 +27,7 @@ class TeacherController extends Controller
             ->where("available", "=", 1)
             ->get();
 
-        return view("teacher.index",['data' => $data]);
+        return view("teacher.index", ['data' => $data]);
     }
 
     /**
@@ -48,7 +48,7 @@ class TeacherController extends Controller
      */
     public function store(Request $request)
     {
-        if($request->isMethod("post")){
+        if ($request->isMethod("post")) {
             $firstName = $request->input("firstName");
             $middleName = $request->input("middleName");
             $lastName = $request->input("lastName");
@@ -66,7 +66,7 @@ class TeacherController extends Controller
                 ->where("gender", "=", $gender)
                 ->where("birthday", "=", $birthday)
                 ->count();
-            if($check == 0 || $check == null){
+            if ($check == 0 || $check == null) {
                 $teacher = new teacher();
                 $teacher->firstName = $firstName;
                 $teacher->middleName = $middleName;
@@ -95,20 +95,19 @@ class TeacherController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function show($id)
-    {   
+    {
         $data = DB::table("teacher")
             ->where('idTeacher', '=', $id)
             ->get();
-        
+
         $query = DB::table('assign')
-        ->join('classroom', 'assign.idClass', '=', 'classroom.idClass')
-        ->join('subject', 'assign.idSubject', '=', 'subject.idSubject')
-        ->where('assign.idTeacher', '=', $id)
-        ->where('assign.available', '=', 1)
-        ->select('assign.*', 'classroom.nameClass', 'subject.*')
-        ->get();
-        
-        return view("info.index",[
+            ->join('classroom', 'assign.idClass', '=', 'classroom.idClass')
+            ->join('subject', 'assign.idSubject', '=', 'subject.idSubject')
+            ->where('assign.idTeacher', '=', $id)
+            ->select('assign.*', 'assign.available as assAvai', 'classroom.nameClass', 'subject.*')
+            ->get();
+
+        return view("info.index", [
             'index' => 1,
             'data' => $data,
             'class' => $query
@@ -122,14 +121,13 @@ class TeacherController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function edit($id)
-    {  
+    {
         $query = DB::table("teacher");
-        $query = $query->where("idTeacher","$id");
+        $query = $query->where("idTeacher", "$id");
         $query = $query->select("*");
         $data = $query->paginate(10);
         // return $data;
-        return view("teacher.update",['data' => $data ]);
-        
+        return view("teacher.update", ['data' => $data]);
     }
 
     /**
@@ -151,7 +149,7 @@ class TeacherController extends Controller
         $address = $request->input("address");
 
         $data = Teacher::find($id);
-        
+
         $data->firstName = $firstName;
         $data->middleName = $middleName;
         $data->lastName = $lastName;
@@ -160,11 +158,11 @@ class TeacherController extends Controller
         $data->phone = $phone;
         $data->birthday = $birthday;
         $data->address = $address;
-        
+
 
         $data->save();
-        $alert="Thông tin giảng viên đã được cập nhật thành công!";
-        return redirect()->back()->with('alert',$alert);
+        $alert = "Thông tin giảng viên đã được cập nhật thành công!";
+        return redirect()->back()->with('alert', $alert);
     }
 
     /**
@@ -175,48 +173,43 @@ class TeacherController extends Controller
      */
     public function destroy($id)
     {
-
     }
 
 
     public function hide($id)
-    {  
+    {
         $assign = DB::table("assign")
-                ->where("idTeacher", "=", $id)
-                ->update(["available" => 0]);
+            ->where("idTeacher", "=", $id)
+            ->update(["available" => 0]);
 
-        $data = Teacher::find($id);       
+        $data = Teacher::find($id);
         $data->available = 0;
         $data->save();
         return redirect('teacher');
-        
     }
 
     public function showPassword($id)
-    {  
+    {
         $data = DB::table("teacher")->where("idTeacher", "=", $id)->get();
         // return $data;
-        return view("info.updatePassword",['data' => $data ]);
-        
+        return view("info.updatePassword", ['data' => $data]);
     }
 
     public function changePassword(Request $request, $id)
-    {  
+    {
         $newPass = $request->input("newPassword");
         $rePass = $request->input("rePassword");
-        if($newPass != $rePass){
+        if ($newPass != $rePass) {
             $data = DB::table("teacher")->where("idTeacher", "=", $id)->get();
             // return $data;
-            return view("info.updatePassword",['data' => $data ])->with("error","Mật khẩu không trùng khớp! Vui lòng nhập lại");
-        }else{
-            $data = Teacher::find($id);       
+            return view("info.updatePassword", ['data' => $data])->with("error", "Mật khẩu không trùng khớp! Vui lòng nhập lại");
+        } else {
+            $data = Teacher::find($id);
             $data->password = md5($newPass);
             $data->save();
             $teacher = DB::table("teacher")->where("idTeacher", "=", $id)->get();
-            return view("info.updatePassword",['data' => $teacher])->with("message","Thay đổi mật khẩu thành công");
+            return view("info.updatePassword", ['data' => $teacher])->with("message", "Thay đổi mật khẩu thành công");
         }
-        
-        
     }
 
     public function insertExcel()
@@ -226,10 +219,10 @@ class TeacherController extends Controller
 
     public function insertExcelProcess(Request $request)
     {
-        try{
+        try {
             Excel::import(new TeacherImport, $request->file("nameTeacher"));
             return redirect("teacher")->with('success', 'Thêm mới thành công!');
-        }catch(\Maatwebsite\Excel\Validators\ValidationException $e){
+        } catch (\Maatwebsite\Excel\Validators\ValidationException $e) {
             $failures = $e->failures();
             return back()->with('failures', $failures);
         }
