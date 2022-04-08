@@ -5,7 +5,7 @@
 
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Project 2 | ST </title>
+    <title>Project 3 | ST </title>
     <base href="{{ asset('') }}">
     <!-- Google Font: Source Sans Pro -->
     <link rel="stylesheet"
@@ -89,33 +89,6 @@
                         <a href="/logout" class="dropdown-item dropdown-footer">Đăng xuất</a>
                     </div>
                 </li>
-                {{-- <!-- Notifications Dropdown Menu -->
-      <li class="nav-item dropdown">
-        <a class="nav-link" data-toggle="dropdown" href="#">
-          <i class="far fa-bell"></i>
-          <span class="badge badge-warning navbar-badge">15</span>
-        </a>
-        <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
-          <span class="dropdown-item dropdown-header">15 Notifications</span>
-          <div class="dropdown-divider"></div>
-          <a href="#" class="dropdown-item">
-            <i class="fas fa-envelope mr-2"></i> 4 new messages
-            <span class="float-right text-muted text-sm">3 mins</span>
-          </a>
-          <div class="dropdown-divider"></div>
-          <a href="#" class="dropdown-item">
-            <i class="fas fa-users mr-2"></i> 8 friend requests
-            <span class="float-right text-muted text-sm">12 hours</span>
-          </a>
-          <div class="dropdown-divider"></div>
-          <a href="#" class="dropdown-item">
-            <i class="fas fa-file mr-2"></i> 3 new reports
-            <span class="float-right text-muted text-sm">2 days</span>
-          </a>
-          <div class="dropdown-divider"></div>
-          <a href="#" class="dropdown-item dropdown-footer">See All Notifications</a>
-        </div>
-      </li> --}}
             </ul>
         </nav>
         <!-- /.navbar -->
@@ -165,7 +138,8 @@
                             {{-- Thao tác với giảng viên --}}
                             {{-- Thông tin cá nhân --}}
                             <li class="nav-item">
-                                <a href="{{ route('teacher.show', Session::get('user_id')) }}" class="nav-link">
+                                <a href="{{ route('teacher.show', Session::get('user_id')) }}"
+                                    class="nav-link">
                                     <i class="nav-icon fas fa-copy"></i>
                                     <p>
                                         Thông tin cá nhân & lịch dạy
@@ -293,8 +267,7 @@
 
                             {{-- Thao tác với thông tin cá nhân giáo vụ --}}
                             <li class="nav-item">
-                                <a href="{{ route('admin.show', Session::get('admin_id')) }}"
-                                    class="nav-link">
+                                <a href="{{ route('admin.show', Session::get('admin_id')) }}" class="nav-link">
                                     <i class="nav-icon fas fa-copy"></i>
                                     <p>
                                         Thông tin cá nhân

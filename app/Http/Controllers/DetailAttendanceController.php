@@ -8,7 +8,8 @@ use Illuminate\Support\Facades\Redirect;
 use Auth;
 // use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
-use Session, DateTime;
+use Illuminate\Support\Facades\Session;
+use DateTime;
 use App\Models\Attendance;
 use App\Models\DetailAttendance;
 

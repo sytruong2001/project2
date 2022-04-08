@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
 use App\Models\LoginModel;
 use Auth;
-use DB;
+use Illuminate\Support\Facades\DB;
 use App\Models\Subject;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Imports\SubjectImport;
@@ -26,12 +26,12 @@ class SubjectController extends Controller
             ->where('available', '=', 1)
             ->get();
         $query = DB::table('subject')
-        ->join('major', 'subject.idMajor', '=', 'major.idMajor')
-        ->where('subject.idMajor', '=', $idMajor)
-        ->where('subject.available', '=', 1)
-        ->select('subject.*', 'major.nameMajor')
-        ->get();
-        return view("subject.index",[
+            ->join('major', 'subject.idMajor', '=', 'major.idMajor')
+            ->where('subject.idMajor', '=', $idMajor)
+            ->where('subject.available', '=', 1)
+            ->select('subject.*', 'major.nameMajor')
+            ->get();
+        return view("subject.index", [
             'subjects' => $query,
             'idMajor' => $idMajor,
             'major' => $major
@@ -49,8 +49,8 @@ class SubjectController extends Controller
         $query = $query->where("available", "=", 1);
         $query = $query->select("*");
         $major = $query->paginate(10);
-        return view("subject.create",[
-            'major' => $major 
+        return view("subject.create", [
+            'major' => $major
         ]);
     }
 
@@ -62,7 +62,7 @@ class SubjectController extends Controller
      */
     public function store(Request $request)
     {
-        if($request->isMethod("post")){
+        if ($request->isMethod("post")) {
             $nameSubject = $request->input("nameSubject");
             $idMajor = $request->input("idMajor");
             $duration = $request->input("duration");
@@ -70,7 +70,7 @@ class SubjectController extends Controller
                 ->where("nameSubject", "=", $nameSubject)
                 ->where("duration", "=", $duration)
                 ->count();
-            if($check == 0 || $check == null){
+            if ($check == 0 || $check == null) {
                 $subject = new subject();
                 $subject->nameSubject = $nameSubject;
                 $subject->idMajor = $idMajor;
@@ -81,9 +81,8 @@ class SubjectController extends Controller
                 return redirect('subject');
             }
             return redirect('subject');
-            
         }
-            return view("student.create");
+        return view("student.create");
     }
 
     /**
@@ -111,11 +110,11 @@ class SubjectController extends Controller
         // ->get();
         // return view("student.update",['class' => $data]);
 
-        $subjects = DB::table("subject")->where("idSubject","$id")->select("*")->get();
+        $subjects = DB::table("subject")->where("idSubject", "$id")->select("*")->get();
 
         $majors = DB::table("major")->select("*")->get();
         // return $data;
-        return view("subject.update",['subjects' => $subjects, 'majors' => $majors ]);
+        return view("subject.update", ['subjects' => $subjects, 'majors' => $majors]);
     }
 
     /**
@@ -133,7 +132,7 @@ class SubjectController extends Controller
 
         // return $request->input('firstName');
         $data = Subject::find($id);
-        
+
         $data->nameSubject = $nameSubject;
         $data->idMajor = $idMajor;
         $data->duration = $duration;
@@ -155,16 +154,15 @@ class SubjectController extends Controller
     }
 
     public function hide($id)
-    {  
+    {
         $assign = DB::table("assign")
-                ->where("idSubject", "=", $id)
-                ->update(["available" => 0]);
+            ->where("idSubject", "=", $id)
+            ->update(["available" => 0]);
 
-        $data = Subject::find($id);       
+        $data = Subject::find($id);
         $data->available = 0;
         $data->save();
         return redirect('subject');
-        
     }
 
     public function insertExcel()
@@ -174,10 +172,10 @@ class SubjectController extends Controller
 
     public function insertExcelProcess(Request $request)
     {
-        try{
+        try {
             Excel::import(new SubjectImport, $request->file("nameSubject"));
             return redirect("subject")->with('success', 'Thêm mới thành công!');
-        }catch(\Maatwebsite\Excel\Validators\ValidationException $e){
+        } catch (\Maatwebsite\Excel\Validators\ValidationException $e) {
             $failures = $e->failures();
             return back()->with('failures', $failures);
         }

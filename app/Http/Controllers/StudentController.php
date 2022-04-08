@@ -7,10 +7,11 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
 use App\Models\LoginModel;
 use Auth;
-use DB;
+use Illuminate\Support\Facades\DB;
 use App\Models\student;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Imports\StudentImport;
+
 class StudentController extends Controller
 {
     /**
@@ -22,16 +23,16 @@ class StudentController extends Controller
     {
         $idClass = $request->get("idClass");
         $student = DB::table('student')
-        ->join('classroom', 'student.idClass', '=', 'classroom.idClass')
-        ->where('student.idClass','=', $idClass)
-        ->where('student.available','=', 1)
-        ->select('student.*', 'classroom.nameClass')
-        ->get();
+            ->join('classroom', 'student.idClass', '=', 'classroom.idClass')
+            ->where('student.idClass', '=', $idClass)
+            ->where('student.available', '=', 1)
+            ->select('student.*', 'classroom.nameClass')
+            ->get();
         $class = DB::table('classroom')
-        ->where('classroom.available','=', 1)
-        ->select('classroom.*')
-        ->get();
-        return view("student.index",['students' => $student,'classs' => $class, 'idClass' => $idClass]);
+            ->where('classroom.available', '=', 1)
+            ->select('classroom.*')
+            ->get();
+        return view("student.index", ['students' => $student, 'classs' => $class, 'idClass' => $idClass]);
     }
 
     /**
@@ -42,11 +43,11 @@ class StudentController extends Controller
     public function create()
     {
         $query = DB::table('classroom')
-        ->join('faculty', 'classroom.idFaculty', '=', 'faculty.idFaculty')
-        ->where("classroom.available", "=", 1)
-        ->select('classroom.*', 'faculty.nameFaculty')
-        ->get();
-        return view("student.create",['class' => $query]);
+            ->join('faculty', 'classroom.idFaculty', '=', 'faculty.idFaculty')
+            ->where("classroom.available", "=", 1)
+            ->select('classroom.*', 'faculty.nameFaculty')
+            ->get();
+        return view("student.create", ['class' => $query]);
     }
 
     /**
@@ -57,7 +58,7 @@ class StudentController extends Controller
      */
     public function store(Request $request)
     {
-        if($request->isMethod("post")){
+        if ($request->isMethod("post")) {
             $firstName = $request->input("firstName");
             $middleName = $request->input("middleName");
             $lastName = $request->input("lastName");
@@ -75,7 +76,7 @@ class StudentController extends Controller
                 ->where("gender", "=", $gender)
                 ->where("birthday", "=", $birthday)
                 ->count();
-            if($check == 0 || $check == null){
+            if ($check == 0 || $check == null) {
                 $student = new student();
                 $student->firstName = $firstName;
                 $student->middleName = $middleName;
@@ -92,9 +93,8 @@ class StudentController extends Controller
                 return redirect('student');
             }
             return redirect('student');
-            
         }
-            return view("student.create");
+        return view("student.create");
     }
 
     /**
@@ -116,14 +116,14 @@ class StudentController extends Controller
      */
     public function edit($id)
     {
-        $student = DB::table("student")->where("idStudent","$id")->select("*")->get();
+        $student = DB::table("student")->where("idStudent", "$id")->select("*")->get();
 
         $class = DB::table('classroom')
-        ->join('faculty', 'classroom.idFaculty', '=', 'faculty.idFaculty')
-        ->select('classroom.*', 'faculty.nameFaculty')
-        ->get();
+            ->join('faculty', 'classroom.idFaculty', '=', 'faculty.idFaculty')
+            ->select('classroom.*', 'faculty.nameFaculty')
+            ->get();
         // return $data;
-        return view("student.update",['student' => $student, 'class' => $class ]);
+        return view("student.update", ['student' => $student, 'class' => $class]);
     }
 
     /**
@@ -146,7 +146,7 @@ class StudentController extends Controller
         $address = $request->input("address");
 
         $data = Student::find($id);
-        
+
         $data->firstName = $firstName;
         $data->middleName = $middleName;
         $data->lastName = $lastName;
@@ -161,12 +161,12 @@ class StudentController extends Controller
 
         $student = DB::table('student')
             ->join('classroom', 'student.idClass', '=', 'classroom.idClass')
-            ->where('student.idClass','=', $idClass)
-            ->where('student.available','=', 1)
+            ->where('student.idClass', '=', $idClass)
+            ->where('student.available', '=', 1)
             ->select('student.*', 'classroom.nameClass')
             ->get();
         $class = DB::table('classroom')
-            ->where('classroom.available','=', 1)
+            ->where('classroom.available', '=', 1)
             ->select('classroom.*')
             ->get();
         // return view("student.index",['students' => $student,'classs' => $class, 'idClass' => $idClass]);
@@ -182,13 +182,12 @@ class StudentController extends Controller
      */
     public function destroy($id)
     {
-        
     }
 
     public function hide($id)
     {
 
-        $data = Student::find($id);       
+        $data = Student::find($id);
         $data->available = 0;
         $data->save();
         return redirect('student');
@@ -201,10 +200,10 @@ class StudentController extends Controller
 
     public function insertExcelProcess(Request $request)
     {
-        try{
+        try {
             Excel::import(new StudentImport, $request->file("firstName"));
             return redirect("student")->with('success', 'Thêm mới thành công!');
-        }catch(\Maatwebsite\Excel\Validators\ValidationException $e){
+        } catch (\Maatwebsite\Excel\Validators\ValidationException $e) {
             $failures = $e->failures();
             return back()->with('failures', $failures);
         }

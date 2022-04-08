@@ -6,7 +6,7 @@ use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Routing\Controller as BaseController;
-use Auth;
+use Illuminate\Support\Facades\Auth;
 
 class Controller extends BaseController
 {
@@ -19,9 +19,8 @@ class Controller extends BaseController
 
     function LoginCheck()
     {
-        if(Auth::guard('users')->check()){
+        if (Auth::guard('users')->check()) {
             view()->share('user', Auth::user());
         }
-        
     }
 }
