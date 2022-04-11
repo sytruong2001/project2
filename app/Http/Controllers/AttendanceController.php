@@ -313,12 +313,14 @@ class AttendanceController extends Controller
             ->get();
         // lưu tất cả dữ liệu lấy được ở trên đưa vào bảng điểm danh
         $date = new Datetime();
+        $timeAtt = Carbon::now('Asia/Ho_Chi_Minh');
 
         $attendance = new Attendance();
         $attendance->dateAttendance = new Datetime();
         $attendance->idAssign = $idAssign;
         $attendance->start = $start;
         $attendance->end = $end;
+        $attendance->created_at = $timeAtt;
         $attendance->save();
 
         // sau khi lưu vào bảng điểm danh thì lấy mã điểm danh vừa mới thêm
@@ -335,6 +337,7 @@ class AttendanceController extends Controller
             $data->status = $status;
             $data->save();
         }
+
         // sau khi lưu thành công thì lấy dữ liệu cuổi lần điểm danh vừa nãy
         if (Session::exists("user_id")) {
             $idTeacher = Session::get("user_id");

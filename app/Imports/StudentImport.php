@@ -6,25 +6,26 @@ use App\Models\Student;
 use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
 use Maatwebsite\Excel\Concerns\WithValidation;
-use DB;
+use Illuminate\Support\Facades\DB;
+
 class StudentImport implements ToModel, WithHeadingRow, WithValidation
 {
     /**
-    * @param array $row
-    *
-    * @return \Illuminate\Database\Eloquent\Model|null
-    */
+     * @param array $row
+     *
+     * @return \Illuminate\Database\Eloquent\Model|null
+     */
     public function model(array $row)
     {
         $date = str_replace('/', '-', $row["ngay_sinh"]);
         $Faculty = DB::table("faculty")
-        ->where("nameFaculty", "like", "%".$row['ten_khoa']."%")
-        ->first();
+            ->where("nameFaculty", "like", "%" . $row['ten_khoa'] . "%")
+            ->first();
         $idFaculty = $Faculty->idFaculty;
         // dd($idFaculty);
         $Class = DB::table("classroom")
-        ->where("nameClass", "like", "%".$row['ten_lop']."%")
-        ->first();
+            ->where("nameClass", "like", "%" . $row['ten_lop'] . "%")
+            ->first();
         // dd($Class);
         $row["idClass"] = $Class->idClass;
         // dd($row["idClass"]);
@@ -42,8 +43,9 @@ class StudentImport implements ToModel, WithHeadingRow, WithValidation
         ]);
     }
 
-    public function rules() : array{
-        return[
+    public function rules(): array
+    {
+        return [
             'ho' => 'required',
             'ten_dem' => 'required',
             'ten' => 'required',
@@ -56,12 +58,11 @@ class StudentImport implements ToModel, WithHeadingRow, WithValidation
             'ten_khoa' => 'required',
 
         ];
- 
     }
 
     public function customValidationMessages()
     {
-        return[
+        return [
             'ho.required' => ':attribute không được để trống',
             'ten_dem.required' => ':attribute không được để trống',
             'ten.required' => ':attribute không được để trống',
