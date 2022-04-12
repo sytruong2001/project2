@@ -379,7 +379,9 @@ class AssignController extends Controller
 
     public function hide($id)
     {
+        // lấy thông tin về phân công thông qua idAssign nhận được
         $check = DB::table("assign")->where("idAssign", $id)->get();
+        // dùng vòng lặp và câu lệnh if else để kiểm tra thông tin hiện tại
         foreach ($check as $value) {
             if ($value->available == 1) {
                 $data = Assign::find($id);
