@@ -96,7 +96,7 @@
                                                     6</option>
                                                 <option value="1"
                                                     @if ($assign->date == 1) {{ 'selected' }} @endif>Thứ 3, 5,
-                                                    7</option>
+                                                    7, CN</option>
                                             </select>
                                         </div>
                                         <div class="form-group">

@@ -255,7 +255,7 @@ class AttendanceController extends Controller
             $date = Carbon::now()->dayOfWeek;
             if ($date == 1 || $date == 3 || $date == 5) {
                 $date = 0;
-            } elseif ($date == 2 || $date == 4 || $date == 6) {
+            } elseif ($date == 2 || $date == 4 || $date == 6 || $date == 7) {
                 $date = 1;
             }
             $view = DB::table('assign')

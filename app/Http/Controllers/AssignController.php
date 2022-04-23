@@ -41,7 +41,7 @@ class AssignController extends Controller
             $day = Carbon::now()->dayOfWeek;
             if ($day == 1 || $day == 3 || $day == 5) {
                 $day = 0;
-            } elseif ($day == 2 || $day == 4 || $day == 6) {
+            } elseif ($day == 2 || $day == 4 || $day == 6 || $day == 7) {
                 $day = 1;
             }
             // lấy thông tin của bảng phân công của ngày hôm nay
@@ -170,11 +170,11 @@ class AssignController extends Controller
 
 
 
-            if (DB::table('assign')->where('idSubject', '=', $idClass)->exists()) {
+            if (DB::table('assign')->where('idClass', '=', $idClass)->exists()) {
 
-                if (DB::table('assign')->where('idSubject', '=', $idClass)->where('idTeacher', '=', $idSubject)->exists()) {
+                if (DB::table('assign')->where('idClass', '=', $idClass)->where('idSubject', '=', $idSubject)->exists()) {
 
-                    if (DB::table('assign')->where('idSubject', '=', $idClass)->where('idTeacher', '=', $idSubject)->where('idTeacher', '=', $idTeacher)->exists()) {
+                    if (DB::table('assign')->where('idClass', '=', $idClass)->where('idSubject', '=', $idSubject)->where('idTeacher', '=', $idTeacher)->exists()) {
                         return redirect('assign');
                     } else {
                         $assign = new Assign();

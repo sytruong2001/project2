@@ -163,7 +163,7 @@ echo "$date";
                                                     @if ($assign->date == 0)
                                                         T2, 4, 6
                                                     @elseif($assign->date == 1)
-                                                        T3, 5, 7
+                                                        T3, 5, 7, CN
                                                     @endif
                                                 </th>
                                                 <th style="text-align: center">{{ $assign->duration }}</th>

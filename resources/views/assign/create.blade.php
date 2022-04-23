@@ -86,7 +86,7 @@
                                         <label for="exampleInputEmail1">Ngày trong tuần </label>
                                         <select name="date" id="date" class="form-control">
                                             <option value="0">Thứ 2, 4, 6</option>
-                                            <option value="1">Thứ 3, 5, 7</option>
+                                            <option value="1">Thứ 3, 5, 7, CN</option>
                                         </select>
                                     </div>
                                     <div class="form-group">
