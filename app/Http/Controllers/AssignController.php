@@ -12,6 +12,7 @@ use Carbon\Carbon;
 use App\Models\Assign;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Imports\AssignImport;
+use DateTime;
 
 class AssignController extends Controller
 {
@@ -41,7 +42,7 @@ class AssignController extends Controller
             $day = Carbon::now()->dayOfWeek;
             if ($day == 1 || $day == 3 || $day == 5) {
                 $day = 0;
-            } elseif ($day == 2 || $day == 4 || $day == 6 || $day == 7) {
+            } elseif ($day == 2 || $day == 4 || $day == 6 || $day == 0) {
                 $day = 1;
             }
             // lấy thông tin của bảng phân công của ngày hôm nay
@@ -167,15 +168,32 @@ class AssignController extends Controller
             $start = $request->input("start");
             $end = $request->input("end");
             $date = $request->input("date");
+            $mydate101 = new DateTime();
+            $mydate101->modify('+7 hours');
+            $checkDate = $mydate101->format('Y-m-d');
+            // kiểm tra ngày bắt đầu điểm danh vs ngày hôm nay
+            if ($startDate >= $checkDate) {
+                if (DB::table('assign')->where('idClass', '=', $idClass)->exists()) {
 
+                    if (DB::table('assign')->where('idClass', '=', $idClass)->where('idSubject', '=', $idSubject)->exists()) {
 
-
-            if (DB::table('assign')->where('idClass', '=', $idClass)->exists()) {
-
-                if (DB::table('assign')->where('idClass', '=', $idClass)->where('idSubject', '=', $idSubject)->exists()) {
-
-                    if (DB::table('assign')->where('idClass', '=', $idClass)->where('idSubject', '=', $idSubject)->where('idTeacher', '=', $idTeacher)->exists()) {
-                        return redirect('assign');
+                        if (DB::table('assign')->where('idClass', '=', $idClass)->where('idSubject', '=', $idSubject)->where('idTeacher', '=', $idTeacher)->exists()) {
+                            $error = "Thêm phân công thất bại vì giảng viên, lớp và môn học bạn chọn đã được phân công!";
+                            return redirect()->back()->with('error', $error);
+                        } else {
+                            $assign = new Assign();
+                            $assign->idClass = $idClass;
+                            $assign->idSubject = $idSubject;
+                            $assign->idTeacher = $idTeacher;
+                            $assign->start_date = $startDate;
+                            $assign->date = $date;
+                            $assign->start = $start;
+                            $assign->end = $end;
+                            $assign->available = 1;
+                            $assign->save();
+                            $alert = "Phân công đã được thêm thành công!";
+                            return redirect()->back()->with('alert', $alert);
+                        }
                     } else {
                         $assign = new Assign();
                         $assign->idClass = $idClass;
@@ -205,18 +223,8 @@ class AssignController extends Controller
                     return redirect()->back()->with('alert', $alert);
                 }
             } else {
-                $assign = new Assign();
-                $assign->idClass = $idClass;
-                $assign->idSubject = $idSubject;
-                $assign->idTeacher = $idTeacher;
-                $assign->start_date = $startDate;
-                $assign->date = $date;
-                $assign->start = $start;
-                $assign->end = $end;
-                $assign->available = 1;
-                $assign->save();
-                $alert = "Phân công đã được thêm thành công!";
-                return redirect()->back()->with('alert', $alert);
+                $error = "Ngày bắt đầu điểm danh không được nhỏ hơn ngày hôm nay";
+                return redirect()->back()->with('error', $error);
             }
         }
         return view("assign.create");
@@ -284,9 +292,6 @@ class AssignController extends Controller
         $start = $request->input("start");
         $end = $request->input("end");
         $date = $request->input("date");
-        // dd($date);
-        // return $startDate;
-        // return $request->input('firstName');
 
 
         if (DB::table('assign')->where('idClass', '=', $idClass)->exists()) {

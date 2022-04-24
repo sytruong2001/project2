@@ -138,6 +138,8 @@ class DetailAttendanceController extends Controller
                             ->join('teacher', 'assign.idTeacher', '=', 'teacher.idTeacher')
                             ->join('attendance', 'assign.idAssign', '=', 'attendance.idAssign')
                             ->where('assign.idTeacher', $idTeacher->idTeacher)
+                            ->whereMonth('attendance.created_at', $curentMonth)
+                            ->whereYear('attendance.created_at', $curentYear)
                             ->selectRaw('assign.idTeacher , SUM(attendance.start) as start, SUM(attendance.end) as end')
                             ->groupBy('assign.idTeacher')
                             ->get();

@@ -9,6 +9,9 @@
         @if (session('alert'))
             <section class='alert alert-success'>{{ session('alert') }}</section>
         @endif
+        @if (session('error'))
+            <section class='alert alert-warning'>{{ session('error') }}</section>
+        @endif
         <section class="content-header">
             <div class="container-fluid">
                 <div class="row mb-2">

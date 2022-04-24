@@ -114,7 +114,7 @@
                                                     @if ($class->date == 0)
                                                         T2, 4, 6
                                                     @elseif($class->date == 1)
-                                                        T3, 5, 7
+                                                        T3, 5, 7, CN
                                                     @endif
                                                 </th>
                                                 <th>
