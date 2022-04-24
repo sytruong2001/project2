@@ -9,7 +9,12 @@ class classroom extends Model
     public $table = "classroom";
     protected $primaryKey = 'idClass';
     protected $fillable = [
-        "nameClass","idFaculty","idMajor","create_at", "update_at", "available"
+        "nameClass", "idFaculty", "idMajor", "create_at", "update_at", "available"
     ];
 
+    public function getInfo($id)
+    {
+        $class = classroom::find($id);
+        return $class;
+    }
 }

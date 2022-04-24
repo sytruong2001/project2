@@ -10,6 +10,7 @@ use Auth;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 use App\Models\Assign;
+use App\Models\Classroom;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Imports\AssignImport;
 use DateTime;
@@ -132,24 +133,60 @@ class AssignController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(Request $request)
     {
         $class = DB::table("classroom")
             ->where("available", "=", 1)
             ->select("*")
             ->get();
-
         $subject = DB::table("subject")
             ->where("available", "=", 1)
             ->select("*")
             ->get();
-
         $teacher = DB::table("teacher")
             ->where("available", "=", 1)
             ->select("*")
             ->get();
 
         return view("assign.create", ['class' => $class, 'subject' => $subject, 'teacher' => $teacher]);
+    }
+
+    public function showInfo(Request $request)
+    {
+        if ($request->get('idClass')) {
+            $subject = DB::table("subject")
+                ->where("available", "=", 1)
+                ->select("*")
+                ->get();
+            echo json_encode($subject);
+        } else {
+            $class = Classroom::query()
+                ->where("available", "=", 1)
+                ->select("*");
+            $arr = [];
+            foreach ($class as $class) {
+                $rs = [
+                    'idClass' => $class->idClass,
+                    'nameClass' => $class->nameClass,
+                    'idFaculty' => $class->idFaculty,
+                    'idMajor' => $class->idMajor,
+                    'available' => $class->available,
+                    'created_at' => $class->created_at,
+                    'updated_at' => $class->updated_at,
+
+                ];
+                array_push($arr, $rs);
+            }
+            echo json_encode($arr);
+        }
+
+        // $teacher = DB::table("teacher")
+        //     ->where("available", "=", 1)
+        //     ->select("*")
+        //     ->get();
+
+        // return view("assign.create", ['teacher' => $teacher]);
+
     }
 
     /**

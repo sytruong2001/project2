@@ -86,7 +86,7 @@
                                     </div>
 
                                     <div class="form-group">
-                                        <label for="exampleInputEmail1">Ngày trong tuần </label>
+                                        <label for="exampleInputEmail1" id="date">Ngày trong tuần </label>
                                         <select name="date" id="date" class="form-control">
                                             <option value="0">Thứ 2, 4, 6</option>
                                             <option value="1">Thứ 3, 5, 7, CN</option>
@@ -130,5 +130,8 @@
         <!-- /.content -->
     </div>
     <!-- /.content-wrapper -->
-
+    {{-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script language="javascript" src="http://code.jquery.com/jquery-2.0.0.min.js"></script>
+    <script src="asset/js/assign.js"></script> --}}
 @endsection
